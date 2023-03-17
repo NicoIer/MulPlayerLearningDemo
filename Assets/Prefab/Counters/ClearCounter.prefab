@@ -92,9 +92,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8441fefc46f4cdcbcfb5a145879c26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tomatoPrefab: {fileID: 7347640811211430993, guid: 9f157b8fe44e4604fadbec419d45007f,
-    type: 3}
-  tomatoSpawnPoint: {fileID: 209170196569568061}
+  <topSpawnPoint>k__BackingField: {fileID: 209170196569568061}
+  <objEnum>k__BackingField: 0
+  nextClearCounter: {fileID: 0}
 --- !u!1001 &2618733411239924322
 PrefabInstance:
   m_ObjectHideFlags: 0

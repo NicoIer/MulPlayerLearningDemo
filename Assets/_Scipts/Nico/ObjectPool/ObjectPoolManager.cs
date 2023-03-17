@@ -7,7 +7,7 @@ namespace Nico
     public class ObjectPoolManager : MonoBehaviour
     {
         public static ObjectPoolManager Singleton { get; private set; }
-        [field: SerializeReference] public List<GameObject> prefabs = new();
+        [field: SerializeReference] private List<GameObject> prefabs = new();
 
         [field: SerializeReference] private readonly Dictionary<string, ObjectPool> _poolDict = new();
 
