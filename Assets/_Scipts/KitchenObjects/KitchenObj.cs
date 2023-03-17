@@ -1,35 +1,29 @@
-﻿using UnityEngine;
+﻿using Kitchen.Interface;
+using UnityEngine;
 
 namespace Kitchen
 {
     public class KitchenObj : MonoBehaviour
     {
         [SerializeField] private KitchenObjSo kitchenObjSo;
-        private ClearCounter _clearCounter;
+        private ICabHoldKitchenObj _cabHoldKitchenObj;
 
-        public void SetClearCounter(ClearCounter newClearCounter)
+        public void SetKitchenParent(ICabHoldKitchenObj cabHoldKitchenObj)
         {
-            if (_clearCounter != null)
+            if (cabHoldKitchenObj.HasKitchenObj())
             {
-                _clearCounter = null;
+                Debug.LogError("kitchenObjParent already has a KitchenObj");
             }
-            //如果新的柜子已经有物体了，就报错
-            if (newClearCounter.HasKitchenObj())
-            {
-                Debug.LogError($"ClearCounter:{newClearCounter.name} already has a KitchenObj");
-            }
-            
-            
-            //设置当前物品的柜子
-            _clearCounter = newClearCounter;
-            
-            transform.SetParent(newClearCounter.topSpawnPoint);
+
+            _cabHoldKitchenObj = cabHoldKitchenObj;
+            transform.SetParent(cabHoldKitchenObj.GetTopSpawnPoint());
             transform.localPosition = Vector3.zero;
         }
+        
 
-        public ClearCounter GetClearCounter()
+        public ICabHoldKitchenObj GetClearCounter()
         {
-            return _clearCounter;
+            return _cabHoldKitchenObj;
         }
     }
 }

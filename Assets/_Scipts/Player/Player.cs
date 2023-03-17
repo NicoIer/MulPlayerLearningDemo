@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kitchen.Interface;
 using UnityEngine;
 
 namespace Kitchen.Player
@@ -7,30 +8,44 @@ namespace Kitchen.Player
     public partial class Player : MonoBehaviour
     {
         public static Player Singleton { get; private set; }
+
+        #region Counter
+
         private ClearCounter SelectedCounter => selectCounterController.SelectedCounter;
         public PlayerSelectCounterController selectCounterController { get; private set; }
 
+        #endregion
+
+        #region MonoComponents
+
+        internal Animator animator;
+
+        #endregion
+
+        #region KitchenObj
+
+        private KitchenObj _kitchenObj;
+        [field: SerializeField] public Transform topSpawnPoint { get; private set; }
+
+        #endregion
 
         internal PlayerInput input;
         private List<PlayerController> _controllers;
         [SerializeField] internal PlayerData data;
-        internal Animator animator;
+
 
         private void Awake()
         {
             input = new PlayerInput();
-            animator = transform.Find("PlayerVisual").GetComponent<Animator>();
             if (Singleton != null)
             {
                 Debug.LogError("More than one Player in scene!");
             }
 
             Singleton = this;
+            InitializedMonoComponents();
             InitializedControllers();
         }
-
-
-
 
         private void OnEnable()
         {
@@ -38,13 +53,11 @@ namespace Kitchen.Player
             input.OnInteractPerform += OnPerformInteract;
         }
 
-
         private void OnPerformInteract()
         {
             if (SelectedCounter != null)
-                SelectedCounter.Interact();
+                SelectedCounter.Interact(this);
         }
-
 
         private void OnDisable()
         {
@@ -58,7 +71,6 @@ namespace Kitchen.Player
                 controller.Update();
             }
         }
-
 
         private void OnDrawGizmos()
         {

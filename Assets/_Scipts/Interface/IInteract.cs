@@ -2,6 +2,6 @@
 {
     public interface IInteract
     {
-        void Interact();
+        void Interact(Player.Player player);
     }
 }

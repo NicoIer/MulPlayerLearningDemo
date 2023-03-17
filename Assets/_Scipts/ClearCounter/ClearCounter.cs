@@ -5,45 +5,16 @@ using UnityEngine;
 
 namespace Kitchen
 {
-    public class ClearCounter : MonoBehaviour, IInteract
+    public partial class ClearCounter : ICabHoldKitchenObj
     {
-        [field: SerializeField] public Transform topSpawnPoint { get; private set; }
-        [field: SerializeField] public KitchenObjEnum objEnum { get; private set; }
-        private KitchenObj _kitchenObj;
-        public ClearCounter nextClearCounter;
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                if (_kitchenObj != null && Player.Player.Singleton.selectCounterController.SelectedCounter == this)
-                {
-                    _kitchenObj.SetClearCounter(nextClearCounter); //设置物体的柜子
-                    nextClearCounter.SetKitchenObj(_kitchenObj); //设置柜子的物体
-                    _kitchenObj = null;
-                }
-            }
-        }
-
-        public void Interact()
-        {
-            if (_kitchenObj == null)
-            {
-                var kitchenObj = ObjectPoolManager.Singleton.GetObject(objEnum.ToString()).GetComponent<KitchenObj>();
-                kitchenObj.SetClearCounter(this); //设置物体的柜子
-
-                _kitchenObj = kitchenObj; //把物体设置到当前的柜子中
-            }
-            else
-            {
-                Debug.Log(_kitchenObj.GetClearCounter().name);
-            }
-        }
-
         public void SetKitchenObj(KitchenObj kitchenObj)
         {
-            Debug.Log($"counter:{name} set kitchenObj to {kitchenObj}");
             _kitchenObj = kitchenObj;
+        }
+
+        public Transform GetTopSpawnPoint()
+        {
+            return topSpawnPoint;
         }
 
         public KitchenObj GetKitchenObj()
@@ -59,6 +30,35 @@ namespace Kitchen
         public void ClearKitchenObj()
         {
             _kitchenObj = null;
+        }
+    }
+
+    public partial class ClearCounter : MonoBehaviour, IInteract
+    {
+        [field: SerializeField] public Transform topSpawnPoint { get; private set; }
+        [field: SerializeField] public KitchenObjEnum objEnum { get; private set; }
+        private KitchenObj _kitchenObj;
+
+        private void Awake()
+        {
+            topSpawnPoint = transform.Find("KitchenObjHoldPoint");
+        }
+
+        public void Interact(Player.Player player)
+        {
+            if (_kitchenObj == null)
+            {
+                var kitchenObj = ObjectPoolManager.Singleton.GetObject(objEnum.ToString()).GetComponent<KitchenObj>();
+                kitchenObj.SetKitchenParent(this); //设置物体的柜子
+
+                _kitchenObj = kitchenObj; //把物体设置到当前的柜子中
+            }
+            else
+            {
+                _kitchenObj.SetKitchenParent(player); //设置物体的柜子
+                player.SetKitchenObj(_kitchenObj); //设置柜子的物体
+                _kitchenObj = null;
+            }
         }
     }
 }
