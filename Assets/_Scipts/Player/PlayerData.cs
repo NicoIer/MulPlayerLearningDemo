@@ -7,5 +7,10 @@ namespace Kitchen
     {
         public float speed=7f;
         public float rotateSpeed = 7f;
+        public float playerRadius = 1f;
+        public float playerHeight = 2f;
+        public string animWalking = "walking";
+        public float interactDistance = 1f;
+        public LayerMask interactLayer;
     }
 }

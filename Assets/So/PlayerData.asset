@@ -13,3 +13,11 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   speed: 7
+  rotateSpeed: 7
+  playerRadius: 0.45
+  playerHeight: 1.8
+  animWalking: walking
+  interactDistance: 2
+  interactLayer:
+    serializedVersion: 2
+    m_Bits: 64

@@ -35,11 +35,20 @@ public partial class @StanderInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""def58a21-a6e5-4031-a761-327c6a14c926"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": ""2D Vector"",
+                    ""name"": ""WASD"",
                     ""id"": ""2d0993d9-c5ed-4a18-8988-4f2d71842df0"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -92,6 +101,72 @@ public partial class @StanderInput : IInputActionCollection2, IDisposable
                     ""action"": ""move2D"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""ArrowKeys"",
+                    ""id"": ""50c5235e-0f49-48c2-9667-b69569c68186"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move2D"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""de1dcd03-3fd4-4790-91bd-19083098a84e"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move2D"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""c95fe016-57a8-4e24-b177-f766933cf404"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move2D"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""14b1e3b1-18b3-4282-9dbb-400a8de49ae7"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move2D"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""20ae5ddd-ad30-49c2-a485-36e39593b1d4"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move2D"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15935371-7451-4c87-99b1-bd5bc19bae8f"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -123,6 +198,7 @@ public partial class @StanderInput : IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_move2D = m_Player.FindAction("move2D", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,11 +259,13 @@ public partial class @StanderInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_move2D;
+    private readonly InputAction m_Player_Interact;
     public struct PlayerActions
     {
         private @StanderInput m_Wrapper;
         public PlayerActions(@StanderInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @move2D => m_Wrapper.m_Player_move2D;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -200,6 +278,9 @@ public partial class @StanderInput : IInputActionCollection2, IDisposable
                 @move2D.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove2D;
                 @move2D.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove2D;
                 @move2D.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove2D;
+                @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -207,6 +288,9 @@ public partial class @StanderInput : IInputActionCollection2, IDisposable
                 @move2D.started += instance.OnMove2D;
                 @move2D.performed += instance.OnMove2D;
                 @move2D.canceled += instance.OnMove2D;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -223,5 +307,6 @@ public partial class @StanderInput : IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove2D(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
