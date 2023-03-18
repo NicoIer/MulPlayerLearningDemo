@@ -5,9 +5,9 @@ namespace Kitchen
 {
     public class KitchenObj : MonoBehaviour
     {
-        [SerializeField] private KitchenObjSo kitchenObjSo;
+        public KitchenObjEnum objEnum;
         private ICanHoldKitchenObj _canHoldKitchenObj;
-
+        
         public void SetHolder(ICanHoldKitchenObj canHoldKitchenObj)
         {
             if (canHoldKitchenObj.HasKitchenObj())

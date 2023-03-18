@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kitchen.Interface;
 using UnityEngine;
 
 namespace Nico
@@ -11,14 +12,12 @@ namespace Nico
 
         public GameObject Get()
         {
-            if (_pool.Count == 0)
+            GameObject obj=null;
+            obj = _pool.Count == 0 ? Instantiate(prefab) : _pool.Dequeue();
+            if (obj.TryGetComponent(out IPoolObject poolObject))
             {
-                GameObject go = Instantiate(prefab);
-                go.SetActive(true);
-                return go;
+                poolObject.OnGet();
             }
-
-            var obj =  _pool.Dequeue();
             obj.SetActive(true);
             return obj;
         }

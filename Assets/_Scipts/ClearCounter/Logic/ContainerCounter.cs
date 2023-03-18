@@ -7,8 +7,18 @@ namespace Kitchen
 {
     public class ContainerCounter : BaseCounter
     {
-        [field: SerializeField] public KitchenObjEnum objEnum { get; private set; }
+        private KitchenObjSo _kitchenObjSo;
+        public KitchenObjEnum objEnum;
         public event EventHandler OnInteractEvent;
+        public SpriteRenderer re;
+
+
+        private void Start()
+        {
+            //ToDO 这里的方式不是很好
+            _kitchenObjSo = DataTableManager.Sigleton.Get(objEnum);
+            re.sprite = _kitchenObjSo.sprite;
+        }
 
         public override void Interact(Player.Player player)
         {
@@ -16,8 +26,8 @@ namespace Kitchen
             {
                 return;
             }
-            
-            var newKitchenObj = ObjectPoolManager.Singleton.GetObject(objEnum.ToString())
+
+            var newKitchenObj = Instantiate(_kitchenObjSo.prefab)
                 .GetComponent<KitchenObj>(); //从对象池中获取物体(从柜子中拿出物体)
             newKitchenObj.SetHolder(player); //设置物体的持有者
             player.SetKitchenObj(newKitchenObj); //设置持有者的物体

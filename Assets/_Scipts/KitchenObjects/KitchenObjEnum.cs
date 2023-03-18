@@ -4,5 +4,8 @@
     {
         Tomato,
         CheeseBlock,
+        Bread,
+        Cabbage,
+        MeatPattyUncooked,
     }
 }
