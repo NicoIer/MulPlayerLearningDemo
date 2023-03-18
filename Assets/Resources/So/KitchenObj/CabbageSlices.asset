@@ -10,9 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 790a2a2d6379a964aa1c70f10f9e5a12, type: 3}
-  m_Name: Bread
+  m_Name: CabbageSlices
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7347640811211430993, guid: 35011eeaf51c5684ea32ffe898ce442d, type: 3}
-  sprite: {fileID: 21300000, guid: 77b28124b8bda494381c80bd5aa42c22, type: 3}
-  kitchenObjEnum: 2
-  objName: Bread
+  prefab: {fileID: 7347640811211430993, guid: 511c34d7f2db7964498158c96e0bfa8d, type: 3}
+  sprite: {fileID: 21300000, guid: bee24f07c57157e45a946eed3bfe8b84, type: 3}
+  kitchenObjEnum: 6

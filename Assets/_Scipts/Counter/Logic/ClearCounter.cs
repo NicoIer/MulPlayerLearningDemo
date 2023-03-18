@@ -20,12 +20,13 @@ namespace Kitchen
             //玩家没有持有物体，当前柜子有物体
             if (!player.HasKitchenObj() && HasKitchenObj())
             {
-                var kitchenObj = GetKitchenObj();
-                kitchenObj.SetHolder(player); //设置物体的柜子
-                player.SetKitchenObj(kitchenObj); //把物体设置到玩家的物体中
+                var targetKitchenObj = GetKitchenObj();
+                targetKitchenObj.SetHolder(player); //设置物体的柜子
+                player.SetKitchenObj(targetKitchenObj); //把物体设置到玩家的物体中
                 ClearKitchenObj(); //清空当前柜子的物体
                 return;
             }
         }
+        
     }
 }

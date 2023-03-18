@@ -11,7 +11,7 @@ namespace Kitchen
 
         protected virtual void Awake()
         {
-            topSpawnPoint = transform.Find("KitchenObjHoldPoint");
+            topSpawnPoint = transform.Find("TopPoint");
         }
 
         public abstract void Interact(Player.Player player);

@@ -16,7 +16,7 @@ namespace Kitchen
         private void Start()
         {
             //ToDO 这里的方式不是很好
-            _kitchenObjSo = DataTableManager.Sigleton.Get(objEnum);
+            _kitchenObjSo = DataTableManager.Sigleton.GetKitchenObjSo(objEnum);
             re.sprite = _kitchenObjSo.sprite;
         }
 
@@ -26,12 +26,9 @@ namespace Kitchen
             {
                 return;
             }
-
-            var newKitchenObj = Instantiate(_kitchenObjSo.prefab)
-                .GetComponent<KitchenObj>(); //从对象池中获取物体(从柜子中拿出物体)
-            newKitchenObj.SetHolder(player); //设置物体的持有者
-            player.SetKitchenObj(newKitchenObj); //设置持有者的物体
+            KitchenObjSpawner.SpawnKitchenObj(_kitchenObjSo,player);
             OnInteractEvent?.Invoke(this, EventArgs.Empty);
         }
+
     }
 }

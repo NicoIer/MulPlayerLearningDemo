@@ -33,12 +33,14 @@ namespace Kitchen.Player
         }
         private Vector3 GetMoveDirection()
         {//ToDo 太丑了，需要优化
+            //尝试按照输入进行移动
             var moveDir = new Vector3(_playerInput.move.x, 0, _playerInput.move.y);
             var position = transform.position;
             var canMove = !Physics.CapsuleCast(position,
                 position + Vector3.up * _data.playerHeight,
                 _data.playerRadius, moveDir, _data.playerRadius);
             if (canMove) return moveDir;
+            
             //尝试在X方向移动
             var moveDirX = new Vector3(moveDir.x, 0, 0);
             canMove = !Physics.CapsuleCast(position,

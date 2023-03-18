@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 790a2a2d6379a964aa1c70f10f9e5a12, type: 3}
-  m_Name: MetaPattyUncooked
+  m_Name: Bread
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7347640811211430993, guid: 01f5113dfa7c82246b767993baed01f8, type: 3}
-  sprite: {fileID: 21300000, guid: aa1bacc24dde76e47b2ec0dd4e82385b, type: 3}
-  kitchenObjEnum: 4
+  prefab: {fileID: 7347640811211430993, guid: 35011eeaf51c5684ea32ffe898ce442d, type: 3}
+  sprite: {fileID: 21300000, guid: 77b28124b8bda494381c80bd5aa42c22, type: 3}
+  kitchenObjEnum: 3
