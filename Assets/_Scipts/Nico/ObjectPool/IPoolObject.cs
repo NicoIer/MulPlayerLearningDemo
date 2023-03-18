@@ -1,4 +1,4 @@
-﻿namespace Kitchen.Interface
+﻿namespace Nico
 {
     public interface IPoolObject
     {

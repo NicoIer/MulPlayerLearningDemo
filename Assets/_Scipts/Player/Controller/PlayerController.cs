@@ -1,8 +1,8 @@
-﻿using Kitchen.Interface;
+﻿using Nico;
 
-namespace Kitchen.Player
+namespace Nico.Player
 {
-    public abstract class PlayerController: ICotroller
+    public abstract class PlayerController: IController
     {
         protected readonly Player player;
 

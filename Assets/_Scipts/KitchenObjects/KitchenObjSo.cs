@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Kitchen
+namespace Nico
 {
     
     [CreateAssetMenu(fileName = "KitchenObjSo", menuName = "ScriptableObjects/KitchenObjSo", order = 0)]

@@ -1,4 +1,4 @@
-﻿namespace Kitchen
+﻿namespace Nico
 {
     public enum KitchenObjEnum
     {

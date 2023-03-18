@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Kitchen.Player
+namespace Nico.Player
 {
     public class PlayerSelectCounterController : PlayerController
     {

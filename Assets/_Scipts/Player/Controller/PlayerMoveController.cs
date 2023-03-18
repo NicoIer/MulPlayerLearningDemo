@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kitchen.Player
+namespace Nico.Player
 {
     public class PlayerMoveController: PlayerController
     {
@@ -23,8 +23,8 @@ namespace Kitchen.Player
             {
                 _animator.SetBool(_walking, true);
                 var inputDir = new Vector3(_playerInput.move.x, 0, _playerInput.move.y);
-                MoveSetter.Move(transform, GetMoveDirection(), _data.speed);
-                RotateSetter.SetForward(transform, inputDir, _data.rotateSpeed);
+                TransformSetter.Move(transform, GetMoveDirection(), _data.speed);
+                TransformSetter.SetForward(transform, inputDir, _data.rotateSpeed);
             }
             else
             {

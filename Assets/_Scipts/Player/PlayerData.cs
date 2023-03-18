@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kitchen
+namespace Nico
 {
     [CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/PlayerData", order = 0)]
     public class PlayerData: ScriptableObject

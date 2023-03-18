@@ -1,54 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
-using Kitchen.Interface;
 using Nico;
 using UnityEngine;
 
-namespace Kitchen
+namespace Nico
 {
-    public class CuttingCounter : BaseCounter,IInteractAlternate
+    public class CuttingCounter : BaseCounter, IInteractAlternate
     {
+        public int cuttingCount = 0;
+        private ProgressBarUI _progressBarUI;
+        public event Action OnCuttingEvent;
+        protected override void Awake()
+        {
+            base.Awake();
+            _progressBarUI = transform.Find("ProgressBarUI").GetComponent<ProgressBarUI>();
+        }
+
         public override void Interact(Player.Player player)
         {
             //玩家持有物体，当前柜子没有物体 -> 放置物体
             if (player.HasKitchenObj() && !HasKitchenObj())
             {
-                var playerKitchenObj = player.GetKitchenObj();
-                playerKitchenObj.SetHolder(this); //设置物体的柜子
-                kitchenObj = playerKitchenObj; //把物体设置到当前的柜子中
-                player.ClearKitchenObj(); //清空玩家的物体
+                cuttingCount = 0;
+                _progressBarUI.SetProgress(0);
+                
+                KitchenObjOperator.PutKitchenObj(player, this);
                 return;
             }
 
             //玩家没有持有物体，当前柜子有物体 -> 拿起物体 TODO 完成切的逻辑
             if (!player.HasKitchenObj() && HasKitchenObj())
             {
-                var targetKitchenObj = GetKitchenObj();
-                targetKitchenObj.SetHolder(player); //设置物体的柜子
-                player.SetKitchenObj(targetKitchenObj); //把物体设置到玩家的物体中
-                ClearKitchenObj(); //清空当前柜子的物体
+                KitchenObjOperator.PutKitchenObj(this, player);
                 return;
             }
         }
 
+
         //交互逻辑 这里是切菜的逻辑
         public void InteractAlternate(Player.Player player)
         {
-            Debug.Log($"{name}");
-            if (HasKitchenObj())
-            {
-                var currentKitchenObj = GetKitchenObj();
+            if (!HasKitchenObj()) return;
 
-                var nextKitchenObjSo = DataTableManager.Sigleton.GetCutKitchenObjSo(currentKitchenObj.objEnum);
-                Debug.Log($"{currentKitchenObj.objEnum}->{nextKitchenObjSo}");
-                if (nextKitchenObjSo != null)
-                {
-                    //切菜
-                    currentKitchenObj.DestroySelf();
-                    //
-                    var obj = KitchenObjSpawner.SpawnKitchenObj(nextKitchenObjSo,this);
-                }
-                
+            var currentKitchenObj = GetKitchenObj();
+            var nextKitchenObjSo = DataTableManager.Sigleton.GetCutKitchenObjSo(currentKitchenObj.objEnum);
+
+            if (nextKitchenObjSo == null) return;
+            //获取最大切菜次数
+            var maxCuttingCount = DataTableManager.Sigleton.GetCuttingCount(currentKitchenObj.objEnum);
+            //切菜
+            ++cuttingCount;
+            //触发切菜事件
+            OnCuttingEvent?.Invoke();
+            //设置进度条
+            _progressBarUI.SetProgress((float) cuttingCount / maxCuttingCount);
+            //如果切完了
+            if (cuttingCount >= maxCuttingCount)
+            {
+                currentKitchenObj.DestroySelf();
+                var obj = KitchenObjOperator.SpawnKitchenObj(nextKitchenObjSo, this);
+                cuttingCount = 0;
             }
         }
     }

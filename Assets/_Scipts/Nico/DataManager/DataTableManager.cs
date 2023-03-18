@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Kitchen;
+using Nico;
 using Mono.CSharp;
 using UnityEngine;
 
@@ -11,9 +11,12 @@ namespace Nico
     {
         public static DataTableManager Sigleton { get; private set; }
         private Dictionary<KitchenObjEnum, KitchenObjSo> _kitchenDict;
-        private Dictionary<KitchenObjEnum, KitchenObjEnum> _exchangeDict;
+        private Dictionary<KitchenObjEnum, KitchenObjEnum> _cuttingDict;
+        private Dictionary<KitchenObjEnum, int> _cuttingCountDict;
+
         private const string _kitchenDataSoDir = "So/KitchenObj/";
-        private const string _exchangeDictTextPath = "So/KitchenObj/exchangeDict";
+        private const string _exchangeDictTextPath = "So/KitchenObj/CuttingDict";
+        private const string _cuttingCountDictTextPath = "So/KitchenObj/CuttingCountDict";
 
         public KitchenObjSo GetKitchenObjSo(KitchenObjEnum kitchenObjEnum)
         {
@@ -24,22 +27,27 @@ namespace Nico
         {
             try
             {
-                return _kitchenDict[_exchangeDict[kitchenObjEnum]];
+                return _kitchenDict[_cuttingDict[kitchenObjEnum]];
             }
             catch (Exception)
             {
                 return null;
             }
-            
+        }
+
+        public int GetCuttingCount(KitchenObjEnum kitchenObjEnum)
+        {
+            return _cuttingCountDict[kitchenObjEnum];
         }
 
         private void _Init()
         {
             _InitKitchenDict();
-            _InitExchangeDict();
+            _InitCuttingChangeDict();
+            _InitCuttingCountDict();
         }
 
-        private void _InitExchangeDict()
+        private void _InitCuttingChangeDict()
         {
             //从指定位置读取文本文件 并解析成Dictionary<KitchenObjEnum, KitchenObjEnum>字典
             //ToDo 当前使用的是 Resources 后期考虑换成 AssetBundle 或者 Addressable
@@ -47,14 +55,31 @@ namespace Nico
 
             var exchangeDictTextStr = exchangeDictText.text;
             var exchangeDictTextStrList = exchangeDictTextStr.Split('\n');
-            _exchangeDict = new();
+            _cuttingDict = new();
             foreach (var exchangeDictTextStrLine in exchangeDictTextStrList)
             {
                 var exchangeDictTextStrLineList = exchangeDictTextStrLine.Split(',');
                 var key = (KitchenObjEnum)System.Enum.Parse(typeof(KitchenObjEnum), exchangeDictTextStrLineList[0]);
                 var value = (KitchenObjEnum)System.Enum.Parse(typeof(KitchenObjEnum), exchangeDictTextStrLineList[1]);
-                Debug.Log($"{key}->{value}");
-                _exchangeDict.TryAdd(key, value);
+                _cuttingDict.TryAdd(key, value);
+            }
+        }
+
+        private void _InitCuttingCountDict()
+        {
+            //从指定位置读取文本文件 并解析成Dictionary<KitchenObjEnum, int>字典
+            //ToDo 当前使用的是 Resources 后期考虑换成 AssetBundle 或者 Addressable
+            var cuttingCountDictText = Resources.Load<TextAsset>(_cuttingCountDictTextPath);
+            var cuttingCountDictTextStr = cuttingCountDictText.text;
+            var cuttingCountDictTextStrList = cuttingCountDictTextStr.Split('\n');
+            _cuttingCountDict = new();
+
+            foreach (var line in cuttingCountDictTextStrList)
+            {
+                var kv = line.Split(',');
+                var key = (KitchenObjEnum)System.Enum.Parse(typeof(KitchenObjEnum), kv[0]);
+                var value = int.Parse(kv[1]);
+                _cuttingCountDict.TryAdd(key, value);
             }
         }
 

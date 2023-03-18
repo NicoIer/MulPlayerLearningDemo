@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kitchen.Interface
+namespace Nico
 {
     public interface ICanHoldKitchenObj
     {

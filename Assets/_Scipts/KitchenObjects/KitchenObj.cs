@@ -1,7 +1,7 @@
-﻿using Kitchen.Interface;
+﻿using Nico;
 using UnityEngine;
 
-namespace Kitchen
+namespace Nico
 {
     public class KitchenObj : MonoBehaviour
     {

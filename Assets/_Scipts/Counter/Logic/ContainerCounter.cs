@@ -1,9 +1,8 @@
 ﻿using System;
-using Kitchen.Interface;
 using Nico;
 using UnityEngine;
 
-namespace Kitchen
+namespace Nico
 {
     public class ContainerCounter : BaseCounter
     {
@@ -26,7 +25,7 @@ namespace Kitchen
             {
                 return;
             }
-            KitchenObjSpawner.SpawnKitchenObj(_kitchenObjSo,player);
+            KitchenObjOperator.SpawnKitchenObj(_kitchenObjSo,player);
             OnInteractEvent?.Invoke(this, EventArgs.Empty);
         }
 

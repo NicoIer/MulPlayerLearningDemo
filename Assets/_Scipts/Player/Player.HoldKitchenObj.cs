@@ -1,8 +1,8 @@
 ﻿using System;
-using Kitchen.Interface;
+using Nico;
 using UnityEngine;
 
-namespace Kitchen.Player
+namespace Nico.Player
 {
     public partial class Player : ICanHoldKitchenObj
     {
