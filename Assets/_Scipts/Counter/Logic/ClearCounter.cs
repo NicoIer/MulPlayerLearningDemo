@@ -1,7 +1,7 @@
-﻿using Nico;
+﻿using Kitchen;
 using UnityEngine;
 
-namespace Nico
+namespace Kitchen
 {
     public class ClearCounter : BaseCounter
     {

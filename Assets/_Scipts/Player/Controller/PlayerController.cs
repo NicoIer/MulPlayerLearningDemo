@@ -1,6 +1,6 @@
-﻿using Nico;
+﻿using Kitchen;
 
-namespace Nico.Player
+namespace Kitchen.Player
 {
     public abstract class PlayerController: IController
     {

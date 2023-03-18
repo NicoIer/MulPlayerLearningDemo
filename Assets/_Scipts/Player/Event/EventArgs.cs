@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nico.Player
+namespace Kitchen.Player
 {
     public class OnSelectedCounterChangedArgs : EventArgs
     {

@@ -1,7 +1,8 @@
-﻿using Nico;
+﻿using System.Collections.Generic;
+using Kitchen;
 using UnityEngine;
 
-namespace Nico
+namespace Kitchen
 {
     public static class KitchenObjOperator
     {
@@ -52,17 +53,35 @@ namespace Nico
                 holder1.SetKitchenObj(obj2);
                 obj2.SetHolder(holder1);
             }
-
-
-
         }
-        
-        public static void PutKitchenObj(ICanHoldKitchenObj putter,ICanHoldKitchenObj reciever)
+
+        public static void PutKitchenObj(ICanHoldKitchenObj putter, ICanHoldKitchenObj reciever)
         {
             var obj = putter.GetKitchenObj();
             obj.SetHolder(reciever);
             reciever.SetKitchenObj(obj);
             putter.ClearKitchenObj();
         }
+
+        private static readonly HashSet<KitchenObjEnum> _cookableKitchenObjEnumSet = new()
+        {
+            KitchenObjEnum.MeatPattyUncooked,
+            KitchenObjEnum.MeatPattyCooked
+        };
+
+        public static bool CanCook(KitchenObj kitchenObj)
+        {
+            return _cookableKitchenObjEnumSet.Contains(kitchenObj.objEnum);
+        }
+        
+        public static void Cook(KitchenObj beCookedObj,ICanHoldKitchenObj holder)
+        {
+            var cookedObjSo = DataTableManager.Sigleton.GetCookedKitchenObjSo(beCookedObj.objEnum);
+            beCookedObj.DestroySelf();
+            var cookedObj = SpawnKitchenObj(cookedObjSo, holder);
+            holder.SetKitchenObj(cookedObj);
+        }
+
+
     }
 }

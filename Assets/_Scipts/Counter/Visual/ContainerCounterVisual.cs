@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Nico
+namespace Kitchen
 {
     public class ContainerCounterVisual : MonoBehaviour
     {

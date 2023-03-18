@@ -1,0 +1,5 @@
+﻿Tomato,TomatoSlices
+CheeseBlock,CheeseSlices
+Cabbage,CabbageSlices
+MeatPattyUncooked,MeatPattyCooked
+MeatPattyCooked,MeatPattyBurned

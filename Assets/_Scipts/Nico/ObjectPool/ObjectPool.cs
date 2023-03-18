@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nico;
+using Kitchen;
 using UnityEngine;
 
-namespace Nico
+namespace Kitchen
 {
     public class ObjectPool : MonoBehaviour
     {

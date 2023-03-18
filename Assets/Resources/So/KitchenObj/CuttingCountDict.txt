@@ -1,3 +1,0 @@
-﻿Tomato, 4
-CheeseBlock, 4
-Cabbage, 4

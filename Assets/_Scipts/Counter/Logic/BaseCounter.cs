@@ -1,8 +1,8 @@
 ﻿using System;
-using Nico;
+using Kitchen;
 using UnityEngine;
 
-namespace Nico
+namespace Kitchen
 {
     public abstract class BaseCounter : MonoBehaviour, IInteract, ICanHoldKitchenObj
     {

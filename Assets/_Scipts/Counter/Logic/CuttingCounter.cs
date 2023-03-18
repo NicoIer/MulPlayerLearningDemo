@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nico;
+using Kitchen;
 using UnityEngine;
 
-namespace Nico
+namespace Kitchen
 {
     public class CuttingCounter : BaseCounter, IInteractAlternate
     {
@@ -43,9 +43,9 @@ namespace Nico
             if (!HasKitchenObj()) return;
 
             var currentKitchenObj = GetKitchenObj();
-            var nextKitchenObjSo = DataTableManager.Sigleton.GetCutKitchenObjSo(currentKitchenObj.objEnum);
+            var cutKitchenObjSo = DataTableManager.Sigleton.GetCutKitchenObjSo(currentKitchenObj.objEnum);
 
-            if (nextKitchenObjSo == null) return;
+            if (cutKitchenObjSo == null) return;
             //获取最大切菜次数
             var maxCuttingCount = DataTableManager.Sigleton.GetCuttingCount(currentKitchenObj.objEnum);
             //切菜
@@ -58,7 +58,7 @@ namespace Nico
             if (cuttingCount >= maxCuttingCount)
             {
                 currentKitchenObj.DestroySelf();
-                var obj = KitchenObjOperator.SpawnKitchenObj(nextKitchenObjSo, this);
+                var obj = KitchenObjOperator.SpawnKitchenObj(cutKitchenObjSo, this);
                 cuttingCount = 0;
             }
         }

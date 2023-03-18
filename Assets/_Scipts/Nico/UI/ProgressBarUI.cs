@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Nico
+namespace Kitchen
 {
     public class ProgressBarUI : MonoBehaviour
     {
@@ -11,7 +11,7 @@ namespace Nico
         private void Awake()
         {
             _image = transform.Find("Bar").GetComponent<Image>();
-            _Hide();
+            Hide();
         }
 
         public void SetProgress(float progress)
@@ -19,19 +19,19 @@ namespace Nico
             var target = Mathf.Clamp01(progress);
             if (target == 0 || Math.Abs(target - 1) < Mathf.Epsilon)
             {
-                _Hide();
+                Hide();
                 return;
             }
-            _Show();
+            Show();
             _image.fillAmount = target;
         }
 
-        private void _Hide()
+        public void Hide()
         {
             gameObject.SetActive(false);
         }
 
-        private void _Show()
+        public void Show()
         {
             gameObject.SetActive(true);
         }

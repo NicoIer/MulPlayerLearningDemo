@@ -1,3 +1,0 @@
-﻿Tomato,TomatoSlices
-CheeseBlock,CheeseSlices
-Cabbage,CabbageSlices

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Nico.Player
+namespace Kitchen.Player
 {
     public class PlayerMoveController: PlayerController
     {

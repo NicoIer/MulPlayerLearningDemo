@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Nico.Player
+namespace Kitchen.Player
 {
     public partial class Player
     {

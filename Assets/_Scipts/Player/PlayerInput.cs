@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Nico
+namespace Kitchen
 {
     public class PlayerInput
     {

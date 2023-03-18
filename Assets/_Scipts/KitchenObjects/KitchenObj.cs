@@ -1,7 +1,7 @@
-﻿using Nico;
+﻿using Kitchen;
 using UnityEngine;
 
-namespace Nico
+namespace Kitchen
 {
     public class KitchenObj : MonoBehaviour
     {
@@ -30,6 +30,7 @@ namespace Nico
         {
             //ToDo 抽象成接口
             _holder.ClearKitchenObj();
+            _holder = null;
             Destroy(gameObject);
         }
     }
