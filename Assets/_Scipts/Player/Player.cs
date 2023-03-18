@@ -11,7 +11,7 @@ namespace Kitchen.Player
 
         #region Counter
 
-        private ClearCounter SelectedCounter => selectCounterController.SelectedCounter;
+        private BaseCounter SelectedCounter => selectCounterController.SelectedCounter;
         public PlayerSelectCounterController selectCounterController { get; private set; }
 
         #endregion

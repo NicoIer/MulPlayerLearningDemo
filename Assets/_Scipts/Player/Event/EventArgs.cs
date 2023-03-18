@@ -4,6 +4,6 @@ namespace Kitchen.Player
 {
     public class OnSelectedCounterChangedArgs : EventArgs
     {
-        public ClearCounter SelectedCounter { get; set; }
+        public BaseCounter SelectedCounter { get; set; }
     }
 }

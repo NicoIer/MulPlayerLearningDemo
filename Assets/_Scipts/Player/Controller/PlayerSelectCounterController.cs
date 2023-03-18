@@ -7,7 +7,7 @@ namespace Kitchen.Player
     {
         private readonly Transform _transform;
         private readonly PlayerData _data;
-        public ClearCounter SelectedCounter { get; private set; }
+        public BaseCounter SelectedCounter { get; private set; }
         public event EventHandler<OnSelectedCounterChangedArgs> OnSelectedCounterChanged;
         private readonly OnSelectedCounterChangedArgs _onSelectedCounterChangedArgs = new();
 
@@ -27,7 +27,7 @@ namespace Kitchen.Player
             if (Physics.Raycast(_transform.position, _transform.forward, out RaycastHit hit, _data.interactDistance,
                     _data.interactLayer))
             {
-                if (hit.transform.TryGetComponent(out ClearCounter clearCounter))
+                if (hit.transform.TryGetComponent(out BaseCounter clearCounter))
                 {
                     if (!Equals(clearCounter, SelectedCounter))
                     {
@@ -47,7 +47,7 @@ namespace Kitchen.Player
             _SetSelectedCounter(SelectedCounter);
         }
 
-        private void _SetSelectedCounter(ClearCounter clearCounter)
+        private void _SetSelectedCounter(BaseCounter clearCounter)
         {
             SelectedCounter = clearCounter;
             _onSelectedCounterChangedArgs.SelectedCounter = SelectedCounter;

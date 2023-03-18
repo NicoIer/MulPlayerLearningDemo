@@ -5,12 +5,12 @@ namespace Kitchen
 {
     public class SelectedCounterVisual : MonoBehaviour
     {
-        private ClearCounter _clearCounter;
+        private BaseCounter _clearCounter;
         private GameObject _visualGameObj;
 
         private void Awake()
         {
-            _clearCounter = GetComponentInParent<ClearCounter>();
+            _clearCounter = GetComponentInParent<BaseCounter>();
             _visualGameObj = transform.Find("KitchenCounter").gameObject;
         }
 

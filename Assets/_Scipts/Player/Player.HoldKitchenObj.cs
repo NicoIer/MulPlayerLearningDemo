@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Kitchen.Player
 {
-    public partial class Player : ICabHoldKitchenObj
+    public partial class Player : ICanHoldKitchenObj
     {
         public Transform GetTopSpawnPoint()
         {
@@ -16,9 +16,9 @@ namespace Kitchen.Player
             return _kitchenObj;
         }
 
-        public void SetKitchenObj(KitchenObj kitchenObj)
+        public void SetKitchenObj(KitchenObj newKitchenObj)
         {
-            this._kitchenObj = kitchenObj;
+            this._kitchenObj = newKitchenObj;
         }
 
         public bool HasKitchenObj()

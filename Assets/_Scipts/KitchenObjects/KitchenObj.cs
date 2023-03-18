@@ -6,24 +6,24 @@ namespace Kitchen
     public class KitchenObj : MonoBehaviour
     {
         [SerializeField] private KitchenObjSo kitchenObjSo;
-        private ICabHoldKitchenObj _cabHoldKitchenObj;
+        private ICanHoldKitchenObj _canHoldKitchenObj;
 
-        public void SetKitchenParent(ICabHoldKitchenObj cabHoldKitchenObj)
+        public void SetHolder(ICanHoldKitchenObj canHoldKitchenObj)
         {
-            if (cabHoldKitchenObj.HasKitchenObj())
+            if (canHoldKitchenObj.HasKitchenObj())
             {
                 Debug.LogError("kitchenObjParent already has a KitchenObj");
             }
 
-            _cabHoldKitchenObj = cabHoldKitchenObj;
-            transform.SetParent(cabHoldKitchenObj.GetTopSpawnPoint());
+            _canHoldKitchenObj = canHoldKitchenObj;
+            transform.SetParent(canHoldKitchenObj.GetTopSpawnPoint());
             transform.localPosition = Vector3.zero;
         }
         
 
-        public ICabHoldKitchenObj GetClearCounter()
+        public ICanHoldKitchenObj GetClearCounter()
         {
-            return _cabHoldKitchenObj;
+            return _canHoldKitchenObj;
         }
     }
 }

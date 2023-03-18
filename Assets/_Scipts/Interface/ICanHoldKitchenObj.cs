@@ -2,11 +2,11 @@
 
 namespace Kitchen.Interface
 {
-    public interface ICabHoldKitchenObj
+    public interface ICanHoldKitchenObj
     {
         Transform GetTopSpawnPoint();
         KitchenObj GetKitchenObj();
-        void SetKitchenObj(KitchenObj kitchenObj);
+        void SetKitchenObj(KitchenObj newKitchenObj);
         bool HasKitchenObj();
         void ClearKitchenObj();
     }
