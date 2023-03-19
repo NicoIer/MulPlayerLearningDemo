@@ -7,7 +7,7 @@ namespace Kitchen
     {
         public KitchenObjEnum objEnum;
 
-        private ICanHoldKitchenObj _holder;
+        protected ICanHoldKitchenObj holder;
 
         public void SetHolder(ICanHoldKitchenObj canHoldKitchenObj)
         {
@@ -15,7 +15,7 @@ namespace Kitchen
             {
                 Debug.LogError("kitchenObjParent already has a KitchenObj");
             }
-            _holder = canHoldKitchenObj;
+            holder = canHoldKitchenObj;
             transform.SetParent(canHoldKitchenObj.GetTopSpawnPoint());
             transform.localPosition = Vector3.zero;
         }
@@ -23,14 +23,18 @@ namespace Kitchen
 
         public ICanHoldKitchenObj GetHolder()
         {
-            return _holder;
+            return holder;
         }
 
+        public void ClearHolder()
+        {
+            holder.ClearKitchenObj();
+            holder = null;
+        }
         public void DestroySelf()
         {
             //ToDo 抽象成接口
-            _holder.ClearKitchenObj();
-            _holder = null;
+            ClearHolder();
             Destroy(gameObject);
         }
     }

@@ -12,6 +12,7 @@
         MeatPattyCooked = 7,
         CheeseSlices = 8,
         MeatPattyBurned = 9,
+        Plate = 10,
     }
 
     public enum KitchenObjStateEnum

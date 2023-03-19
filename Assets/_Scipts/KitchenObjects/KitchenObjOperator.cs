@@ -6,6 +6,12 @@ namespace Kitchen
 {
     public static class KitchenObjOperator
     {
+        public static KitchenObj SpawnKitchenObj(KitchenObjEnum kitchenObjEnum, ICanHoldKitchenObj holder)
+        {
+            var so = DataTableManager.Sigleton.GetKitchenObjSo(kitchenObjEnum);
+            return SpawnKitchenObj(so, holder);
+        }
+
         public static KitchenObj SpawnKitchenObj(KitchenObjSo kitchenObjSo, ICanHoldKitchenObj holder)
         {
             var obj = Object.Instantiate(kitchenObjSo.prefab).GetComponent<KitchenObj>();
@@ -73,8 +79,8 @@ namespace Kitchen
         {
             return _cookableKitchenObjEnumSet.Contains(kitchenObj.objEnum);
         }
-        
-        public static void Cook(KitchenObj beCookedObj,ICanHoldKitchenObj holder)
+
+        public static void Cook(KitchenObj beCookedObj, ICanHoldKitchenObj holder)
         {
             var cookedObjSo = DataTableManager.Sigleton.GetCookedKitchenObjSo(beCookedObj.objEnum);
             beCookedObj.DestroySelf();
@@ -83,5 +89,14 @@ namespace Kitchen
         }
 
 
+        public static void PutToPlate(KitchenObj kitchenObj, Plate plate)
+        {
+            //尝试将物体放入盘子
+            if (plate.TryAddIngredient(kitchenObj))
+            {
+                //销毁掉物体
+                kitchenObj.DestroySelf();
+            }
+        }
     }
 }
