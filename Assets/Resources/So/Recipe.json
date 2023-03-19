@@ -1,0 +1,25 @@
+{
+  "cheeseBurger": {
+    "recipeName": "cheeseBurger",
+    "recipe": [
+      6,
+      9,
+      3
+    ]
+  },
+
+  "meatCheeseBurger": {
+    "recipeName": "meatCheeseBurger",
+    "recipe": [
+      "MeatPattyCooked",
+      "CheeseSlices",
+      "Bread"
+    ]
+  },
+  "tomato": {
+    "recipeName": "tomato",
+    "recipe": [
+      "Tomato"
+    ]
+  }
+}

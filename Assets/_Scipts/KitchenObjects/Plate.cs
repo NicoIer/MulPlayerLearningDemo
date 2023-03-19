@@ -31,5 +31,10 @@ namespace Kitchen
 
             return true;
         }
+        
+        public HashSet<KitchenObjEnum> GetIngredients()
+        {
+            return _ingredients;
+        }
     }
 }
