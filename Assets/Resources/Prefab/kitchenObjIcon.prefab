@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 7801962300571851886}
   - component: {fileID: 2015108147222651473}
   m_Layer: 5
-  m_Name: IconTemplate
+  m_Name: kitchenObjIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -2,9 +2,9 @@
   "cheeseBurger": {
     "recipeName": "cheeseBurger",
     "recipe": [
-      6,
-      9,
-      3
+      "Bread",
+      "CabbageSlices",
+      "MeatPattyCooked"
     ]
   },
 

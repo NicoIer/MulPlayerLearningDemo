@@ -27,8 +27,7 @@ namespace Kitchen
                 pool.transform.SetParent(transform);
                 _poolDict.TryAdd(prefab.name, pool);
             }
-
-            DontDestroyOnLoad(gameObject);
+            
         }
         
 

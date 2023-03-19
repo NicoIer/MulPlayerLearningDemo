@@ -122,7 +122,6 @@ namespace Kitchen
 
             Sigleton = this;
             _Init();
-            DontDestroyOnLoad(gameObject);
         }
     }
 }
