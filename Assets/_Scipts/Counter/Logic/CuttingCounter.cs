@@ -10,6 +10,7 @@ namespace Kitchen
         public int cuttingCount = 0;
         private ProgressBarUI _progressBarUI;
         public event Action OnCuttingEvent;
+
         protected override void Awake()
         {
             base.Awake();
@@ -23,17 +24,21 @@ namespace Kitchen
             {
                 cuttingCount = 0;
                 _progressBarUI.SetProgress(0);
-                
+
                 KitchenObjOperator.PutKitchenObj(player, this);
                 return;
             }
 
-            //玩家没有持有物体，当前柜子有物体 -> 拿起物体 TODO 完成切的逻辑
+            //玩家没有持有物体，当前柜子有物体 -> 拿起物体
             if (!player.HasKitchenObj() && HasKitchenObj())
             {
+                cuttingCount = 0;
+                _progressBarUI.SetProgress(0);
                 KitchenObjOperator.PutKitchenObj(this, player);
                 return;
             }
+            
+            if(CounterOperator.TryPlateOperator(player, this)) return;
         }
 
 
@@ -44,7 +49,7 @@ namespace Kitchen
 
             var currentKitchenObj = GetKitchenObj();
             var cutKitchenObjSo = DataTableManager.Sigleton.GetCutKitchenObjSo(currentKitchenObj.objEnum);
-
+            //ToDo 这里判断是否可以切菜
             if (cutKitchenObjSo == null) return;
             //获取最大切菜次数
             var maxCuttingCount = DataTableManager.Sigleton.GetCuttingCount(currentKitchenObj.objEnum);
@@ -53,7 +58,7 @@ namespace Kitchen
             //触发切菜事件
             OnCuttingEvent?.Invoke();
             //设置进度条
-            _progressBarUI.SetProgress((float) cuttingCount / maxCuttingCount);
+            _progressBarUI.SetProgress((float)cuttingCount / maxCuttingCount);
             //如果切完了
             if (cuttingCount >= maxCuttingCount)
             {

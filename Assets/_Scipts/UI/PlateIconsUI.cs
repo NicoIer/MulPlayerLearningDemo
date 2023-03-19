@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Kitchen.UI
 {
-    public class PlateHoldPanel : MonoBehaviour
+    public class PlateIconsUI : MonoBehaviour
     {
         public GameObject iconPrefab;
         private Plate _plate;

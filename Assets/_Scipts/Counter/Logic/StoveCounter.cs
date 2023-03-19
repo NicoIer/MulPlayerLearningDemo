@@ -38,6 +38,19 @@ namespace Kitchen
                 KitchenObjOperator.PutKitchenObj(this, player);
                 return;
             }
+
+
+            if (!player.HasKitchenObj() || !HasKitchenObj()) return;
+            //都有物体
+            //尝试进行盘子放置的操作
+            //失败则直接返回
+            if (!CounterOperator.TryPlateOperator(player, this)) return;
+
+            //操作成功则停止烹饪
+            if (isCooking)
+            {
+                _StopCooking();
+            }
         }
 
         public bool isCooking = false;
