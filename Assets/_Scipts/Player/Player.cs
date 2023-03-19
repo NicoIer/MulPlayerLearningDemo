@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kitchen;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kitchen.Player
@@ -9,11 +10,12 @@ namespace Kitchen.Player
     {
         public static Player Singleton { get; private set; }
 
-        #region Counter
+        #region Controller
 
         private BaseCounter SelectedCounter => selectCounterController.SelectedCounter;
         public PlayerSelectCounterController selectCounterController { get; private set; }
 
+        public Action<Vector3> OnMoving;
         #endregion
 
         #region MonoComponents

@@ -10,6 +10,7 @@ namespace Kitchen.Player
         public BaseCounter SelectedCounter { get; private set; }
         public event EventHandler<OnSelectedCounterChangedArgs> OnSelectedCounterChanged;
         private readonly OnSelectedCounterChangedArgs _onSelectedCounterChangedArgs = new();
+        
 
         public PlayerSelectCounterController(Player player) : base(player)
         {

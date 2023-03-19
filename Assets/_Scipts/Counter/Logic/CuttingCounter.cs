@@ -10,6 +10,7 @@ namespace Kitchen
         public int cuttingCount = 0;
         private ProgressBarUI _progressBarUI;
         public event Action OnCuttingEvent;
+        public static event EventHandler<Vector3> OnAnyCut; 
 
         protected override void Awake()
         {
@@ -57,6 +58,7 @@ namespace Kitchen
             ++cuttingCount;
             //触发切菜事件
             OnCuttingEvent?.Invoke();
+            OnAnyCut?.Invoke(this, transform.position);
             //设置进度条
             _progressBarUI.SetProgress((float)cuttingCount / maxCuttingCount);
             //如果切完了

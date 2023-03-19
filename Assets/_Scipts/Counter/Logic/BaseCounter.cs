@@ -6,6 +6,7 @@ namespace Kitchen
 {
     public abstract class BaseCounter : MonoBehaviour, IInteract, ICanHoldKitchenObj
     {
+        public static event EventHandler<Vector3> OnAnyObjPlaceOnCounter; 
         protected Transform topSpawnPoint { get; set; }
         protected KitchenObj kitchenObj;
 
@@ -28,6 +29,10 @@ namespace Kitchen
 
         public virtual void SetKitchenObj(KitchenObj newKitchenObj)
         {
+            if (newKitchenObj != null)
+            {
+                OnAnyObjPlaceOnCounter?.Invoke(this, transform.position);
+            }
             kitchenObj = newKitchenObj;
         }
 

@@ -14,8 +14,9 @@ namespace Kitchen.Player
         private void InitializedControllers()
         {
             _controllers = new List<PlayerController>();
-            var playerMoveController = new PlayerMoveController(this);
-            _controllers.Add(playerMoveController);
+            var moveController = new PlayerMoveController(this);
+            moveController.OnMoving += () => { OnMoving?.Invoke(transform.position); };
+            _controllers.Add(moveController);
             selectCounterController = new PlayerSelectCounterController(this);
             _controllers.Add(selectCounterController);
         }

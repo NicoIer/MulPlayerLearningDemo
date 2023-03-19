@@ -32,16 +32,22 @@ namespace Kitchen
         private bool _isGeneratingOrder = false;
         public event EventHandler<RecipeData> OnOrderAdded;
         public event EventHandler<RecipeData> OnOrderFinished;
+        public event EventHandler<Vector3> OnOrderSuccess;
+        public event EventHandler<Vector3> OnOrderFailed;
 
         private void Awake()
         {
             if (_singleton != null)
             {
-                throw new Exception("DeliveryManager already exists");
+                return;
             }
 
             _singleton = this;
+            _Init();
+        }
 
+        private void _Init()
+        {
             var contentStr = File.ReadAllText(_recipeDataPath);
             _recipeDict = JsonConvert.DeserializeObject<Dictionary<string, RecipeData>>(contentStr);
             if (_recipeDict == null)
@@ -54,6 +60,7 @@ namespace Kitchen
 
         private void OnEnable()
         {
+            //TODO 这里需要优化 应该由其他类来调用
             _GenerateOrder().Forget();
         }
 
@@ -96,15 +103,21 @@ namespace Kitchen
             _isGeneratingOrder = false;
         }
 
-        public bool TryDeliverOrder(HashSet<KitchenObjEnum> ingredients)
+        public bool TryDeliverOrder(Vector3 position, HashSet<KitchenObjEnum> ingredients)
         {
             //检查是否有匹配的订单
             RecipeData? target = _CheckIngredients(ingredients);
-            if (target == null) return false;
+            if (target == null)
+            {
+                OnOrderFailed?.Invoke(this, position);
+                return false;
+            }
+
             Debug.Log("订单完成!!");
             //完成订单时 
             _waitingQueue.Remove((RecipeData)target);
-            OnOrderFinished?.Invoke(this, (RecipeData)target);
+            OnOrderSuccess?.Invoke(this, position);
+            // OnOrderFinished?.Invoke(this, (RecipeData)target);
             //尝试重新启动订单生成任务
             if (!_isGeneratingOrder)
             {
@@ -127,7 +140,7 @@ namespace Kitchen
 
                 //如果有一个不相同则跳过
                 if (!flag) continue;
-                //如果有相同则订单完成 跳出检查
+                //有符合的订单 -> 跳出检查
                 target = order;
                 break;
             }
