@@ -25,7 +25,7 @@ namespace Kitchen.UI
             {
                 if (!_listening)
                 {
-                    var deliveryManager = DeliveryManager.Singleton;
+                    var deliveryManager = DeliveryManager.Instance;
                     deliveryManager.OnOrderFinished += _OnOrderFinished;
                     deliveryManager.OnOrderAdded += _OnOrderAdded;
                     deliveryManager.OnOrderSuccess += _OnOrderSuccess;
@@ -50,10 +50,10 @@ namespace Kitchen.UI
         {
             try
             {
-                DeliveryManager.Singleton.OnOrderFinished -= _OnOrderFinished;
-                DeliveryManager.Singleton.OnOrderAdded -= _OnOrderAdded;
-                DeliveryManager.Singleton.OnOrderSuccess -= _OnOrderSuccess;
-                DeliveryManager.Singleton.OnOrderFailed -= _OnOrderFailed;
+                DeliveryManager.Instance.OnOrderFinished -= _OnOrderFinished;
+                DeliveryManager.Instance.OnOrderAdded -= _OnOrderAdded;
+                DeliveryManager.Instance.OnOrderSuccess -= _OnOrderSuccess;
+                DeliveryManager.Instance.OnOrderFailed -= _OnOrderFailed;
                 _listening = false;
             }
             catch (NullReferenceException)
@@ -64,22 +64,22 @@ namespace Kitchen.UI
 
         private void _OnOrderFinished(object sender, RecipeData e)
         {
-            SetWaitingRecipes(DeliveryManager.Singleton.GetWaitingQueue());
+            SetWaitingRecipes(DeliveryManager.Instance.GetWaitingQueue());
         }
 
         private void _OnOrderSuccess(object sender, Vector3 e)
         {
-            SetWaitingRecipes(DeliveryManager.Singleton.GetWaitingQueue());
+            SetWaitingRecipes(DeliveryManager.Instance.GetWaitingQueue());
         }
 
         private void _OnOrderFailed(object sender, Vector3 e)
         {
-            SetWaitingRecipes(DeliveryManager.Singleton.GetWaitingQueue());
+            SetWaitingRecipes(DeliveryManager.Instance.GetWaitingQueue());
         }
 
         private void _OnOrderAdded(object sender, RecipeData e)
         {
-            SetWaitingRecipes(DeliveryManager.Singleton.GetWaitingQueue());
+            SetWaitingRecipes(DeliveryManager.Instance.GetWaitingQueue());
         }
 
         public void SetWaitingRecipes(ICollection<RecipeData> recipes)

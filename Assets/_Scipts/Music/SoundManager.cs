@@ -1,64 +1,40 @@
 ﻿using System;
+using Nico.DesignPattern;
 using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kitchen.Music
 {
-    public class SoundManager : MonoBehaviour
+    public class SoundManager : MonoSingleton<SoundManager>
     {
         [SerializeField] AudioClipData audioClipData;
-        private bool _listening;
 
         private void OnEnable()
         {
-            _SubscribeEvent();
-        }
+            var deliveryManager = DeliveryManager.Instance;
+            deliveryManager.OnOrderSuccess += _OnOrderSuccess;
+            deliveryManager.OnOrderFailed += _OnOrderFailed;
+            CuttingCounter.OnAnyCut += _CuttingCounter_OnAnyCut;
+            Player.Player.Instance.OnPickUpSomeThing += _Player_On_PickUpSomeThing;
+            Player.Player.Instance.onMoving += _Player_OnMoving;
+            BaseCounter.OnAnyObjPlaceOnCounter += _BaseCounter_OnAnyObjPlaceOnCounter;
+            TrashCounter.OnAnyObjTrashed += _TrashCounter_OnAnyObjTrashed;
 
-        private void Start()
-        {
-            _SubscribeEvent();
-        }
 
-        private void _SubscribeEvent()
-        {
-            try
-            {
-                if (_listening) return;
-
-                var deliveryManager = DeliveryManager.Singleton;
-                deliveryManager.OnOrderSuccess += _OnOrderSuccess;
-                deliveryManager.OnOrderFailed += _OnOrderFailed;
-                CuttingCounter.OnAnyCut += _CuttingCounter_OnAnyCut;
-                Player.Player.Singleton.OnPickUpSomeThing += _Player_On_PickUpSomeThing;
-                BaseCounter.OnAnyObjPlaceOnCounter += _BaseCounter_OnAnyObjPlaceOnCounter;
-                TrashCounter.OnAnyObjTrashed += _TrashCounter_OnAnyObjTrashed;
-                Player.Player.Singleton.onMoving += _Player_OnMoving;
-                _listening = true;
-            }
-            catch (NullReferenceException)
-            {
-                //由于不同对象的OnEnable调用顺序不同，可能会出现DeliveryManager还没有初始化的情况
-                //因为OnEnable会在Awake之前调用，所以可能会出现DeliveryManager还没有初始化的情况
-            }
         }
 
         private void OnDisable()
         {
-            try
-            {
-                DeliveryManager.Singleton.OnOrderSuccess -= _OnOrderSuccess;
-                DeliveryManager.Singleton.OnOrderFailed -= _OnOrderFailed;
+
+                DeliveryManager.Instance.OnOrderSuccess -= _OnOrderSuccess;
+                DeliveryManager.Instance.OnOrderFailed -= _OnOrderFailed;
                 CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;
-                Player.Player.Singleton.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
+                Player.Player.Instance.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
+                Player.Player.Instance.onMoving -= _Player_OnMoving;
                 BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
                 TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
-                Player.Player.Singleton.onMoving -= _Player_OnMoving;
 
-                _listening = false;
-            }
-            catch (NullReferenceException)
-            {
-            }
+
         }
 
 
@@ -109,7 +85,7 @@ namespace Kitchen.Music
 
         private void _Player_On_PickUpSomeThing(object sender, EventArgs e)
         {
-            _PlaySound(audioClipData.pickUp, Player.Player.Singleton.transform.position);
+            _PlaySound(audioClipData.pickUp, Player.Player.Instance.transform.position);
         }
 
         private void _CuttingCounter_OnAnyCut(object sender, Vector3 position)
@@ -123,7 +99,7 @@ namespace Kitchen.Music
 
         private void ChangeVolume(float volume)
         {
-            _volume = Mathf.Clamp(volume,0,1);
+            _volume = Mathf.Clamp(volume, 0, 1);
         }
     }
 }

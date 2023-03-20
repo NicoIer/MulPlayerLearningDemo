@@ -1,5 +1,4 @@
-﻿using System;
-using Kitchen.Model;
+﻿using Kitchen.Model;
 using Nico.MVC;
 using TMPro;
 using UnityEngine;
@@ -9,34 +8,31 @@ namespace Kitchen.UI
     public class GameOverUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI recipeDeliveredText;
+        private GameObject _uiContainer;
 
-        private void Start()
+        private void Awake()
+        {
+            _uiContainer = transform.Find("UIContainer").gameObject;
+        }
+
+        private void OnEnable()
         {
             GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
-            gameObject.SetActive(false);
+            _uiContainer.SetActive(false);
+        }
+        private void OnDisable()
+        {
+            GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
         }
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
             if (arg2 is GameOverState)
             {
-                gameObject.SetActive(true);
+                _uiContainer.SetActive(true);
 
                 recipeDeliveredText.text = ModelManager.Get<CompletedOrderModel>().orderCount.ToString();
             }
-        }
-
-        private void OnDestroy()
-        {
-            try
-            {
-                GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
-            }
-            catch (Exception)
-            {
-               //ignore
-            }
-            
         }
     }
 }

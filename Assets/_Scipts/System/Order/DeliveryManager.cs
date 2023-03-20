@@ -6,18 +6,15 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Kitchen.Model;
 using Newtonsoft.Json;
+using Nico.DesignPattern;
 using Nico.MVC;
 using Unity.Collections;
 using UnityEngine;
 
 namespace Kitchen
 {
-    public class DeliveryManager : MonoBehaviour
+    public class DeliveryManager : MonoSingleton<DeliveryManager>
     {
-        private static DeliveryManager _singleton;
-
-        public static DeliveryManager Singleton => _singleton;
-
         //ToDo 后续将所有配置信息保存到一个位置
         private const string _recipeDataPath =
             "D:/UserData/GitHub/MulPlayerLearningDemo/Assets/Resources/So/Recipe.json";
@@ -37,14 +34,9 @@ namespace Kitchen
         public event EventHandler<Vector3> OnOrderSuccess;
         public event EventHandler<Vector3> OnOrderFailed;
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (_singleton != null)
-            {
-                return;
-            }
-
-            _singleton = this;
+            base.Awake();
             _Init();
         }
 
@@ -60,9 +52,15 @@ namespace Kitchen
             recipeList = new List<RecipeData>(_recipeDict.Values);
         }
 
-        private void Start()
+        private void OnEnable()
         {
             GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
+        }
+
+        private void OnDisable()
+        {
+            GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
+            _orderGenerateCts?.Cancel();
         }
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
@@ -73,16 +71,7 @@ namespace Kitchen
             }
         }
 
-        private void OnDisable()
-        {
-            _orderGenerateCts?.Cancel();
-        }
-
-        private void OnDestroy()
-        {
-            _singleton = null;
-        }
-
+        
         private async UniTask _GenerateOrder()
         {
             _isGeneratingOrder = true;

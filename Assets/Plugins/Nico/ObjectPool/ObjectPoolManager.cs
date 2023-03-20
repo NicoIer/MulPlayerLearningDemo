@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kitchen
+namespace Nico
 {
     public class ObjectPoolManager : MonoBehaviour
     {

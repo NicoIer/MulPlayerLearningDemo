@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kitchen
+namespace Nico
 {
     public static class TransformSetter
     {

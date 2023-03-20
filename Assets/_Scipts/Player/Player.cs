@@ -1,21 +1,34 @@
 using System;
 using System.Collections.Generic;
 using Kitchen;
+using Nico.DesignPattern;
 using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kitchen.Player
 {
-    public partial class Player : MonoBehaviour
+    public partial class Player : MonoSingleton<Player>
     {
-        public static Player Singleton { get; private set; }
-
         #region Controller
 
         private BaseCounter SelectedCounter => selectCounterController.SelectedCounter;
-        public PlayerSelectCounterController selectCounterController { get; private set; }
+        private PlayerSelectCounterController _selectCounterController;
+
+        public PlayerSelectCounterController selectCounterController
+        {
+            get
+            {
+                if (_selectCounterController == null && !_initialized)
+                {
+                    _Init();
+                }
+
+                return _selectCounterController;
+            }
+        }
 
         public Action<Vector3> onMoving;
+
         #endregion
 
         #region MonoComponents
@@ -36,17 +49,10 @@ namespace Kitchen.Player
         [SerializeField] internal PlayerData data;
 
 
-        private void Awake()
+        protected override void Awake()
         {
-            input = new PlayerInput();
-            if (Singleton != null)
-            {
-                Debug.LogError("More than one Player in scene!");
-            }
-
-            Singleton = this;
-            InitializedMonoComponents();
-            InitializedControllers();
+            base.Awake();
+            _Init();
         }
 
         private void OnEnable()
@@ -65,24 +71,12 @@ namespace Kitchen.Player
         }
 
 
-
-
         private void Update()
         {
             foreach (var controller in _controllers)
             {
                 controller.Update();
             }
-        }
-
-        private void OnDrawGizmos()
-        {
-            var transform1 = transform;
-            var position = transform1.position;
-            Debug.DrawRay(position, transform1.forward * data.interactDistance, Color.red);
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(position, data.playerRadius);
-            Gizmos.DrawWireSphere(position + Vector3.up * data.playerHeight, data.playerRadius);
         }
     }
 }

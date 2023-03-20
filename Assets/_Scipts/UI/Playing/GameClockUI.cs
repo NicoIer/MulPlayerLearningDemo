@@ -7,25 +7,26 @@ namespace Kitchen.UI
     public class GameClockUI : MonoBehaviour
     {
         [SerializeField] private Image clockFillImage;
+        private GameObject _uiContainer;
         private float _maxPlayingTime;
 
-        private void Start()
+
+        private void Awake()
+        {
+            _uiContainer = transform.Find("UIContainer").gameObject;
+        }
+
+        private void OnEnable()
         {
             GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
             _Hide();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            try
-            {
-                GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
+            GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
         }
+        
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
@@ -46,12 +47,12 @@ namespace Kitchen.UI
 
         private void _Hide()
         {
-            gameObject.SetActive(false);
+            _uiContainer.SetActive(false);
         }
 
         private void _Show()
         {
-            gameObject.SetActive(true);
+            _uiContainer.SetActive(true);
         }
 
         private void _OnLeftTimeChange(float leftTime)

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Kitchen.Model;
+using Nico.MVC;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,14 +15,7 @@ namespace Kitchen
         public event Action<float> OnLeftTimeChange;
         private CancellationTokenSource _playingTokenSource;
         private bool _firstEnter = true;
-
-        public override void Update()
-        {
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
-            {
-                stateMachine.Change<GameOverState>();
-            }
-        }
+        
 
         public override void Enter()
         {
@@ -28,6 +23,7 @@ namespace Kitchen
             {
                 _firstEnter = false;
                 _currentTime = gameDuration;
+                ModelManager.Get<CompletedOrderModel>().orderCount = 0;
                 //开启计时器
             }
             _StartPlaying().Forget();

@@ -7,12 +7,14 @@ namespace Kitchen.UI
 {
     public class GamePauseUI : MonoBehaviour
     {
+        private GameObject _uiContainer;
         [SerializeField] private Button mainMenuButton;
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button optionsButton;
 
         private void Awake()
         {
+            _uiContainer = transform.Find("UIContainer").gameObject;
             mainMenuButton.onClick.AddListener(_OnMainMenuButtonClick);
             resumeButton.onClick.AddListener(_OnResumeButtonClick);
             optionsButton.onClick.AddListener(_OnOptionsButtonClick);
@@ -20,7 +22,6 @@ namespace Kitchen.UI
 
         private void _OnOptionsButtonClick()
         {
-            
         }
 
         private void _OnResumeButtonClick()
@@ -33,14 +34,21 @@ namespace Kitchen.UI
             SceneLoader.Load("MainMenuScene", "LoadingScene");
         }
 
-        private void Start()
+
+        private void OnEnable()
         {
             GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
             Hide();
         }
 
+        private void OnDisable()
+        {
+            GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
+        }
+
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
+            Debug.Log("State Change");
             if (arg2 is PausedState)
             {
                 Show();
@@ -54,26 +62,15 @@ namespace Kitchen.UI
             }
         }
 
-        private void OnDestroy()
-        {
-            try
-            {
-                GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
 
         public void Show()
         {
-            gameObject.SetActive(true);
+            _uiContainer.SetActive(true);
         }
 
         public void Hide()
         {
-            gameObject.SetActive(false);
+            _uiContainer.SetActive(false);
         }
     }
 }

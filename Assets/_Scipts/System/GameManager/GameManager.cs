@@ -1,40 +1,50 @@
 ﻿using System;
+using Nico.DesignPattern;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Kitchen
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : MonoSingleton<GameManager>
     {
         public GameSetting setting;
         public int readyCountDown = 3;
         public event Action<int> OnCountDownChange;
-        public GameStateMachine stateMachine { get; private set; }
+        private GameStateMachine _stateMachine;
 
-        public static GameManager Instance { get; private set; }
-
-        protected void Awake()
+        //TODO 这里的stateMachine就不能让外部访问
+        public GameStateMachine stateMachine
         {
-            Instance = this;
-            _Init_StateMachine();
+            get
+            {
+                //这里不是线程安全的
+                if (_stateMachine == null)
+                    _Init_StateMachine();
+                return _stateMachine;
+            }
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if (stateMachine == null)
+            {
+                _Init_StateMachine();
+            }
         }
 
         private void _Init_StateMachine()
         {
-            stateMachine = new GameStateMachine(this);
-            stateMachine.Add(new WaitingToStartState());
+            _stateMachine = new GameStateMachine(this);
+            _stateMachine.Add(new WaitingToStartState());
             var readyToStartState = new ReadyToStartState();
             readyToStartState.onCountDownChange += (num) => { OnCountDownChange?.Invoke(num); };
-            stateMachine.Add(readyToStartState);
-            stateMachine.Add(new PlayingState());
-            stateMachine.Add(new PausedState());
-            stateMachine.Add(new GameOverState());
-            
+            _stateMachine.Add(readyToStartState);
+            _stateMachine.Add(new PlayingState());
+            _stateMachine.Add(new PausedState());
+            _stateMachine.Add(new GameOverState());
         }
-        private void OnDestroy()
-        {
-            Instance = null;
-        }
+
         private void Start()
         {
             StartGame();
@@ -77,7 +87,5 @@ namespace Kitchen
         {
             return stateMachine.CurrentState is PlayingState;
         }
-
-
     }
 }

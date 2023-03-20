@@ -5,6 +5,19 @@ namespace Kitchen.Player
 {
     public partial class Player
     {
+        private bool _initialized;
+
+        protected void _Init()
+        {
+            if (!_initialized)
+            {
+                input = new PlayerInput();
+                InitializedMonoComponents();
+                InitializedControllers();
+                _initialized = true;
+            }
+        }
+
         private void InitializedMonoComponents()
         {
             animator = transform.Find("PlayerVisual").GetComponent<Animator>();
@@ -17,8 +30,8 @@ namespace Kitchen.Player
             var moveController = new PlayerMoveController(this);
             moveController.onMoving += () => { onMoving?.Invoke(transform.position); };
             _controllers.Add(moveController);
-            selectCounterController = new PlayerSelectCounterController(this);
-            _controllers.Add(selectCounterController);
+            _selectCounterController = new PlayerSelectCounterController(this);
+            _controllers.Add(_selectCounterController);
         }
     }
 }
