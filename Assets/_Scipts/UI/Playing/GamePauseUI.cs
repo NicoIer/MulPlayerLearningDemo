@@ -9,11 +9,18 @@ namespace Kitchen.UI
     {
         [SerializeField] private Button mainMenuButton;
         [SerializeField] private Button resumeButton;
+        [SerializeField] private Button optionsButton;
 
         private void Awake()
         {
             mainMenuButton.onClick.AddListener(_OnMainMenuButtonClick);
             resumeButton.onClick.AddListener(_OnResumeButtonClick);
+            optionsButton.onClick.AddListener(_OnOptionsButtonClick);
+        }
+
+        private void _OnOptionsButtonClick()
+        {
+            
         }
 
         private void _OnResumeButtonClick()

@@ -64,23 +64,25 @@ namespace Kitchen.Music
 
         #region Play Sound
 
-        private void _PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f)
+        private void _PlaySound(AudioClip audioClip, Vector3 position)
         {
-            AudioSource.PlayClipAtPoint(audioClip, position, volume);
+            AudioSource.PlayClipAtPoint(audioClip, position, _volume);
         }
 
-        private void _PlaySound(AudioClip[] audioClips, Vector3 position, float volume = 1f)
+        private void _PlaySound(AudioClip[] audioClips, Vector3 position)
         {
             var audioClip = audioClips[UnityEngine.Random.Range(0, audioClips.Length)];
-            _PlaySound(audioClip, position, volume);
+            _PlaySound(audioClip, position);
         }
 
         #endregion
 
+        #region Events
 
         private void _Player_OnMoving(Vector3 position)
         {
             //TODO 由于玩家每帧都在动 会导致生成的声音数量太多 听起来卡卡的
+            //设置一个interval
             _PlaySound(audioClipData.footStep, position);
         }
 
@@ -113,6 +115,15 @@ namespace Kitchen.Music
         private void _CuttingCounter_OnAnyCut(object sender, Vector3 position)
         {
             _PlaySound(audioClipData.chop, position);
+        }
+
+        #endregion
+
+        private float _volume = 1f;
+
+        private void ChangeVolume(float volume)
+        {
+            _volume = Mathf.Clamp(volume,0,1);
         }
     }
 }
