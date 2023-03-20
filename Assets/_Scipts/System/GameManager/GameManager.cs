@@ -5,6 +5,7 @@ namespace Kitchen
 {
     public class GameManager : MonoBehaviour
     {
+        public GameSetting setting;
         public int readyCountDown = 3;
         public event Action<int> OnCountDownChange;
         public GameStateMachine stateMachine { get; private set; }
