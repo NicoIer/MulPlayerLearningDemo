@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Kitchen
 {
@@ -28,23 +29,55 @@ namespace Kitchen
             stateMachine.Add(new PlayingState());
             stateMachine.Add(new PausedState());
             stateMachine.Add(new GameOverState());
-            stateMachine.Change<WaitingToStartState>();
+            
+        }
+        private void OnDestroy()
+        {
+            Instance = null;
+        }
+        private void Start()
+        {
+            StartGame();
         }
 
         private void Update()
         {
+            if (Keyboard.current.pKey.wasPressedThisFrame)
+            {
+                PauseGame();
+                return;
+            }
+
             stateMachine.Update();
         }
-        
+
+        public void StartGame()
+        {
+            stateMachine.Change<ReadyToStartState>();
+        }
+
+        public void PauseGame()
+        {
+            if (stateMachine.CurrentState is PausedState)
+            {
+                stateMachine.Change<PlayingState>();
+            }
+            else if (stateMachine.CurrentState is PlayingState)
+            {
+                stateMachine.Change<PausedState>();
+            }
+        }
+
+        public void ExitGame()
+        {
+            stateMachine.Change<WaitingToStartState>(); //切换
+        }
 
         public bool IsPlaying()
         {
             return stateMachine.CurrentState is PlayingState;
         }
 
-        private void OnDestroy()
-        {
-            Instance = null;
-        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Kitchen.Model;
+﻿using System;
+using Kitchen.Model;
 using Nico.MVC;
 using TMPro;
 using UnityEngine;
@@ -27,7 +28,15 @@ namespace Kitchen.UI
 
         private void OnDestroy()
         {
-            GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
+            try
+            {
+                GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
+            }
+            catch (Exception)
+            {
+               //ignore
+            }
+            
         }
     }
 }

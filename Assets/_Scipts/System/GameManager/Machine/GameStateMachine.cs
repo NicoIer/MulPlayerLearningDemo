@@ -26,7 +26,7 @@ namespace Kitchen
         {
             var nextState = _states[typeof(T)];
             onStateChange?.Invoke(CurrentState, nextState);
-            Debug.Log($"{CurrentState?.GetType()} to {nextState?.GetType()}");
+            // Debug.Log($"{CurrentState?.GetType()} to {nextState?.GetType()}");
             CurrentState?.Exit();
             CurrentState = nextState;
             CurrentState?.Enter();

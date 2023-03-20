@@ -10,6 +10,7 @@ namespace Kitchen
         private readonly StanderInput _standerInput;
         public event Action OnInteractPerform;
         public event Action OnInteractAlternatePerform;
+        public event Action OnPause;
 
         public PlayerInput()
         {
@@ -23,11 +24,7 @@ namespace Kitchen
             _standerInput.Player.Interact.started += _InteractStarted;
             _standerInput.Player.Interact.canceled += _InteractCanceled;
             _standerInput.Player.InteractAlternate.performed += _InteractAlternatePerformed;
-        }
-
-        private void _InteractAlternatePerformed(InputAction.CallbackContext obj)
-        {
-            OnInteractAlternatePerform?.Invoke();
+            _standerInput.Player.Pause.performed += _OnPause;
         }
 
         public void Disable()
@@ -37,6 +34,16 @@ namespace Kitchen
             _standerInput.Player.Interact.started -= _InteractStarted;
             _standerInput.Player.Interact.canceled -= _InteractCanceled;
             _standerInput.Player.InteractAlternate.performed -= _InteractAlternatePerformed;
+        }
+
+        private void _OnPause(InputAction.CallbackContext obj)
+        {
+            OnPause?.Invoke();
+        }
+
+        private void _InteractAlternatePerformed(InputAction.CallbackContext obj)
+        {
+            OnInteractAlternatePerform?.Invoke();
         }
 
 

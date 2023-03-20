@@ -11,14 +11,20 @@ namespace Kitchen.UI
 
         private void Start()
         {
-            
             GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
             _Hide();
         }
 
         private void OnDestroy()
         {
-            GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
+            try
+            {
+                GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
@@ -26,14 +32,14 @@ namespace Kitchen.UI
             if (arg2 is PlayingState playingState)
             {
                 _Show();
-                playingState.onLeftTimeChange += _OnLeftTimeChange;
+                playingState.OnLeftTimeChange += _OnLeftTimeChange;
                 _maxPlayingTime = GameManager.Instance.setting.gameDurationSetting;
                 return;
             }
 
             if (arg1 is PlayingState playingState1)
             {
-                playingState1.onLeftTimeChange -= _OnLeftTimeChange;
+                playingState1.OnLeftTimeChange -= _OnLeftTimeChange;
                 return;
             }
         }
@@ -42,11 +48,12 @@ namespace Kitchen.UI
         {
             gameObject.SetActive(false);
         }
+
         private void _Show()
         {
             gameObject.SetActive(true);
         }
-        
+
         private void _OnLeftTimeChange(float leftTime)
         {
             clockFillImage.fillAmount = leftTime / _maxPlayingTime;

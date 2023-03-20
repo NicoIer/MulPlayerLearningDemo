@@ -1,7 +1,10 @@
-﻿namespace Kitchen.Player
+﻿using System;
+
+namespace Kitchen.Player
 {
     public partial class Player
     {
+        public event Action pause; 
         private void OnPerformInteract()
         {
             if (!GameManager.Instance.IsPlaying()) return;

@@ -13,7 +13,7 @@ namespace Kitchen.Player
 
         public event Action OnStartMove;
         public event Action OnStopMove;
-        public Action OnMoving;
+        public Action onMoving;
 
         public PlayerMoveController(Player player) : base(player)
         {
@@ -33,7 +33,7 @@ namespace Kitchen.Player
                 TransformSetter.Move(transform, GetMoveDirection(), _data.speed);
                 TransformSetter.SetForward(transform, inputDir, _data.rotateSpeed);
                 //如果没在移动状态，就触发开始移动事件
-                OnMoving?.Invoke();
+                onMoving?.Invoke();
                 if (!_isMoving)
                 {
                     _animator.SetBool(_walking, true);

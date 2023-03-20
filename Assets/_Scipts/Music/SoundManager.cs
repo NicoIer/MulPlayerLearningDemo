@@ -32,7 +32,7 @@ namespace Kitchen.Music
                 Player.Player.Singleton.OnPickUpSomeThing += _Player_On_PickUpSomeThing;
                 BaseCounter.OnAnyObjPlaceOnCounter += _BaseCounter_OnAnyObjPlaceOnCounter;
                 TrashCounter.OnAnyObjTrashed += _TrashCounter_OnAnyObjTrashed;
-                Player.Player.Singleton.OnMoving += _Player_OnMoving;
+                Player.Player.Singleton.onMoving += _Player_OnMoving;
                 _listening = true;
             }
             catch (NullReferenceException)
@@ -52,7 +52,7 @@ namespace Kitchen.Music
                 Player.Player.Singleton.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
                 BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
                 TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
-                Player.Player.Singleton.OnMoving -= _Player_OnMoving;
+                Player.Player.Singleton.onMoving -= _Player_OnMoving;
 
                 _listening = false;
             }

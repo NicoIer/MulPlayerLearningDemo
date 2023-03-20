@@ -10,6 +10,16 @@ namespace Kitchen.UI
         [SerializeField] private TextMeshProUGUI textMeshProUGUI;
         private bool _listening;
 
+        private void Start()
+        {
+            Hide();
+            if (!_listening)
+            {
+                GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
+                GameManager.Instance.OnCountDownChange += _GameManager_OnCountDownChange;
+            }
+        }
+
         private void OnEnable()
         {
             try
@@ -38,24 +48,8 @@ namespace Kitchen.UI
             }
         }
 
-        private void Start()
-        {
-            Hide();
-            if (!_listening)
-            {
-                GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
-                GameManager.Instance.OnCountDownChange += _GameManager_OnCountDownChange;
-            }
-        }
 
 
-        private void OnDisable()
-        {
-            GameManager.Instance.stateMachine.onStateChange -= _GameManager_OnStateChange;
-            GameManager.Instance.OnCountDownChange -= _GameManager_OnCountDownChange;
-            _listening = false;
-        }
-        
 
         private void _GameManager_OnCountDownChange(int num)
         {
@@ -69,12 +63,26 @@ namespace Kitchen.UI
 
         public void Show()
         {
-            textMeshProUGUI.enabled = true;
+            gameObject.SetActive(true);
         }
 
         public void Hide()
         {
-            textMeshProUGUI.enabled = false;
+            gameObject.SetActive(false);
         }
+        private void OnDisable()
+        {
+            try
+            {
+                GameManager.Instance.stateMachine.onStateChange -= _GameManager_OnStateChange;
+                GameManager.Instance.OnCountDownChange -= _GameManager_OnCountDownChange;
+                _listening = false;
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
     }
 }

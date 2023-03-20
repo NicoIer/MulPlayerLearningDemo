@@ -15,7 +15,7 @@ namespace Kitchen.Player
         private BaseCounter SelectedCounter => selectCounterController.SelectedCounter;
         public PlayerSelectCounterController selectCounterController { get; private set; }
 
-        public Action<Vector3> OnMoving;
+        public Action<Vector3> onMoving;
         #endregion
 
         #region MonoComponents
