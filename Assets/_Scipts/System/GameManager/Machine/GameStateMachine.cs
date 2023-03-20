@@ -9,7 +9,7 @@ namespace Kitchen
         private Dictionary<Type, GameState> _states = new();
         public GameManager Owner { get; private set; }
         public GameState CurrentState { get; private set; }
-        public Action<GameState, GameState> OnStateChange;
+        public Action<GameState, GameState> onStateChange;
 
         public GameStateMachine(GameManager manager)
         {
@@ -25,7 +25,7 @@ namespace Kitchen
         public void Change<T>() where T : GameState
         {
             var nextState = _states[typeof(T)];
-            OnStateChange?.Invoke(CurrentState, CurrentState);
+            onStateChange?.Invoke(CurrentState, nextState);
             Debug.Log($"{CurrentState?.GetType()} to {nextState?.GetType()}");
             CurrentState?.Exit();
             CurrentState = nextState;

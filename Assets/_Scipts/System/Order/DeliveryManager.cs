@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Kitchen.Model;
 using Newtonsoft.Json;
+using Nico.MVC;
 using Unity.Collections;
 using UnityEngine;
 
@@ -60,13 +62,17 @@ namespace Kitchen
 
         private void Start()
         {
-            GameManager.Instance.OnStartPlaying += () =>
+            GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
+        }
+
+        private void _OnGameStateChange(GameState arg1, GameState arg2)
+        {
+            if (arg2 is ReadyToStartState)
             {
                 _GenerateOrder().Forget();
-            };
-            
+            }
         }
-        
+
         private void OnDisable()
         {
             _orderGenerateCts?.Cancel();
@@ -116,18 +122,23 @@ namespace Kitchen
                 return false;
             }
 
+            _CompleteOrder((RecipeData)target, position);
+
+            return true;
+        }
+
+        private void _CompleteOrder(RecipeData recipeData, Vector3 position)
+        {
             Debug.Log("订单完成!!");
-            //完成订单时 
-            _waitingQueue.Remove((RecipeData)target);
+            ++ModelManager.Get<CompletedOrderModel>().orderCount;
+
+            _waitingQueue.Remove(recipeData);
             OnOrderSuccess?.Invoke(this, position);
-            // OnOrderFinished?.Invoke(this, (RecipeData)target);
             //尝试重新启动订单生成任务
             if (!_isGeneratingOrder)
             {
                 _GenerateOrder().Forget();
             }
-
-            return true;
         }
 
         private RecipeData? _CheckIngredients(HashSet<KitchenObjEnum> ingredients)

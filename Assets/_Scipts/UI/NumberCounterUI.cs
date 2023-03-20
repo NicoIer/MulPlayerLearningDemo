@@ -8,14 +8,14 @@ namespace Kitchen.UI
     public class NumberCounterUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-        private bool _listening = false;
+        private bool _listening;
 
         private void OnEnable()
         {
             try
             {
+                GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
                 GameManager.Instance.OnCountDownChange += _GameManager_OnCountDownChange;
-                GameManager.Instance.OnGameReadyToStart += _GameManager_OnGameReadyToStart;
                 _listening = true;
             }
             catch (Exception)
@@ -24,34 +24,38 @@ namespace Kitchen.UI
             }
         }
 
+        private void _GameManager_OnStateChange(GameState oldState, GameState newState)
+        {
+            if (newState is ReadyToStartState)
+            {
+                Show();
+                return;
+            }
+
+            if (newState is PlayingState)
+            {
+                Hide();
+            }
+        }
+
         private void Start()
         {
             Hide();
             if (!_listening)
             {
-                
+                GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
                 GameManager.Instance.OnCountDownChange += _GameManager_OnCountDownChange;
-                GameManager.Instance.OnGameReadyToStart += _GameManager_OnGameReadyToStart;
-                GameManager.Instance.OnStartPlaying += _GameManager_OnStartPlaying;
             }
         }
 
-        private void _GameManager_OnStartPlaying()
-        {
-            Hide();
-        }
 
         private void OnDisable()
         {
+            GameManager.Instance.stateMachine.onStateChange -= _GameManager_OnStateChange;
             GameManager.Instance.OnCountDownChange -= _GameManager_OnCountDownChange;
-            GameManager.Instance.OnGameReadyToStart -= _GameManager_OnGameReadyToStart;
             _listening = false;
         }
-
-        private void _GameManager_OnGameReadyToStart()
-        {
-            Show();
-        }
+        
 
         private void _GameManager_OnCountDownChange(int num)
         {
