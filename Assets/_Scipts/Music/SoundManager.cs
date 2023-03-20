@@ -62,7 +62,6 @@ namespace Kitchen.Music
         }
 
 
-
         #region Play Sound
 
         private void _PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f)
@@ -81,8 +80,10 @@ namespace Kitchen.Music
 
         private void _Player_OnMoving(Vector3 position)
         {
+            //TODO 由于玩家每帧都在动 会导致生成的声音数量太多 听起来卡卡的
             _PlaySound(audioClipData.footStep, position);
         }
+
         private void _OnOrderSuccess(object sender, Vector3 position)
         {
             _PlaySound(audioClipData.deliverySuccess, position);
@@ -113,7 +114,5 @@ namespace Kitchen.Music
         {
             _PlaySound(audioClipData.chop, position);
         }
-        
-
     }
 }

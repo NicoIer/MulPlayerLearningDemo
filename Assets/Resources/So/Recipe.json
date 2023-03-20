@@ -7,7 +7,6 @@
       "MeatPattyCooked"
     ]
   },
-
   "meatCheeseBurger": {
     "recipeName": "meatCheeseBurger",
     "recipe": [
@@ -20,6 +19,13 @@
     "recipeName": "tomato",
     "recipe": [
       "Tomato"
+    ]
+  },
+  "salad": {
+    "recipeName": "salad",
+    "recipe": [
+      "TomatoSlices",
+      "CabbageSlices"
     ]
   }
 }

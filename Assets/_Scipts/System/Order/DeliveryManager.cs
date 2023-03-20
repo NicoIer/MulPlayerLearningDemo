@@ -58,12 +58,15 @@ namespace Kitchen
             recipeList = new List<RecipeData>(_recipeDict.Values);
         }
 
-        private void OnEnable()
+        private void Start()
         {
-            //TODO 这里需要优化 应该由其他类来调用
-            _GenerateOrder().Forget();
+            GameManager.Instance.OnStartPlaying += () =>
+            {
+                _GenerateOrder().Forget();
+            };
+            
         }
-
+        
         private void OnDisable()
         {
             _orderGenerateCts?.Cancel();

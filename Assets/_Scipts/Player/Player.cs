@@ -64,22 +64,7 @@ namespace Kitchen.Player
             input.OnInteractAlternatePerform -= OnPerformInteractAlternate;
         }
 
-        private void OnPerformInteract()
-        {
-            //这是多播委托的调用 其实没必要通知每个Counter
-            if (SelectedCounter == null)
-                return;
-            SelectedCounter.Interact(this);
-        }
 
-        private void OnPerformInteractAlternate()
-        {
-            if (SelectedCounter == null) return;
-            if (SelectedCounter.TryGetComponent(out IInteractAlternate interactAlternate))
-            {
-                interactAlternate.InteractAlternate(this);
-            }
-        }
 
 
         private void Update()
