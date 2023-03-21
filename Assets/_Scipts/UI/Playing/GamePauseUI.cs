@@ -87,6 +87,7 @@ namespace Kitchen.UI
         public void Hide()
         {
             _uiContainer.SetActive(false);
+            optionsUI.Hide();
         }
     }
 }

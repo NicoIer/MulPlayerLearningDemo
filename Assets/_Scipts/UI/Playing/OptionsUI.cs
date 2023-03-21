@@ -13,12 +13,11 @@ namespace Kitchen.UI
         [SerializeField] private Button closeButton;
         [SerializeField] private TextMeshProUGUI soundText;
         [SerializeField] private TextMeshProUGUI musicText;
-        private GameObject _uiContainer;
+        [SerializeField] private GameObject uiContainer;
         public event Action onColse;
         
         private void Start()
         {
-            _uiContainer = transform.Find("UIContainer").gameObject;
             soundButton.onClick.AddListener(() =>
             {
                 var volume = SoundManager.Instance.GetVolume();
@@ -43,12 +42,12 @@ namespace Kitchen.UI
 
         public void Hide()
         {
-            _uiContainer.SetActive(false);
+            uiContainer.SetActive(false);
         }
 
         public void Show()
         {
-            _uiContainer.SetActive(true);
+            uiContainer.SetActive(true);
             _UpdateText();
         }
 

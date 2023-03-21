@@ -67,7 +67,7 @@ namespace Kitchen
 
         private void Update()
         {
-            if (Keyboard.current.pKey.wasPressedThisFrame)
+            if (Player.Player.Instance.input.Player.Pause.WasPerformedThisFrame())
             {
                 PauseGame();
                 return;
