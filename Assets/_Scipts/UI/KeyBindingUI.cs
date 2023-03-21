@@ -23,6 +23,9 @@ namespace Kitchen.UI
         [SerializeField] private Button interactAltButton;
         [SerializeField] private Button pauseButton;
         [SerializeField] private GameObject waitingForKey;
+        [SerializeField] private Button gamepadInteractButton;
+        [SerializeField] private Button gamepadInteractAltButton;
+        [SerializeField] private Button gamepadPauseButton;
 
         public void UpdateVisual()
         {
@@ -35,6 +38,14 @@ namespace Kitchen.UI
             interactAltButton.GetComponentInChildren<TextMeshProUGUI>().text =
                 input.GetBingingName(InputEnum.InteractAlternate);
             pauseButton.GetComponentInChildren<TextMeshProUGUI>().text = input.GetBingingName(InputEnum.Pause);
+            
+            gamepadInteractButton.GetComponentInChildren<TextMeshProUGUI>().text =
+                input.GetBingingName(InputEnum.GamePadInteract);
+            gamepadInteractAltButton.GetComponentInChildren<TextMeshProUGUI>().text =
+                input.GetBingingName(InputEnum.GamePadInteractAlternate);
+            gamepadPauseButton.GetComponentInChildren<TextMeshProUGUI>().text =
+                input.GetBingingName(InputEnum.GamePadPause);
+            
 
             moveUpText.text = "Move Up";
             moveDownText.text = "Move Down";
@@ -55,6 +66,10 @@ namespace Kitchen.UI
             interactButton.onClick.AddListener(() => { _ReBinding(InputEnum.Interact); });
             interactAltButton.onClick.AddListener(() => { _ReBinding(InputEnum.InteractAlternate); });
             pauseButton.onClick.AddListener(() => { _ReBinding(InputEnum.Pause); });
+            
+            gamepadInteractButton.onClick.AddListener(() => { _ReBinding(InputEnum.GamePadInteract); });
+            gamepadInteractAltButton.onClick.AddListener(() => { _ReBinding(InputEnum.GamePadInteractAlternate); });
+            gamepadPauseButton.onClick.AddListener(() => { _ReBinding(InputEnum.GamePadPause); });
         }
 
         private void _ReBinding(InputEnum inputEnum)
@@ -93,6 +108,18 @@ namespace Kitchen.UI
                 case InputEnum.Pause:
                     action = input.Player.Pause;
                     idx = 0;
+                    break;
+                case InputEnum.GamePadInteract:
+                    action = input.Player.Interact;
+                    idx = 1;
+                    break;
+                case InputEnum.GamePadInteractAlternate:
+                    action = input.Player.InteractAlternate;
+                    idx = 1;
+                    break;
+                case InputEnum.GamePadPause:
+                    action = input.Player.Pause;
+                    idx = 1;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(inputEnum), inputEnum, null);

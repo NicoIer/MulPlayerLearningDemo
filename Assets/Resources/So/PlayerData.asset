@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d3ddb1851d34b488fc0732c686f107e, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  speed: 7
-  rotateSpeed: 7
+  speed: 5
+  rotateSpeed: 4
   playerRadius: 0.45
   playerHeight: 1.8
   animWalking: walking

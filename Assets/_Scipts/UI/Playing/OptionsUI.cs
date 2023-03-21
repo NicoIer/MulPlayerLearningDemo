@@ -42,6 +42,7 @@ namespace Kitchen.UI
 
         public void Hide()
         {
+            soundButton.Select();
             uiContainer.SetActive(false);
         }
 

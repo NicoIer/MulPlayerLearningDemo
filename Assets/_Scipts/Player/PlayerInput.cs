@@ -12,12 +12,15 @@ namespace Kitchen
         MoveRight,
         Interact,
         InteractAlternate,
-        Pause
+        Pause,
+        GamePadInteract,
+        GamePadInteractAlternate,
+        GamePadPause,
     }
 
     public class PlayerInput
     {
-        public Vector2 move => _standerInput.Player.move2D.ReadValue<Vector2>();
+        public Vector2 move => _standerInput.Player.move2D.ReadValue<Vector2>().normalized;
         private readonly StanderInput _standerInput;
         public StanderInput.PlayerActions Player => _standerInput.Player;
         public event Action OnInteractPerform;
@@ -43,6 +46,12 @@ namespace Kitchen
                     return _standerInput.Player.InteractAlternate.bindings[0].ToDisplayString();
                 case InputEnum.Pause:
                     return _standerInput.Player.Pause.bindings[0].ToDisplayString();
+                case InputEnum.GamePadInteract:
+                    return _standerInput.Player.Interact.bindings[1].ToDisplayString();
+                case InputEnum.GamePadInteractAlternate:
+                    return _standerInput.Player.InteractAlternate.bindings[1].ToDisplayString();
+                case InputEnum.GamePadPause:
+                    return _standerInput.Player.Pause.bindings[1].ToDisplayString();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(actionName), actionName, null);
             }

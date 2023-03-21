@@ -81,6 +81,7 @@ namespace Kitchen.UI
 
         public void Show()
         {
+            resumeButton.Select();
             _uiContainer.SetActive(true);
         }
 

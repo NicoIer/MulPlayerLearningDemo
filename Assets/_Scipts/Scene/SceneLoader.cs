@@ -13,6 +13,7 @@ namespace Kitchen.Scene
             await SceneManager.LoadSceneAsync(transitionSceneName);
             await Task.Delay(TimeSpan.FromSeconds(0.2f));
             await SceneManager.LoadSceneAsync(targetSceneName);
+
         }
     }
 }
