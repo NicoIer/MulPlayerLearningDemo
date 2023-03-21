@@ -26,10 +26,10 @@ namespace Kitchen.Music
             var deliveryManager = DeliveryManager.GetInstanceOnDisable();
             if (deliveryManager != null)
             {
-                
                 deliveryManager.OnOrderSuccess -= _OnOrderSuccess;
                 deliveryManager.OnOrderFailed -= _OnOrderFailed;
             }
+
             CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;
             var player = Player.Player.GetInstanceOnDisable();
             if (player != null)
@@ -37,6 +37,7 @@ namespace Kitchen.Music
                 player.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
                 player.onMoving -= _Player_OnMoving;
             }
+
             BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
         }
@@ -84,7 +85,6 @@ namespace Kitchen.Music
 
         private void _BaseCounter_OnAnyObjPlaceOnCounter(object sender, Vector3 position)
         {
-            Debug.Log("OnAnyObjPlaceOnCounter");
             _PlaySound(audioClipData.drop, position);
         }
 
@@ -100,11 +100,25 @@ namespace Kitchen.Music
 
         #endregion
 
-        private float _volume = 1f;
+       private float _volume = 1f;
 
-        private void ChangeVolume(float volume)
+        public void ChangeVolume(float volume)
         {
-            _volume = Mathf.Clamp(volume, 0, 1);
+            if (volume > 1)
+            {
+                volume = 0;
+            }
+
+            if (volume < 0)
+            {
+                volume = 0;
+            }
+            _volume = volume;
+        }
+
+        public float GetVolume()
+        {
+            return _volume;
         }
     }
 }

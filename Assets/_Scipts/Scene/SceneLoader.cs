@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace Kitchen.Scene
 {
+    //TODO 后续改到GlobalManager里去
     public static class SceneLoader
     {
         public static async void Load(string targetSceneName, string transitionSceneName)

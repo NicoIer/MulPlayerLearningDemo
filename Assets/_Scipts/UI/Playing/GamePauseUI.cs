@@ -11,17 +11,28 @@ namespace Kitchen.UI
         [SerializeField] private Button mainMenuButton;
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button optionsButton;
+        [SerializeField] private OptionsUI optionsUI;
 
         private void Awake()
         {
             _uiContainer = transform.Find("UIContainer").gameObject;
+            optionsUI = transform.Find("OptionsUI").GetComponent<OptionsUI>();
             mainMenuButton.onClick.AddListener(_OnMainMenuButtonClick);
             resumeButton.onClick.AddListener(_OnResumeButtonClick);
             optionsButton.onClick.AddListener(_OnOptionsButtonClick);
+            optionsUI.onColse += _OnOptionsUIClose;
+        }
+
+        private void _OnOptionsUIClose()
+        {
+            optionsUI.Hide();
+            Show();
         }
 
         private void _OnOptionsButtonClick()
         {
+            Hide();
+            optionsUI.Show();
         }
 
         private void _OnResumeButtonClick()
