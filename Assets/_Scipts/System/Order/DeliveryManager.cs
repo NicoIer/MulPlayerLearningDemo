@@ -15,7 +15,7 @@ namespace Kitchen
     {
         //ToDo 后续将所有配置信息保存到一个位置
         private const string _recipeDataPath =
-            "D:/UserData/GitHub/MulPlayerLearningDemo/Assets/Resources/So/Recipe.json";
+            "Assets/Resources/So/Recipe.json";
 
         private Dictionary<string, RecipeData> _recipeDict;
         private readonly LinkedList<RecipeData> _waitingQueue = new();
