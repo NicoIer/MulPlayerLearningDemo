@@ -1,6 +1,6 @@
 ﻿using Nico.MVC;
 
-namespace Kitchen.Model
+namespace Kitchen
 {
     public class CompletedOrderModel : IModel
     {

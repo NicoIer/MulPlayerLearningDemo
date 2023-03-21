@@ -4,11 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Kitchen.Model;
 using Newtonsoft.Json;
-using Nico.DesignPattern;
+using Nico;
 using Nico.MVC;
-using Unity.Collections;
 using UnityEngine;
 
 namespace Kitchen
@@ -59,7 +57,12 @@ namespace Kitchen
 
         private void OnDisable()
         {
-            GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
+            var gameManager = GameManager.GetInstanceOnDisable();
+            if (gameManager != null)
+            {
+                gameManager.stateMachine.onStateChange -= _OnGameStateChange;
+                return;
+            }
             _orderGenerateCts?.Cancel();
         }
 

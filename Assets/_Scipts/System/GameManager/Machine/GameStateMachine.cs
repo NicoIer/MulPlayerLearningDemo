@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nico;
+using Nico.ECC;
 using UnityEngine;
 
 namespace Kitchen
 {
-    public class GameStateMachine : IController
+    public class GameStateMachine : IController<GameManager>
     {
         private Dictionary<Type, GameState> _states = new();
-        public GameManager Owner { get; private set; }
+
+
         public GameState CurrentState { get; private set; }
         public Action<GameState, GameState> onStateChange;
-
+        
+        public GameManager Owner { get; protected set; }
         public GameStateMachine(GameManager manager)
         {
             Owner = manager;
@@ -31,8 +34,9 @@ namespace Kitchen
             CurrentState?.Exit();
             CurrentState = nextState;
             CurrentState?.Enter();
-            
         }
+
+
 
         public void Update()
         {

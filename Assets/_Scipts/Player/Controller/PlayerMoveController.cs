@@ -6,7 +6,7 @@ namespace Kitchen.Player
 {
     public class PlayerMoveController : PlayerController
     {
-        private Transform transform => player.transform;
+        private Transform transform => Owner.transform;
         private readonly Animator _animator;
         private readonly PlayerInput _playerInput;
         private readonly PlayerData _data;

@@ -22,7 +22,9 @@ namespace Kitchen
         private void OnDisable()
         {
             //如果抛出异常 才是正常的 因为 其本身都被删除了 事件自然也被删除了
-            Player.Player.Instance.selectCounterController.OnSelectedCounterChanged -= OnSelectedCounterChanged;
+            var player = Player.Player.GetInstanceOnDisable();
+            if (player != null)
+                player.selectCounterController.OnSelectedCounterChanged -= OnSelectedCounterChanged;
         }
 
         private void OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedArgs e)

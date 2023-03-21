@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kitchen;
-using Nico.DesignPattern;
+using Nico;
 using Unity.VisualScripting;
 using UnityEngine;
 

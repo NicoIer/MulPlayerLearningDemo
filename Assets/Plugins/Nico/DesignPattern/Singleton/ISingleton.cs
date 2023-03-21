@@ -1,4 +1,4 @@
-﻿namespace Nico.DesignPattern
+﻿namespace Nico
 {
     public interface ISingleton
     {

@@ -8,30 +8,11 @@ namespace Kitchen.UI
     public class NumberCounterUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-        private bool _listening;
-
-        private void Start()
-        {
-            Hide();
-            if (!_listening)
-            {
-                GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
-                GameManager.Instance.OnCountDownChange += _GameManager_OnCountDownChange;
-            }
-        }
-
+        
         private void OnEnable()
         {
-            try
-            {
-                GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
-                GameManager.Instance.OnCountDownChange += _GameManager_OnCountDownChange;
-                _listening = true;
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+            GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
+            GameManager.Instance.OnCountDownChange += _GameManager_OnCountDownChange;
         }
 
         private void _GameManager_OnStateChange(GameState oldState, GameState newState)
@@ -47,8 +28,6 @@ namespace Kitchen.UI
                 Hide();
             }
         }
-
-
 
 
         private void _GameManager_OnCountDownChange(int num)
@@ -70,19 +49,16 @@ namespace Kitchen.UI
         {
             gameObject.SetActive(false);
         }
+
         private void OnDisable()
         {
-            try
+            var gameManager = GameManager.GetInstanceOnDisable();
+            if (gameManager != null)
             {
-                GameManager.Instance.stateMachine.onStateChange -= _GameManager_OnStateChange;
-                GameManager.Instance.OnCountDownChange -= _GameManager_OnCountDownChange;
-                _listening = false;
-            }
-            catch (Exception)
-            {
-                // ignored
+                gameManager.stateMachine.onStateChange -= _GameManager_OnStateChange;
+                gameManager.OnCountDownChange -= _GameManager_OnCountDownChange;
+                return;
             }
         }
-
     }
 }

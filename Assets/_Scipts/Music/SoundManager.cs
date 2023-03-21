@@ -1,5 +1,5 @@
 ﻿using System;
-using Nico.DesignPattern;
+using Nico;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -19,22 +19,26 @@ namespace Kitchen.Music
             Player.Player.Instance.onMoving += _Player_OnMoving;
             BaseCounter.OnAnyObjPlaceOnCounter += _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed += _TrashCounter_OnAnyObjTrashed;
-
-
         }
 
         private void OnDisable()
         {
-
-                DeliveryManager.Instance.OnOrderSuccess -= _OnOrderSuccess;
-                DeliveryManager.Instance.OnOrderFailed -= _OnOrderFailed;
-                CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;
-                Player.Player.Instance.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
-                Player.Player.Instance.onMoving -= _Player_OnMoving;
-                BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
-                TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
-
-
+            var deliveryManager = DeliveryManager.GetInstanceOnDisable();
+            if (deliveryManager != null)
+            {
+                
+                deliveryManager.OnOrderSuccess -= _OnOrderSuccess;
+                deliveryManager.OnOrderFailed -= _OnOrderFailed;
+            }
+            CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;
+            var player = Player.Player.GetInstanceOnDisable();
+            if (player != null)
+            {
+                player.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
+                player.onMoving -= _Player_OnMoving;
+            }
+            BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
+            TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
         }
 
 
@@ -80,6 +84,7 @@ namespace Kitchen.Music
 
         private void _BaseCounter_OnAnyObjPlaceOnCounter(object sender, Vector3 position)
         {
+            Debug.Log("OnAnyObjPlaceOnCounter");
             _PlaySound(audioClipData.drop, position);
         }
 

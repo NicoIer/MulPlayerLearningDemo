@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Nico.DesignPattern
+namespace Nico
 {
     /// <summary>
     /// 跨场景的 Mono 单例模式 不会随着场景的切换而销毁

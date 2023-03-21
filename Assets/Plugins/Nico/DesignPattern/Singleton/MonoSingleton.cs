@@ -2,7 +2,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Nico.DesignPattern
+namespace Nico
 {
     /// <summary>
     /// 基于MonoBehaviour的单例模式 仅场景内单例 不会跨场景 切换场景会被销毁
@@ -12,24 +12,16 @@ namespace Nico.DesignPattern
     {
         private static readonly object _lock = typeof(T);
         private static T _instance;
-        private static bool _applicationQuit;
 
+        /// <summary>
+        /// 正常访问时的途径
+        /// </summary>
         public static T Instance
         {
             get
             {
-                if (_applicationQuit)
-                {
-                    return null;
-                }
                 if (_instance == null)
                 {
-                    //如果时在 OnDisable时访问 则会返回null
-                    if (Application.isPlaying == false)
-                    {
-                        return null;
-                    }
-
                     //双重检查锁
                     lock (_lock)
                     {
@@ -51,6 +43,32 @@ namespace Nico.DesignPattern
             }
         }
 
+        /// <summary>
+        /// 在Disable时访问的途径 之所以会有这个存在 是因为游戏退出时 单例应该被销毁 此时其他的途径访问单例对象 都会造成错误
+        /// </summary>
+        /// <returns></returns>
+        public static T GetInstanceOnDisable(bool throwError = false)
+        {
+            if (_applicationQuit)
+            {
+                if (throwError)
+                {
+                    throw new Exception("Application is quitting !!!!");
+                }
+
+                return null;
+            }
+
+            return Instance;
+        }
+
+        private static bool _applicationQuit;
+
+        protected void OnApplicationQuit()
+        {
+            _applicationQuit = true;
+        }
+
         protected virtual void Awake()
         {
             _applicationQuit = false;
@@ -67,10 +85,6 @@ namespace Nico.DesignPattern
             }
         }
 
-        protected void OnApplicationQuit()
-        {
-            _applicationQuit = true;
-        }
 
         protected virtual void OnDestroy()
         {

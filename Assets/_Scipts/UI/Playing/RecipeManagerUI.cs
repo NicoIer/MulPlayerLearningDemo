@@ -48,17 +48,16 @@ namespace Kitchen.UI
 
         private void OnDisable()
         {
-            try
+            var deliveryManager = DeliveryManager.GetInstanceOnDisable();
+            if (deliveryManager != null)
             {
-                DeliveryManager.Instance.OnOrderFinished -= _OnOrderFinished;
-                DeliveryManager.Instance.OnOrderAdded -= _OnOrderAdded;
-                DeliveryManager.Instance.OnOrderSuccess -= _OnOrderSuccess;
-                DeliveryManager.Instance.OnOrderFailed -= _OnOrderFailed;
-                _listening = false;
+                
+                deliveryManager.OnOrderFinished -= _OnOrderFinished;
+                deliveryManager.OnOrderAdded -= _OnOrderAdded;
+                deliveryManager.OnOrderSuccess -= _OnOrderSuccess;
+                deliveryManager.OnOrderFailed -= _OnOrderFailed;
             }
-            catch (NullReferenceException)
-            {
-            }
+
         }
 
 

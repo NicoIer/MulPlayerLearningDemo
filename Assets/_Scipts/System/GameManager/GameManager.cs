@@ -1,5 +1,5 @@
 ﻿using System;
-using Nico.DesignPattern;
+using Nico;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

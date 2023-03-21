@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Kitchen.Model;
 using Nico.MVC;
-using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Kitchen
 {
