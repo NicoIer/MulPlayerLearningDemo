@@ -7,12 +7,27 @@ namespace Kitchen
 {
     public class GameManager : MonoSingleton<GameManager>
     {
-        public GameSetting setting;
+        private GameSetting _setting;
+
+        public GameSetting setting
+        {
+            get
+            {
+                if (_setting == null)
+                {
+                    //TODO 改成从配置文件读取
+                    _setting = new GameSetting();
+                    setting.gameDurationSetting = 60;
+                }
+
+                return _setting;
+            }
+        }
+
         public int readyCountDown = 3;
         public event Action<int> OnCountDownChange;
         private GameStateMachine _stateMachine;
 
-        //TODO 这里的stateMachine就不能让外部访问
         public GameStateMachine stateMachine
         {
             get
@@ -68,6 +83,7 @@ namespace Kitchen
 
         public void PauseGame()
         {
+            Debug.Log($"PauseGame: from {stateMachine.CurrentState.GetType()}");
             if (stateMachine.CurrentState is PausedState)
             {
                 stateMachine.Change<PlayingState>();

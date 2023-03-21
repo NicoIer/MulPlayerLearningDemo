@@ -51,7 +51,6 @@ namespace Kitchen.UI
             var deliveryManager = DeliveryManager.GetInstanceOnDisable();
             if (deliveryManager != null)
             {
-                
                 deliveryManager.OnOrderFinished -= _OnOrderFinished;
                 deliveryManager.OnOrderAdded -= _OnOrderAdded;
                 deliveryManager.OnOrderSuccess -= _OnOrderSuccess;

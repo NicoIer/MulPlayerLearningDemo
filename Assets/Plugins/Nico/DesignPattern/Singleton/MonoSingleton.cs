@@ -31,7 +31,7 @@ namespace Nico
                             if (_instance == null)
                             {
                                 //找不见 就 new 一个
-                                Debug.Log($"can not find {typeof(T).Name} auto create one");
+                                Debug.Log($"can not find MonoSingleton<{typeof(T).Name}> auto create one");
                                 GameObject obj = new GameObject(typeof(T).Name);
                                 _instance = obj.AddComponent<T>();
                             }
@@ -49,7 +49,7 @@ namespace Nico
         /// <returns></returns>
         public static T GetInstanceOnDisable(bool throwError = false)
         {
-            if (_applicationQuit)
+            if(_instance==null)
             {
                 if (throwError)
                 {
@@ -62,16 +62,9 @@ namespace Nico
             return Instance;
         }
 
-        private static bool _applicationQuit;
-
-        protected void OnApplicationQuit()
-        {
-            _applicationQuit = true;
-        }
 
         protected virtual void Awake()
         {
-            _applicationQuit = false;
             //如果Awake前没有被访问 那么就会在Awake中初始化
             if (_instance == null)
             {

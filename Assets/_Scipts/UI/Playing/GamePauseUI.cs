@@ -31,6 +31,7 @@ namespace Kitchen.UI
 
         private void _OnMainMenuButtonClick()
         {
+            GameManager.Instance.ExitGame();
             SceneLoader.Load("MainMenuScene", "LoadingScene");
         }
 
@@ -53,7 +54,6 @@ namespace Kitchen.UI
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
-            Debug.Log("State Change");
             if (arg2 is PausedState)
             {
                 Show();
