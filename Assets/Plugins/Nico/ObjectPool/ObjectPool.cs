@@ -14,7 +14,7 @@ namespace Nico
             obj = _pool.Count == 0 ? Instantiate(prefab) : _pool.Dequeue();
             if (obj.TryGetComponent(out IPoolObject poolObject))
             {
-                poolObject.OnGet();
+                poolObject.Get();
             }
             obj.SetActive(true);
             return obj;

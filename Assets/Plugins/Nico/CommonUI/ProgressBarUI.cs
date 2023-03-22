@@ -7,6 +7,7 @@ namespace Nico
     public class ProgressBarUI : MonoBehaviour
     {
         private Image _image;
+        public event Action onSetProgress;
 
         private void Awake()
         {
@@ -25,6 +26,7 @@ namespace Nico
 
             Show();
             _image.fillAmount = target;
+            onSetProgress?.Invoke();
         }
 
         public void Hide()

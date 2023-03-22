@@ -2312,6 +2312,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1696317765}
     m_Modifications:
+    - target: {fileID: 2108936314938973294, guid: 008e6341827ed8847a2a2b8ff58d0de1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4729988700585643602, guid: 008e6341827ed8847a2a2b8ff58d0de1,
         type: 3}
       propertyPath: m_Name
@@ -2467,6 +2472,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1696317765}
     m_Modifications:
+    - target: {fileID: 2108936314938973294, guid: 008e6341827ed8847a2a2b8ff58d0de1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4729988700585643602, guid: 008e6341827ed8847a2a2b8ff58d0de1,
         type: 3}
       propertyPath: m_Name
@@ -3316,6 +3326,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1696317765}
     m_Modifications:
+    - target: {fileID: 2108936314938973294, guid: 008e6341827ed8847a2a2b8ff58d0de1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4729988700585643602, guid: 008e6341827ed8847a2a2b8ff58d0de1,
         type: 3}
       propertyPath: m_Name
@@ -9760,7 +9775,7 @@ GameObject:
   - component: {fileID: 1316002815}
   - component: {fileID: 1316002814}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: OutSide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10889,7 +10904,7 @@ GameObject:
   - component: {fileID: 1421916235}
   - component: {fileID: 1421916234}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: OutSide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11310,7 +11325,7 @@ GameObject:
   - component: {fileID: 1438903888}
   - component: {fileID: 1438903887}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: OutSide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

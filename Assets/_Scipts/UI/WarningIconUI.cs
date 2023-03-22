@@ -17,19 +17,24 @@ namespace Kitchen.UI
 
         private void OnEnable()
         {
-            _stoveCounter.onCookingStageChange += OnCookingStageChange;
+            _stoveCounter.OnCookingStageChange += OnCookingStageChange;
         }
 
         private void OnDisable()
         {
-            _stoveCounter.onCookingStageChange -= OnCookingStageChange;
+            _stoveCounter.OnCookingStageChange -= OnCookingStageChange;
         }
 
-        private void OnCookingStageChange(KitchenObjEnum obj)
+        private void OnCookingStageChange(KitchenObjEnum? obj)
         {
             //TODO 如果obj的下一个状态是烤焦 则显示WarningIcon
             //否则隐藏WarningIcon
-            if(KitchenObjOperator.WillBeBurned(obj))
+            if (obj is null)
+            {
+                warningIcon.SetActive(false);
+                return;
+            }
+            if(KitchenObjOperator.WillBeBurned(obj.Value))
             {
                 warningIcon.SetActive(true);
             }

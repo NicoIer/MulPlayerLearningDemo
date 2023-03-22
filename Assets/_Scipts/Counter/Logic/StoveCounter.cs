@@ -11,7 +11,7 @@ namespace Kitchen
         private CancellationTokenSource _cookingCts;
         public event EventHandler OnStartCooking;
         public event EventHandler OnStopCooking;
-        public event Action<KitchenObjEnum> onCookingStageChange;
+        public event Action<KitchenObjEnum?> OnCookingStageChange;
         private ProgressBarUI _progressBarUI;
 
         protected override void Awake()
@@ -79,6 +79,7 @@ namespace Kitchen
             _cookingCts?.Cancel();
             isCooking = false;
             OnStopCooking?.Invoke(this, EventArgs.Empty);
+            OnCookingStageChange?.Invoke(null);
             _progressBarUI.Hide();
         }
 
@@ -87,10 +88,10 @@ namespace Kitchen
             _cookingCts = new CancellationTokenSource();
             isCooking = true;
             OnStartCooking?.Invoke(this, EventArgs.Empty);
+            OnCookingStageChange?.Invoke(kitchenObj.objEnum);
             while (KitchenObjOperator.CanCook(kitchenObj) && !_cookingCts.IsCancellationRequested)
             {
-                //烹饪阶段改变 
-                onCookingStageChange?.Invoke(kitchenObj.objEnum);
+                
                 //获取此次烹饪需要的时间
                 float cookTime = DataTableManager.Sigleton.GetCookingTime(kitchenObj.objEnum);
                 //开始烹饪 同时 更新进度条
@@ -102,8 +103,12 @@ namespace Kitchen
                 }
 
                 KitchenObjOperator.Cook(kitchenObj, this);
+                //烹饪阶段改变 
+                OnCookingStageChange?.Invoke(kitchenObj.objEnum);
+
             }
 
+            OnCookingStageChange?.Invoke(kitchenObj.objEnum);
             OnStopCooking?.Invoke(this, EventArgs.Empty);
 
             isCooking = false;

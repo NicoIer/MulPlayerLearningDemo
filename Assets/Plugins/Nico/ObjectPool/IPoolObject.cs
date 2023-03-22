@@ -2,7 +2,7 @@
 {
     public interface IPoolObject
     {
-        void OnGet();
+        void Get();
         void Return();
     }
 }
