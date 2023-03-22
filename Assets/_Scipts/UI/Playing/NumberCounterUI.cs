@@ -8,7 +8,9 @@ namespace Kitchen.UI
     public class NumberCounterUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-        
+        [SerializeField] private Animator animator;
+        private readonly int _animParam = Animator.StringToHash("pop_up");
+
         private void OnEnable()
         {
             GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
@@ -37,17 +39,18 @@ namespace Kitchen.UI
 
         public void SetNumber(int number)
         {
+            animator.SetTrigger(_animParam);
             textMeshProUGUI.text = number.ToString();
         }
 
         public void Show()
         {
-            gameObject.SetActive(true);
+            textMeshProUGUI.gameObject.SetActive(true);
         }
 
         public void Hide()
         {
-            gameObject.SetActive(false);
+            textMeshProUGUI.gameObject.SetActive(false);
         }
 
         private void OnDisable()

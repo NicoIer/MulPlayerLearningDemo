@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Nico;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -19,6 +20,12 @@ namespace Kitchen.Music
             Player.Player.Instance.onMoving += _Player_OnMoving;
             BaseCounter.OnAnyObjPlaceOnCounter += _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed += _TrashCounter_OnAnyObjTrashed;
+            GameManager.Instance.OnCountDownChange += _OnCountDownChanged;
+        }
+
+        private void _OnCountDownChanged(int obj)
+        {
+            _PlaySound(audioClipData.warning, transform.position);
         }
 
         private void OnDisable()
@@ -40,6 +47,10 @@ namespace Kitchen.Music
 
             BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
+
+            var gameManager = GameManager.GetInstanceOnDisable();
+            if (gameManager != null)
+                gameManager.OnCountDownChange -= _OnCountDownChanged;
         }
 
 
@@ -60,11 +71,23 @@ namespace Kitchen.Music
 
         #region Events
 
+        private bool _canPlayMovingSound = true;
+        private readonly float _movingSoundInterval = 0.2f;
+
         private void _Player_OnMoving(Vector3 position)
         {
             //TODO 由于玩家每帧都在动 会导致生成的声音数量太多 听起来卡卡的
-            //设置一个interval
-            _PlaySound(audioClipData.footStep, position);
+            //设置一个interval 只有计数到interval才会播放声音
+            if (_canPlayMovingSound)
+            {
+                _PlaySound(audioClipData.footStep, position);
+                //开启计时器
+                _canPlayMovingSound = false;
+                UniTask.Delay(TimeSpan.FromSeconds(_movingSoundInterval)).ContinueWith(() =>
+                {
+                    _canPlayMovingSound = true;
+                }).Forget();
+            }
         }
 
         private void _OnOrderSuccess(object sender, Vector3 position)
@@ -100,7 +123,9 @@ namespace Kitchen.Music
 
         #endregion
 
-       private float _volume = 1f;
+        #region 音量大小
+
+        private float _volume = 1f;
 
         public void ChangeVolume(float volume)
         {
@@ -113,12 +138,20 @@ namespace Kitchen.Music
             {
                 volume = 0;
             }
+
             _volume = volume;
         }
 
         public float GetVolume()
         {
             return _volume;
+        }
+
+        #endregion
+        
+        public void PlayWarning(Vector3 position)
+        {
+            _PlaySound(audioClipData.warning, position);
         }
     }
 }

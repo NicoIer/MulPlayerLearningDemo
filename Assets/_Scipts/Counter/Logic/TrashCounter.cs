@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Kitchen
 {
     public class TrashCounter : BaseCounter
-    { public static event Action<Vector3> OnAnyObjTrashed;
+    { 
+        public static event Action<Vector3> OnAnyObjTrashed;
         public override void Interact(Player.Player player)
         {
             //将玩家手上的东西销毁掉

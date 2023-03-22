@@ -88,6 +88,16 @@ namespace Kitchen
             holder.SetKitchenObj(cookedObj);
         }
 
+        public static bool WillBeBurned(KitchenObjEnum kitchenObjEnum)
+        {
+            //ToDO
+            if (kitchenObjEnum == KitchenObjEnum.MeatPattyCooked)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         public static void PutToPlate(KitchenObj kitchenObj, Plate plate)
         {

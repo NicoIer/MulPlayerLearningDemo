@@ -62,7 +62,17 @@ namespace Kitchen
 
         private void Start()
         {
-            StartGame();
+            Player.Player.Instance.input.OnInteractPerform += OnPerformInteract;
+            _stateMachine.Change<WaitingToStartState>();
+        }
+
+        private void OnPerformInteract()
+        {
+            if (stateMachine.CurrentState is WaitingToStartState)
+            {
+                StartGame();
+                Player.Player.Instance.input.OnInteractPerform -= OnPerformInteract;
+            }
         }
 
         private void Update()

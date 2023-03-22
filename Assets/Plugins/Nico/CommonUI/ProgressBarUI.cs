@@ -7,6 +7,7 @@ namespace Nico
     public class ProgressBarUI : MonoBehaviour
     {
         private Image _image;
+
         private void Awake()
         {
             _image = transform.Find("Bar").GetComponent<Image>();
@@ -21,13 +22,23 @@ namespace Nico
                 Hide();
                 return;
             }
+
             Show();
             _image.fillAmount = target;
         }
 
         public void Hide()
         {
-            gameObject.SetActive(false);
+            //如果此时游戏直接退出了 会出现一点BUG
+            //但是这个BUG不影响游戏 还是处理一下
+            try
+            {
+                gameObject.SetActive(false);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         public void Show()

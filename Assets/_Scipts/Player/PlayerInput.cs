@@ -27,6 +27,7 @@ namespace Kitchen
         public event Action OnInteractAlternatePerform;
         public event Action OnPause;
         private const string _bingSaveKey = "player_bindings";
+        public event Action OnRebinding;
 
         public string GetBingingName(InputEnum actionName)
         {
@@ -63,7 +64,6 @@ namespace Kitchen
             if (PlayerPrefs.HasKey(_bingSaveKey))
             {
                 _standerInput.LoadBindingOverridesFromJson(PlayerPrefs.GetString(_bingSaveKey));
-                
             }
         }
 
@@ -116,6 +116,68 @@ namespace Kitchen
         {
             var str = _standerInput.SaveBindingOverridesAsJson();
             PlayerPrefs.SetString(_bingSaveKey, str);
+           
+        }
+
+        public void Rebinding(InputEnum inputEnum, Action callbackAction)
+        {
+            _standerInput.Player.Disable();
+            InputAction action;
+            int idx;
+            switch (inputEnum)
+            {
+                case InputEnum.MoveUp:
+                    action = _standerInput.Player.move2D;
+                    idx = 1;
+                    break;
+                case InputEnum.MoveDown:
+                    action = _standerInput.Player.move2D;
+                    idx = 2;
+                    break;
+                case InputEnum.MoveLeft:
+                    action = _standerInput.Player.move2D;
+                    idx = 3;
+                    break;
+                case InputEnum.MoveRight:
+                    action = _standerInput.Player.move2D;
+                    idx = 4;
+                    break;
+                case InputEnum.Interact:
+                    action = _standerInput.Player.Interact;
+                    idx = 0;
+                    break;
+                case InputEnum.InteractAlternate:
+                    action = _standerInput.Player.InteractAlternate;
+                    idx = 0;
+                    break;
+                case InputEnum.Pause:
+                    action = _standerInput.Player.Pause;
+                    idx = 0;
+                    break;
+                case InputEnum.GamePadInteract:
+                    action = _standerInput.Player.Interact;
+                    idx = 1;
+                    break;
+                case InputEnum.GamePadInteractAlternate:
+                    action = _standerInput.Player.InteractAlternate;
+                    idx = 1;
+                    break;
+                case InputEnum.GamePadPause:
+                    action = _standerInput.Player.Pause;
+                    idx = 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(inputEnum), inputEnum, null);
+            }
+
+            action.PerformInteractiveRebinding(idx).OnComplete((callback) =>
+            {
+                callback.Dispose();
+                _standerInput.Enable();
+                OnRebinding?.Invoke();
+                callbackAction?.Invoke();
+            }).Start();
+            SaveAsJson();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -47,6 +48,7 @@ namespace Nico
         /// 在Disable时访问的途径 之所以会有这个存在 是因为游戏退出时 单例应该被销毁 此时其他的途径访问单例对象 都会造成错误
         /// </summary>
         /// <returns></returns>
+        [CanBeNull]
         public static T GetInstanceOnDisable(bool throwError = false)
         {
             if(_instance==null)

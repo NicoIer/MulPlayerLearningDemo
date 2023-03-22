@@ -75,64 +75,11 @@ namespace Kitchen.UI
         private void _ReBinding(InputEnum inputEnum)
         {
             waitingForKey.SetActive(true);
-            PlayerInput input = Player.Player.Instance.input;
-            input.Player.Disable();
-            InputAction action;
-            int idx;
-            switch (inputEnum)
+            Player.Player.Instance.input.Rebinding(inputEnum, () =>
             {
-                case InputEnum.MoveUp:
-                    action = input.Player.move2D;
-                    idx = 1;
-                    break;
-                case InputEnum.MoveDown:
-                    action = input.Player.move2D;
-                    idx = 2;
-                    break;
-                case InputEnum.MoveLeft:
-                    action = input.Player.move2D;
-                    idx = 3;
-                    break;
-                case InputEnum.MoveRight:
-                    action = input.Player.move2D;
-                    idx = 4;
-                    break;
-                case InputEnum.Interact:
-                    action = input.Player.Interact;
-                    idx = 0;
-                    break;
-                case InputEnum.InteractAlternate:
-                    action = input.Player.InteractAlternate;
-                    idx = 0;
-                    break;
-                case InputEnum.Pause:
-                    action = input.Player.Pause;
-                    idx = 0;
-                    break;
-                case InputEnum.GamePadInteract:
-                    action = input.Player.Interact;
-                    idx = 1;
-                    break;
-                case InputEnum.GamePadInteractAlternate:
-                    action = input.Player.InteractAlternate;
-                    idx = 1;
-                    break;
-                case InputEnum.GamePadPause:
-                    action = input.Player.Pause;
-                    idx = 1;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(inputEnum), inputEnum, null);
-            }
-
-            action.PerformInteractiveRebinding(idx).OnComplete((callback) =>
-            {
-                callback.Dispose();
-                input.Enable();
                 waitingForKey.SetActive(false);
                 UpdateVisual();
-                Player.Player.Instance.input.SaveAsJson();
-            }).Start();
+            });
         }
     }
 }

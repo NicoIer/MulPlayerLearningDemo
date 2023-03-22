@@ -15,6 +15,22 @@ namespace Kitchen
         private bool _isGenerating = false;
         public event EventHandler<int> OnPlateCountChanged;
 
+        private void Start()
+        {
+            GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
+        }
+
+        private void _OnGameStateChange(GameState arg1, GameState arg2)
+        {
+            if (arg2 is PlayingState)
+            {
+                _StartGeneratePlate();
+            }
+            else
+            {
+                _StopGeneratePlate();
+            }
+        }
 
         private void OnEnable()
         {
@@ -27,11 +43,20 @@ namespace Kitchen
             _StopGeneratePlate();
         }
 
+        private void _StartGeneratePlate()
+        {
+            if (!_isGenerating)
+            {
+                _GeneratePlate().Forget();
+            }
+        }
+
         private void _StopGeneratePlate()
         {
             _plateGenerateCts?.Cancel();
             _isGenerating = false;
         }
+
         private async UniTask _GeneratePlate()
         {
             _isGenerating = true;

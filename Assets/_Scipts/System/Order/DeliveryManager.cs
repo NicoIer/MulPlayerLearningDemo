@@ -58,24 +58,24 @@ namespace Kitchen
         private void OnDisable()
         {
             _orderGenerateCts?.Cancel();
+
             var gameManager = GameManager.GetInstanceOnDisable();
             if (gameManager != null)
             {
                 gameManager.stateMachine.onStateChange -= _OnGameStateChange;
-                return;
             }
-            
         }
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
             if (arg2 is ReadyToStartState)
             {
+                //当切换到ReadyToStartState时，开始生成订单
                 _GenerateOrder().Forget();
             }
         }
 
-        
+
         private async UniTask _GenerateOrder()
         {
             _isGeneratingOrder = true;
