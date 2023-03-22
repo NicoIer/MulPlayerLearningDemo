@@ -30,7 +30,7 @@ namespace Kitchen.Music
 
         private void OnDisable()
         {
-            var deliveryManager = DeliveryManager.GetInstanceOnDisable();
+            var deliveryManager = DeliveryManager.GetInstanceUnSafe();
             if (deliveryManager != null)
             {
                 deliveryManager.OnOrderSuccess -= _OnOrderSuccess;
@@ -38,7 +38,7 @@ namespace Kitchen.Music
             }
 
             CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;
-            var player = Player.Player.GetInstanceOnDisable();
+            var player = Player.Player.GetInstanceUnSafe();
             if (player != null)
             {
                 player.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
@@ -48,7 +48,7 @@ namespace Kitchen.Music
             BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
 
-            var gameManager = GameManager.GetInstanceOnDisable();
+            var gameManager = GameManager.GetInstanceUnSafe();
             if (gameManager != null)
                 gameManager.OnCountDownChange -= _OnCountDownChanged;
         }

@@ -49,7 +49,7 @@ namespace Nico
         /// </summary>
         /// <returns></returns>
         [CanBeNull]
-        public static T GetInstanceOnDisable(bool throwError = false)
+        public static T GetInstanceUnSafe(bool throwError = false)
         {
             if(_instance==null)
             {

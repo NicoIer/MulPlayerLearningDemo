@@ -59,7 +59,7 @@ namespace Kitchen
         {
             _orderGenerateCts?.Cancel();
 
-            var gameManager = GameManager.GetInstanceOnDisable();
+            var gameManager = GameManager.GetInstanceUnSafe();
             if (gameManager != null)
             {
                 gameManager.stateMachine.onStateChange -= _OnGameStateChange;

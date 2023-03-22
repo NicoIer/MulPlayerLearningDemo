@@ -1936,6 +1936,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlateCounter (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6786556633018255501, guid: bbaa0452dcf53aa408d981eb24fac40a,
+        type: 3}
+      propertyPath: spawnInterval
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12411,7 +12416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ecfe0668ab74f46bcbf00937d268d4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyCountDown: 4
+  readyCountDown: 1
 --- !u!1 &1567231555
 GameObject:
   m_ObjectHideFlags: 0

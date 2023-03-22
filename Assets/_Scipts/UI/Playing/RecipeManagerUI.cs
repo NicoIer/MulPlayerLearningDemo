@@ -48,7 +48,7 @@ namespace Kitchen.UI
 
         private void OnDisable()
         {
-            var deliveryManager = DeliveryManager.GetInstanceOnDisable();
+            var deliveryManager = DeliveryManager.GetInstanceUnSafe();
             if (deliveryManager != null)
             {
                 deliveryManager.OnOrderFinished -= _OnOrderFinished;
