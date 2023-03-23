@@ -21,7 +21,7 @@ namespace Kitchen
             "Assets/Resources/So/Recipe.json";
 
         private Dictionary<string, RecipeData> _recipeDict;
-        private readonly LinkedList<RecipeData> _waitingQueue = new();
+        private readonly List<RecipeData> _waitingQueue = new();
 
         [SerializeField] private List<RecipeData> recipeList;
         private CancellationTokenSource _orderGenerateCts;
@@ -76,7 +76,7 @@ namespace Kitchen
         private void SpawnOrderClientRpc(int recipeDataIdx)
         {
             var recipeData = recipeList[recipeDataIdx];
-            _waitingQueue.AddLast(recipeData);
+            _waitingQueue.Add(recipeData);
             OnOrderAdded?.Invoke(this, recipeData);
         }
 
@@ -94,7 +94,7 @@ namespace Kitchen
                 {
                     //从食谱中随机选取一个
                     var randomIndex = UnityEngine.Random.Range(0, _recipeDict.Count);
-                    SpawnOrderClientRpc(randomIndex);//生成订单
+                    SpawnOrderClientRpc(randomIndex); //生成订单
                     //如果在这里添加订单,则只会生成服务端的订单 客户端的订单需要通过网络同步来实现
                     //如果在Rpc中添加 则会在所有客户端上生成订单
                 }
@@ -112,25 +112,35 @@ namespace Kitchen
         public bool TryDeliverOrder(Vector3 position, HashSet<KitchenObjEnum> ingredients)
         {
             //检查是否有匹配的订单
-            RecipeData? target = _CheckIngredients(ingredients);
-            if (target == null)
+            int target = _CheckIngredients(ingredients);
+            if (target == -1)
             {
-                OnOrderFailed?.Invoke(this, position);
+                _FailedOrderServerRpc(position);
                 return false;
             }
 
-            _CompleteOrder((RecipeData)target, position);
+            Debug.Log("订单完成!!");
+            _CompleteOrderServerRpc(target, position);
 
             return true;
         }
 
-        private void _CompleteOrder(RecipeData recipeData, Vector3 position)
+        [ClientRpc]
+        private void _FailedOrderClientRpc(Vector3 position)
         {
-            Debug.Log("订单完成!!");
-            ++ModelManager.Get<CompletedOrderModel>().orderCount;
+            OnOrderFailed?.Invoke(this, position);
+        }
 
-            _waitingQueue.Remove(recipeData);
-            OnOrderSuccess?.Invoke(this, position);
+        [ServerRpc]
+        private void _FailedOrderServerRpc(Vector3 position)
+        {
+            _FailedOrderClientRpc(position);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void _CompleteOrderServerRpc(int recipeDataIdx, Vector3 position)
+        {
+            _CompleteOrderClientRpc(recipeDataIdx, position);
             //尝试重新启动订单生成任务
             if (!_isGeneratingOrder)
             {
@@ -138,11 +148,22 @@ namespace Kitchen
             }
         }
 
-        private RecipeData? _CheckIngredients(HashSet<KitchenObjEnum> ingredients)
+        [ClientRpc]
+        private void _CompleteOrderClientRpc(int recipeDataIdx, Vector3 position)
         {
-            RecipeData? target = null;
-            foreach (var order in _waitingQueue)
+            Debug.Log("订单完成!!");
+            ++ModelManager.Get<CompletedOrderModel>().orderCount;
+
+            _waitingQueue.RemoveAt(recipeDataIdx);
+            OnOrderSuccess?.Invoke(this, position);
+        }
+
+        private int _CheckIngredients(HashSet<KitchenObjEnum> ingredients)
+        {
+            int target = -1;
+            for (int i = 0; i < _waitingQueue.Count; i++)
             {
+                var order = _waitingQueue[i];
                 if (order.recipe.Length != ingredients.Count)
                     continue;
                 //检查是否有相同的食材
@@ -152,7 +173,7 @@ namespace Kitchen
                 //如果有一个不相同则跳过
                 if (!flag) continue;
                 //有符合的订单 -> 跳出检查
-                target = order;
+                target = i;
                 break;
             }
 
