@@ -54,28 +54,12 @@ namespace Kitchen
             recipeList = new List<RecipeData>(_recipeDict.Values);
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
-        }
-
-        private void OnDisable()
-        {
-            _orderGenerateCts?.Cancel();
-
-            var gameManager = GameManager.GetInstanceUnSafe();
-            if (gameManager != null)
-            {
-                gameManager.stateMachine.onStateChange -= _OnGameStateChange;
-            }
-        }
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
             Debug.Log("游戏状态切换：" + arg1 + " -> " + arg2);
             Debug.Log("isServer:" + IsServer);
-            if (!IsServer) return;//只有服务器端才会生成订单
+            if (!IsServer) return; //只有服务器端才会生成订单
             if (arg2 is ReadyToStartState)
             {
                 //当切换到ReadyToStartState时，开始生成订单
@@ -83,6 +67,18 @@ namespace Kitchen
             }
         }
 
+        /// <summary>
+        /// 由服务器调用,在所有 客户端 上生成订单
+        /// Tag 之所以只传递一个idx,是因为参数会在网络传输中被序列化,如果传递整个RecipeData,会导致序列化失败 或者 开销过大
+        /// </summary>
+        /// <param name="recipeDataIdx"></param>
+        [ClientRpc]
+        private void SpawnOrderClientRpc(int recipeDataIdx)
+        {
+            var recipeData = recipeList[recipeDataIdx];
+            _waitingQueue.AddLast(recipeData);
+            OnOrderAdded?.Invoke(this, recipeData);
+        }
 
         private async UniTask _GenerateOrder()
         {
@@ -98,9 +94,9 @@ namespace Kitchen
                 {
                     //从食谱中随机选取一个
                     var randomIndex = UnityEngine.Random.Range(0, _recipeDict.Count);
-                    var recipeData = recipeList[randomIndex];
-                    _waitingQueue.AddLast(recipeData);
-                    OnOrderAdded?.Invoke(this, recipeData);
+                    SpawnOrderClientRpc(randomIndex);//生成订单
+                    //如果在这里添加订单,则只会生成服务端的订单 客户端的订单需要通过网络同步来实现
+                    //如果在Rpc中添加 则会在所有客户端上生成订单
                 }
                 else
                 {
@@ -167,5 +163,26 @@ namespace Kitchen
         {
             return _waitingQueue;
         }
+
+        #region 脚本 激活 取消激活
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
+        }
+
+        private void OnDisable()
+        {
+            _orderGenerateCts?.Cancel();
+
+            var gameManager = GameManager.GetInstanceUnSafe();
+            if (gameManager != null)
+            {
+                gameManager.stateMachine.onStateChange -= _OnGameStateChange;
+            }
+        }
+
+        #endregion
     }
 }
