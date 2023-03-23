@@ -5,7 +5,7 @@ namespace Kitchen.Player
 {
     public partial class Player : ICanHoldKitchenObj
     {
-        public event EventHandler OnPickUpSomeThing; 
+        
         public Transform GetTopSpawnPoint()
         {
             return topSpawnPoint;
@@ -20,7 +20,7 @@ namespace Kitchen.Player
         {
             if (newKitchenObj != null)
             {
-                OnPickUpSomeThing?.Invoke(this, EventArgs.Empty);
+                OnAnyPickUpSomeThing?.Invoke(transform.position);
             }
             this._kitchenObj = newKitchenObj;
         }

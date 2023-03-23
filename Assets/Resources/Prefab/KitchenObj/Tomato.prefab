@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7347640811211430992}
   - component: {fileID: 3791774424439512234}
+  - component: {fileID: -6451538418681678889}
+  - component: {fileID: 793269313709611719}
   m_Layer: 0
   m_Name: Tomato
   m_TagString: Untagged
@@ -46,11 +48,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objEnum: 0
+--- !u!114 &-6451538418681678889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7347640811211430993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &793269313709611719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7347640811211430993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fba95087c8914d57b3bc033293854f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Target>k__BackingField: {fileID: 0}
 --- !u!1001 &7347640810055610348
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 7347640811211430992}
     m_Modifications:
     - target: {fileID: 3812876574508226176, guid: 81e9fe7b3cd084242a088e945f531f38,
@@ -114,6 +146,9 @@ PrefabInstance:
       value: Tomato_Visual
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81e9fe7b3cd084242a088e945f531f38, type: 3}
 --- !u!4 &5841766198852696428 stripped
 Transform:

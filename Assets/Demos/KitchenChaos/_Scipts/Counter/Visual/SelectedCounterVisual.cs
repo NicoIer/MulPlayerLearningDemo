@@ -30,7 +30,7 @@ namespace Kitchen
         private void _OnAnyPlayerSpawned()
         {
             //当有玩家出生的时候 就会触发这个事件
-            //出生的玩家并不一定是本地玩家 因此 这里需要判断一下
+            //出生的玩家并不一定是本地玩家 因此 这里需要判断一下 null
             if (Player.Player.LocalInstance != null)
             {
                 Player.Player.LocalInstance.SelectCounterController.OnSelectedCounterChanged += OnSelectedCounterChanged;

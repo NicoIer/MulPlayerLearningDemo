@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kitchen;
-using Nico.DesignPattern.Singleton.Network;
+using Nico.Network.Singleton;
 using UnityEngine;
 
 namespace Kitchen
@@ -66,7 +66,7 @@ namespace Kitchen
             if (cuttingCount >= maxCuttingCount)
             {
                 currentKitchenObj.DestroySelf();
-                var obj = KitchenObjOperator.SpawnKitchenObj(cutKitchenObjSo, this);
+                KitchenObjOperator.SpawnKitchenObj(cutKitchenObjSo.kitchenObjEnum, this);
                 cuttingCount = 0;
             }
         }

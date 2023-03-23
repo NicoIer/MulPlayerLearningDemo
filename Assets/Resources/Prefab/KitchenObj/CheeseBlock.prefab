@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7347640811211430992}
   - component: {fileID: 5316773725243224771}
+  - component: {fileID: 6906315203049819069}
+  - component: {fileID: -2126855630462440933}
   m_Layer: 0
   m_Name: CheeseBlock
   m_TagString: Untagged
@@ -46,11 +48,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objEnum: 2
+--- !u!114 &6906315203049819069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7347640811211430993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &-2126855630462440933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7347640811211430993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fba95087c8914d57b3bc033293854f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Target>k__BackingField: {fileID: 0}
 --- !u!1001 &7021345025283326581
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 7347640811211430992}
     m_Modifications:
     - target: {fileID: 3812876574508226176, guid: 44325c67017631342b5f02792113e57b,
@@ -114,6 +146,9 @@ PrefabInstance:
       value: CheeseBlock_Visual
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44325c67017631342b5f02792113e57b, type: 3}
 --- !u!4 &6168483512384001269 stripped
 Transform:

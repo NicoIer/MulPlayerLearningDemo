@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Nico.DesignPattern.Singleton.Network
+namespace Nico.Network.Singleton
 {
     public class ProgressBarUI : MonoBehaviour
     {

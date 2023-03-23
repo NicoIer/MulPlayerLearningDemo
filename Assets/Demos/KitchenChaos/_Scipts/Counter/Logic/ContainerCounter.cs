@@ -21,13 +21,16 @@ namespace Kitchen
 
         public override void Interact(Player.Player player)
         {
+            Debug.Log(player + "  " + player.NetworkObjectId + "尝试获取道具" +$"它是否有道具:{player.HasKitchenObj()}");
             if (player.HasKitchenObj())
             {
+                Debug.Log("获取失败");
                 return;
             }
-            KitchenObjOperator.SpawnKitchenObj(_kitchenObjSo,player);
+
+            Debug.Log("请求生成道具");
+            KitchenObjOperator.SpawnKitchenObj(_kitchenObjSo.kitchenObjEnum, player);
             OnInteractEvent?.Invoke(this, EventArgs.Empty);
         }
-
     }
 }

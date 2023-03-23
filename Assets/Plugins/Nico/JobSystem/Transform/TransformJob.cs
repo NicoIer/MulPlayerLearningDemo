@@ -3,7 +3,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Jobs;
 
-namespace Nico.DesignPattern.Singleton.Network
+namespace Nico.Network.Singleton
 {
     [BurstCompile]
     internal struct MoveTransformsJob : IJobParallelForTransform

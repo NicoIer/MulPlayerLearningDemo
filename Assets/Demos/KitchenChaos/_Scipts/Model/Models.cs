@@ -1,4 +1,4 @@
-﻿using Nico.DesignPattern.Singleton.Network.MVC;
+﻿using Nico.Network.Singleton.MVC;
 
 namespace Kitchen
 {

@@ -1,7 +1,7 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 
-namespace Nico.DesignPattern.Singleton.Network
+namespace Nico.Network.Singleton
 {
     /// <summary>
     /// 本地单例模式

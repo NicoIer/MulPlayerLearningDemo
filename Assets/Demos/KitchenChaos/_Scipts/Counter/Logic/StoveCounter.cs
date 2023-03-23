@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Nico.DesignPattern.Singleton.Network;
+using Nico.Network.Singleton;
 using UnityEngine;
 
 namespace Kitchen

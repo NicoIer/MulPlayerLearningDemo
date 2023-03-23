@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Nico.DesignPattern.Singleton.Network;
+using Nico.Network.Singleton;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -33,6 +33,7 @@ namespace Kitchen.Player
         #region Event
 
         public static event Action OnAnyPlayerSpawned;
+        public static event Action<Vector3> OnAnyPickUpSomeThing;
 
         #endregion
 
@@ -48,30 +49,23 @@ namespace Kitchen.Player
 
         [SerializeField] internal PlayerData data;
 
-
-        protected void Awake()
-        {
-            // Instance = this;
-            _Init();
-        }
+        
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            _Init();
+            
             OnAnyPlayerSpawned?.Invoke();
-        }
-        
-
-        private void OnEnable()
-        {
             input.Enable();
             input.OnInteractPerform += OnPerformInteract;
             input.OnInteractAlternatePerform += OnPerformInteractAlternate;
         }
 
-
-        private void OnDisable()
+        public override void OnNetworkDespawn()
         {
+            base.OnNetworkDespawn();
+            
             input.Disable();
             input.OnInteractPerform -= OnPerformInteract;
             input.OnInteractAlternatePerform -= OnPerformInteractAlternate;
@@ -99,25 +93,23 @@ namespace Kitchen.Player
         {
             if (!_initialized)
             {
+                Debug.Log("INIT");
                 input = PlayerInput.Instance; //TODO Controller需要获取Input的引用，所以这里需要先初始化Input
-                InitializedMonoComponents();
-                InitializedControllers();
+                topSpawnPoint = transform.Find("KitchenObjHoldPoint");
+                
+                _controllers = new List<PlayerController>();
+                MoveController = new PlayerMoveController(this);
+                _controllers.Add(MoveController);
+                _selectCounterController = new PlayerSelectCounterController(this);
+                _controllers.Add(_selectCounterController);
+                
                 _initialized = true;
             }
         }
-
-        private void InitializedMonoComponents()
+        
+        public NetworkObject GetNetworkObject()
         {
-            topSpawnPoint = transform.Find("KitchenObjHoldPoint");
-        }
-
-        private void InitializedControllers()
-        {
-            _controllers = new List<PlayerController>();
-            MoveController = new PlayerMoveController(this);
-            _controllers.Add(MoveController);
-            _selectCounterController = new PlayerSelectCounterController(this);
-            _controllers.Add(_selectCounterController);
+            return NetworkObject;
         }
     }
 }

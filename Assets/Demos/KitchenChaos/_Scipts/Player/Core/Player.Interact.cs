@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Kitchen.Player
 {
@@ -12,6 +13,7 @@ namespace Kitchen.Player
             //这是多播委托的调用 其实没必要通知每个Counter
             if (SelectedCounter == null)
                 return;
+            Debug.Log("按下交互键");
             SelectedCounter.Interact(this);
         }
 

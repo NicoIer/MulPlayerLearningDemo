@@ -1,7 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Kitchen.UI;
-using Nico.DesignPattern.Singleton.Network;
+using Nico.Network.Singleton;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

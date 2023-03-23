@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nico.DesignPattern.Singleton.Network;
-using Nico.DesignPattern.Singleton.Network.ECC;
+using Nico.Network.Singleton;
+using Nico.Network.Singleton.ECC;
 using UnityEngine;
 
 namespace Kitchen

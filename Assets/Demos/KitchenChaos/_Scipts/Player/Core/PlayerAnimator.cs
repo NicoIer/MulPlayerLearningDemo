@@ -10,26 +10,26 @@ namespace Kitchen.Player
         private Animator _animator;
 
         private int _walking;
+        
 
-        private void Awake()
+        public override void OnNetworkSpawn()
         {
+            base.OnNetworkSpawn();
             _player = GetComponentInParent<Player>();
             _animator = GetComponent<Animator>();
             _walking = Animator.StringToHash(_player.data.animWalking);
-        }
-
-        private void OnEnable()
-        {
+            
             _player.MoveController.OnStartMove += _OnStartMove;
             _player.MoveController.OnStopMove += _OnStopMove;
         }
 
-        private void OnDisable()
+        public override void OnNetworkDespawn()
         {
+            base.OnNetworkDespawn();
+            
             _player.MoveController.OnStartMove -= _OnStartMove;
             _player.MoveController.OnStopMove -= _OnStopMove;
         }
-
         private void _OnStopMove()
         {
             _animator.SetBool(_walking, false);

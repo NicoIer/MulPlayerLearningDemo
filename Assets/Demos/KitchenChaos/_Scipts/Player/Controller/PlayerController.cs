@@ -1,5 +1,5 @@
-﻿using Nico.DesignPattern.Singleton.Network;
-using Nico.DesignPattern.Singleton.Network.ECC;
+﻿using Nico.Network.Singleton;
+using Nico.Network.Singleton.ECC;
 
 namespace Kitchen.Player
 {

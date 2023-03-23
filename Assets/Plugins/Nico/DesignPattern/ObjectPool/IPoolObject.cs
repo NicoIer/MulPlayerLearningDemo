@@ -1,4 +1,4 @@
-﻿namespace Nico.DesignPattern.Singleton.Network
+﻿namespace Nico.Network.Singleton
 {
     public interface IPoolObject
     {

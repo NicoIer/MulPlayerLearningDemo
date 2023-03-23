@@ -1,7 +1,7 @@
 ﻿using Unity.Netcode.Components;
 using UnityEngine;
 
-namespace Nico.DesignPattern.Singleton.Network.NetCode
+namespace Nico.Network.Singleton.NetCode
 {
     public class ClientNetworkAnimator : NetworkAnimator
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using Nico.DesignPattern.Singleton.Network;
+using Nico.Network.Singleton;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -17,17 +17,32 @@ namespace Kitchen.Music
             deliveryManager.OnOrderSuccess += _OnOrderSuccess;
             deliveryManager.OnOrderFailed += _OnOrderFailed;
             CuttingCounter.OnAnyCut += _CuttingCounter_OnAnyCut;
-            // Player.Player.Instance.OnPickUpSomeThing += _Player_On_PickUpSomeThing;
-            // Player.Player.Instance.onMoving += _Player_OnMoving;
+
+            Player.Player.OnAnyPickUpSomeThing += _On_PickUpSomeThing;
+            if (Player.Player.LocalInstance != null)
+            {
+                Player.Player.LocalInstance.MoveController.onMoving += _Player_OnMoving;
+            }
+            else
+            {
+                Player.Player.OnAnyPlayerSpawned += _OnAnyPlayerSpawned;
+            }
+
+
             BaseCounter.OnAnyObjPlaceOnCounter += _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed += _TrashCounter_OnAnyObjTrashed;
             GameManager.Instance.OnCountDownChange += _OnCountDownChanged;
         }
 
-        private void _OnCountDownChanged(int obj)
+        private void _OnAnyPlayerSpawned()
         {
-            _PlaySound(audioClipData.warning, transform.position);
+            if (Player.Player.LocalInstance != null)
+            {
+                Player.Player.LocalInstance.MoveController.onMoving += _Player_OnMoving;
+                Player.Player.OnAnyPlayerSpawned -= _OnAnyPlayerSpawned;
+            }
         }
+
 
         private void OnDisable()
         {
@@ -39,12 +54,14 @@ namespace Kitchen.Music
             }
 
             CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;
-            // var player = Player.Player.GetInstanceUnSafe();
-            // if (player != null)
-            // {
-                // player.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
-                // player.onMoving -= _Player_OnMoving;
-            // }
+            Player.Player.OnAnyPickUpSomeThing -= _On_PickUpSomeThing;
+            try
+            {
+                Player.Player.LocalInstance.MoveController.onMoving -= _Player_OnMoving;
+            }
+            catch (NullReferenceException)
+            {
+            }
 
             BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
@@ -71,6 +88,11 @@ namespace Kitchen.Music
         #endregion
 
         #region Events
+
+        private void _OnCountDownChanged(int obj)
+        {
+            _PlaySound(audioClipData.warning, transform.position);
+        }
 
         private bool _canPlayMovingSound = true;
         private readonly float _movingSoundInterval = 0.2f;
@@ -112,9 +134,9 @@ namespace Kitchen.Music
             _PlaySound(audioClipData.drop, position);
         }
 
-        private void _Player_On_PickUpSomeThing(object sender, EventArgs e)
+        private void _On_PickUpSomeThing(Vector3 position)
         {
-            // _PlaySound(audioClipData.pickUp, Player.Player.Instance.transform.position);
+            _PlaySound(audioClipData.pickUp, position);
         }
 
         private void _CuttingCounter_OnAnyCut(object sender, Vector3 position)
@@ -149,7 +171,7 @@ namespace Kitchen.Music
         }
 
         #endregion
-        
+
         public void PlayWarning(Vector3 position)
         {
             _PlaySound(audioClipData.warning, position);

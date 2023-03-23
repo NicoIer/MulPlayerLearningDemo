@@ -1,5 +1,6 @@
 ﻿using System;
 using Kitchen;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Kitchen
@@ -44,6 +45,11 @@ namespace Kitchen
         public virtual void ClearKitchenObj()
         {
             kitchenObj = null;
+        }
+
+        public NetworkObject GetNetworkObject()
+        {
+            return GetComponent<NetworkObject>();
         }
     }
 }

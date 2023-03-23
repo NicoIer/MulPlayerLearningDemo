@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Nico.DesignPattern.Singleton.Network
+namespace Nico.Network.Singleton
 {
     /// <summary>
     /// 网络Mono单例模式
@@ -35,6 +35,8 @@ namespace Nico.DesignPattern.Singleton.Network
                             {
                                 //找不见 就 new 一个
                                 GameObject obj = new GameObject(typeof(T).Name);
+                                //网络物体需要添加NetworkObject组件
+                                obj.AddComponent<NetworkObject>();
                                 _instance = obj.AddComponent<T>();
                             }
                         }

@@ -1,4 +1,4 @@
-﻿namespace Nico.DesignPattern.Singleton.Network.MVC
+﻿namespace Nico.Network.Singleton.MVC
 {
     public class View
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nico.DesignPattern.Singleton.Network
+namespace Nico.Network.Singleton
 {
     public interface ISingleton
     {

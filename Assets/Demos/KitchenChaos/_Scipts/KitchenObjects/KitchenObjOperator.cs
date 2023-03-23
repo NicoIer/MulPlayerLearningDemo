@@ -6,21 +6,11 @@ namespace Kitchen
 {
     public static class KitchenObjOperator
     {
-        public static KitchenObj SpawnKitchenObj(KitchenObjEnum kitchenObjEnum, ICanHoldKitchenObj holder)
+        
+        public static void SpawnKitchenObj(KitchenObjEnum objEnum, ICanHoldKitchenObj holder)
         {
-            var so = DataTableManager.Sigleton.GetKitchenObjSo(kitchenObjEnum);
-            return SpawnKitchenObj(so, holder);
-        }
-
-        public static KitchenObj SpawnKitchenObj(KitchenObjSo kitchenObjSo, ICanHoldKitchenObj holder)
-        {
-            var obj = Object.Instantiate(kitchenObjSo.prefab).GetComponent<KitchenObj>();
-            obj.SetHolder(holder);
-            holder.SetKitchenObj(obj);
-            //ToDo 下面的操作在SetHolder已经执行过了
-            // obj.transform.SetParent(holder.GetTopSpawnPoint());
-            // obj.transform.localPosition = Vector3.zero;
-            return obj;
+            KitchenObjFactory.Instance.CreateKitchenObj(objEnum, holder);
+            
         }
 
         public static void ExchangeKitchenObj(ICanHoldKitchenObj holder1, ICanHoldKitchenObj holder2)
@@ -84,8 +74,7 @@ namespace Kitchen
         {
             var cookedObjSo = DataTableManager.Sigleton.GetCookedKitchenObjSo(beCookedObj.objEnum);
             beCookedObj.DestroySelf();
-            var cookedObj = SpawnKitchenObj(cookedObjSo, holder);
-            holder.SetKitchenObj(cookedObj);
+            SpawnKitchenObj(cookedObjSo.kitchenObjEnum, holder);
         }
 
         public static bool WillBeBurned(KitchenObjEnum kitchenObjEnum)

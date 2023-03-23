@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace Kitchen
 {
@@ -9,5 +10,7 @@ namespace Kitchen
         void SetKitchenObj(KitchenObj newKitchenObj);
         bool HasKitchenObj();
         void ClearKitchenObj();
+        
+        NetworkObject GetNetworkObject();
     }
 }
