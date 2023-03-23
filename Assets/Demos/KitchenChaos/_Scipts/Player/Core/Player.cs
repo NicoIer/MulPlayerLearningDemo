@@ -1,10 +1,5 @@
-using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using Kitchen;
-using Nico;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kitchen.Player
@@ -15,7 +10,8 @@ namespace Kitchen.Player
 
         private BaseCounter SelectedCounter => selectCounterController.SelectedCounter;
         private PlayerSelectCounterController _selectCounterController;
-
+        public  PlayerMoveController moveController { get; private set; }
+        private List<PlayerController> _controllers;
         public PlayerSelectCounterController selectCounterController
         {
             get
@@ -29,25 +25,25 @@ namespace Kitchen.Player
             }
         }
 
-        public Action<Vector3> onMoving;
+        
+
+        #endregion
+
+        #region Event
+
 
         #endregion
 
         #region MonoComponents
-
-        internal Animator animator;
-
-        #endregion
-
-        #region KitchenObj
-
         private KitchenObj _kitchenObj;
         [field: SerializeField] public Transform topSpawnPoint { get; private set; }
 
+
+
         #endregion
+        
 
         internal PlayerInput input;
-        private List<PlayerController> _controllers;
 
         [SerializeField] internal PlayerData data;
         // public static Player Instance { get; private set; }
@@ -103,11 +99,38 @@ namespace Kitchen.Player
             }
         }
         
-        [ServerRpc(RequireOwnership = false)]
-        internal void _MoveServerRpc(Vector3 inputDir,Vector3 moveDir)
+        // [ServerRpc(RequireOwnership = false)]
+        // internal void _MoveServerRpc(Vector3 inputDir,Vector3 moveDir)
+        // {
+        //     TransformSetter.Move(transform, moveDir, data.speed);
+        //     TransformSetter.SetForward(transform, inputDir, data.rotateSpeed);
+        // }
+        
+        private bool _initialized;
+
+        protected void _Init()
         {
-            TransformSetter.Move(transform, moveDir, data.speed);
-            TransformSetter.SetForward(transform, inputDir, data.rotateSpeed);
+            if (!_initialized)
+            {
+                input = PlayerInput.Instance;//TODO Controller需要获取Input的引用，所以这里需要先初始化Input
+                InitializedMonoComponents();
+                InitializedControllers();
+                _initialized = true;
+            }
+        }
+
+        private void InitializedMonoComponents()
+        {
+            topSpawnPoint = transform.Find("KitchenObjHoldPoint");
+        }
+
+        private void InitializedControllers()
+        {
+            _controllers = new List<PlayerController>();
+            moveController = new PlayerMoveController(this);
+            _controllers.Add(moveController);
+            _selectCounterController = new PlayerSelectCounterController(this);
+            _controllers.Add(_selectCounterController);
         }
     }
 }

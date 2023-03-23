@@ -7,22 +7,19 @@ namespace Kitchen.Player
 {
     public class PlayerMoveController : PlayerController
     {
-        private Transform transform => Owner.transform;
-        private readonly Animator _animator;
+        // private readonly Animator _animator;
         private readonly PlayerInput _playerInput;
         private readonly PlayerData _data;
-        private readonly int _walking;
+        // private readonly int _walking;
 
         public event Action OnStartMove;
         public event Action OnStopMove;
-        public Action onMoving;
+        public Action<Vector3> onMoving;
 
         public PlayerMoveController(Player player) : base(player)
         {
-            _animator = player.animator;
             _data = player.data;
             _playerInput = player.input;
-            _walking = Animator.StringToHash(_data.animWalking);
         }
 
         private bool _isMoving;
@@ -32,14 +29,13 @@ namespace Kitchen.Player
             if (_playerInput.move != Vector2.zero)
             {
                 var inputDir = new Vector3(_playerInput.move.x, 0, _playerInput.move.y);
-                // MoveNormal(inputDir);
-                Owner._MoveServerRpc(inputDir, GetMoveDirection());
-                // Debug.Log("Move");
+                MoveNormal(inputDir);
+                // Owner._MoveServerRpc(inputDir, GetMoveDirection());
+                Debug.Log("Move");
                 //如果没在移动状态，就触发开始移动事件
-                onMoving?.Invoke();
+                onMoving?.Invoke(Owner.transform.position);
                 if (!_isMoving)
                 {
-                    _animator.SetBool(_walking, true);
                     OnStartMove?.Invoke();
                     _isMoving = true;
                 }
@@ -48,14 +44,13 @@ namespace Kitchen.Player
             {
                 _isMoving = false;
                 OnStopMove?.Invoke();
-                _animator.SetBool(_walking, false);
             }
         }
 
         private void MoveNormal(Vector3 inputDir)
         {
-            TransformSetter.Move(transform, GetMoveDirection(), _data.speed);
-            TransformSetter.SetForward(transform, inputDir, _data.rotateSpeed);
+            TransformSetter.Move(Owner.transform, GetMoveDirection(), _data.speed);
+            TransformSetter.SetForward(Owner.transform, inputDir, _data.rotateSpeed);
         }
 
 
@@ -66,7 +61,7 @@ namespace Kitchen.Player
             //ToDo 太丑了，需要优化
             //尝试按照输入进行移动
             var moveDir = new Vector3(_playerInput.move.x, 0, _playerInput.move.y);
-            var position = transform.position;
+            var position = Owner.transform.position;
             var canMove = !Physics.CapsuleCast(position,
                 position + Vector3.up * _data.playerHeight,
                 _data.playerRadius, moveDir, _data.playerRadius);

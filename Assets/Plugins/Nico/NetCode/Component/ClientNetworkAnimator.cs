@@ -1,9 +1,9 @@
 ﻿using Unity.Netcode.Components;
 using UnityEngine;
 
-namespace MulPlayerGame
+namespace Nico.NetCode
 {
-    public class ClientNetworkTransform : NetworkTransform
+    public class ClientNetworkAnimator : NetworkAnimator
     {
         protected override bool OnIsServerAuthoritative()
         {
