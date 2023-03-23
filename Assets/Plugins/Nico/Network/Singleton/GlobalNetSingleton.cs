@@ -1,13 +1,11 @@
 ﻿using System;
+using Nico.Design;
+using Unity.Netcode;
 using UnityEngine;
 
-namespace Nico.Design
+namespace Nico.Network
 {
-    /// <summary>
-    /// 全局单例 不会随着场景切换被销毁
-    /// 它是线程安全的
-    /// </summary>
-    public abstract class GlobalSingleton<T> : MonoBehaviour, ISingleton where T : GlobalSingleton<T>
+    public class GlobalNetSingleton<T> : NetworkBehaviour, ISingleton where T : GlobalNetSingleton<T>
     {
         private static readonly object _lock = typeof(T);
         private static T _instance;
@@ -57,14 +55,32 @@ namespace Nico.Design
             if (_instance == null)
             {
                 _instance = this as T;
-                DontDestroyOnLoad(gameObject);
+                DontDestroyOnLoad(this);
+            }
+            else if (_instance != this)
+            {
+                Destroy(this);
             }
         }
 
-        protected virtual void OnDestroy()
+        public override void OnDestroy()
         {
             if (_instance == this)
                 _instance = null;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            if (_instance == this)
+                _instance = null;
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (_instance != this)
+            {
+                Destroy(this);
+            }
         }
     }
 }
