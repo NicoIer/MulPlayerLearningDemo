@@ -1,6 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Nico.Design;
+using Nico.Exception;
 using UnityEngine;
 
 namespace Kitchen.Music
@@ -45,11 +46,15 @@ namespace Kitchen.Music
 
         private void OnDisable()
         {
-            if (DeliveryManager.Instance is not null)
+            try
             {
                 DeliveryManager.Instance.OnOrderSuccess -= _OnOrderSuccess;
                 DeliveryManager.Instance.OnOrderFailed -= _OnOrderFailed;
             }
+            catch (SingletonException)
+            {
+            }
+
 
             CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;
             Player.Player.OnAnyPickUpSomeThing -= _On_PickUpSomeThing;

@@ -1,4 +1,6 @@
 ﻿
+using System;
+using Nico.Exception;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,12 +28,15 @@ namespace Kitchen.UI
 
         private void OnDestroy()
         {
-            if (DeliveryManager.Instance is not null)
+            try
             {
-                
                 DeliveryManager.Instance.OnOrderSuccess -= OnOrderSuccess;
                 DeliveryManager.Instance.OnOrderFailed -= OnOrderFail;
             }
+            catch (SingletonException)
+            {
+            }
+            
         }
 
         public void OnAnimFinish()

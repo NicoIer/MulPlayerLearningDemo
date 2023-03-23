@@ -1,6 +1,5 @@
 ﻿using System;
-using Nico.Network.Singleton;
-using Unity.Netcode;
+using Nico.Job;
 using UnityEngine;
 
 namespace Kitchen.Player
@@ -9,6 +8,7 @@ namespace Kitchen.Player
     {
         // private readonly Animator _animator;
         private readonly PlayerInput _playerInput;
+
         private readonly PlayerData _data;
         // private readonly int _walking;
 
@@ -30,8 +30,6 @@ namespace Kitchen.Player
             {
                 var inputDir = new Vector3(_playerInput.move.x, 0, _playerInput.move.y);
                 MoveNormal(inputDir);
-                // Owner._MoveServerRpc(inputDir, GetMoveDirection());
-                Debug.Log("Move");
                 //如果没在移动状态，就触发开始移动事件
                 onMoving?.Invoke(Owner.transform.position);
                 if (!_isMoving)
@@ -49,11 +47,9 @@ namespace Kitchen.Player
 
         private void MoveNormal(Vector3 inputDir)
         {
-            TransformSetter.Move(Owner.transform, GetMoveDirection(), _data.speed);
-            TransformSetter.SetForward(Owner.transform, inputDir, _data.rotateSpeed);
+            TransformWorker.Move(new[] { Owner.transform }, new[] { GetMoveDirection() }, _data.speed);
+            TransformWorker.SetForward(new[] { Owner.transform }, new[] { inputDir }, _data.rotateSpeed);
         }
-
-
 
 
         private Vector3 GetMoveDirection()

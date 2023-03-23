@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nico.Exception;
 using UnityEngine;
 
 namespace Kitchen.UI
@@ -22,12 +23,15 @@ namespace Kitchen.UI
 
         private void OnDisable()
         {
-            if (DeliveryManager.Instance is not null)
+            try
             {
                 DeliveryManager.Instance.OnOrderFinished -= _OnOrderFinished;
                 DeliveryManager.Instance.OnOrderAdded -= _OnOrderAdded;
                 DeliveryManager.Instance.OnOrderSuccess -= _OnOrderSuccess;
                 DeliveryManager.Instance.OnOrderFailed -= _OnOrderFailed;
+            }
+            catch (SingletonException)
+            {
             }
         }
 

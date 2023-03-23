@@ -1,4 +1,5 @@
 ﻿using System;
+using Nico.Exception;
 
 namespace Nico.Design
 {
@@ -46,7 +47,7 @@ namespace Nico.Design
         public static void Init()
         {
             if (_instance != null)
-                throw new Exception($"{typeof(T)}already has an instance!!!");
+                throw new SingletonException($"{typeof(T)}already has an instance!!!");
             _instance = new T();
         }
 

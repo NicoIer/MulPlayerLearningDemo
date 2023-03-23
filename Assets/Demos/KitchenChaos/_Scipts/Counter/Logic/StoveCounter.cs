@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Nico.Network.Singleton;
+using Nico.Components;
 using UnityEngine;
 
 namespace Kitchen
@@ -12,12 +12,12 @@ namespace Kitchen
         public event EventHandler OnStartCooking;
         public event EventHandler OnStopCooking;
         public event Action<KitchenObjEnum?> OnCookingStageChange;
-        private ProgressBarUI _progressBarUI;
+        private ProgressBar _progressBarUI;
 
         protected override void Awake()
         {
             base.Awake();
-            _progressBarUI = transform.Find("ProgressBarUI").GetComponent<ProgressBarUI>();
+            _progressBarUI = transform.Find("ProgressBarUI").GetComponent<ProgressBar>();
         }
 
         public override void Interact(Player.Player player)

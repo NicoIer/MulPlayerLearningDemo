@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Nico.Exception;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace Nico.Design
                             _instance = FindObjectOfType<T>(); //从场景中寻找一个T类型的组件
                             if (_instance is null)
                             {
-                                throw new Exception("Can not find " + typeof(T).Name + " in scene");
+                                throw new SingletonException("Can not find " + typeof(T).Name + " in scene");
                             }
                         }
                     }

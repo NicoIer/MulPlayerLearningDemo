@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using Kitchen;
-using Nico.Network.Singleton;
+using Nico.Components;
 using UnityEngine;
 
 namespace Kitchen
@@ -9,14 +7,14 @@ namespace Kitchen
     public class CuttingCounter : BaseCounter, IInteractAlternate
     {
         public int cuttingCount = 0;
-        private ProgressBarUI _progressBarUI;
+        private ProgressBar _progressBar;
         public event Action OnCuttingEvent;
         public static event EventHandler<Vector3> OnAnyCut; 
 
         protected override void Awake()
         {
             base.Awake();
-            _progressBarUI = transform.Find("ProgressBarUI").GetComponent<ProgressBarUI>();
+            _progressBar = transform.Find("ProgressBarUI").GetComponent<ProgressBar>();
         }
 
         public override void Interact(Player.Player player)
@@ -25,7 +23,7 @@ namespace Kitchen
             if (player.HasKitchenObj() && !HasKitchenObj())
             {
                 cuttingCount = 0;
-                _progressBarUI.SetProgress(0);
+                _progressBar.SetProgress(0);
 
                 KitchenObjOperator.PutKitchenObj(player, this);
                 return;
@@ -35,7 +33,7 @@ namespace Kitchen
             if (!player.HasKitchenObj() && HasKitchenObj())
             {
                 cuttingCount = 0;
-                _progressBarUI.SetProgress(0);
+                _progressBar.SetProgress(0);
                 KitchenObjOperator.PutKitchenObj(this, player);
                 return;
             }
@@ -61,7 +59,7 @@ namespace Kitchen
             OnCuttingEvent?.Invoke();
             OnAnyCut?.Invoke(this, transform.position);
             //设置进度条
-            _progressBarUI.SetProgress((float)cuttingCount / maxCuttingCount);
+            _progressBar.SetProgress((float)cuttingCount / maxCuttingCount);
             //如果切完了
             if (cuttingCount >= maxCuttingCount)
             {

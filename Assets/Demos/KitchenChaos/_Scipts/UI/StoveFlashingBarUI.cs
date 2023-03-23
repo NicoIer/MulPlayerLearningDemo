@@ -1,5 +1,4 @@
-﻿using System;
-using Nico.Network.Singleton;
+﻿using Nico.Components;
 using UnityEngine;
 
 namespace Kitchen.UI
@@ -7,7 +6,7 @@ namespace Kitchen.UI
     public class StoveFlashingBarUI : MonoBehaviour
     {
         private StoveCounter _stoveCounter;
-        private ProgressBarUI _progressBarUI;
+        private ProgressBar _progressBar;
         private Animator _animator;
         private readonly int _animParamHash = Animator.StringToHash("flashing");
 
@@ -15,17 +14,17 @@ namespace Kitchen.UI
         {
             _stoveCounter = GetComponentInParent<StoveCounter>();
             _animator = GetComponent<Animator>();
-            _progressBarUI = GetComponent<ProgressBarUI>();
+            _progressBar = GetComponent<ProgressBar>();
         }
 
         private void Start()
         {
-            _progressBarUI.onSetProgress += OnCookingStageChange;
+            _progressBar.onSetProgress += OnCookingStageChange;
         }
 
         private void OnDestroy()
         {
-            _progressBarUI.onSetProgress += OnCookingStageChange;
+            _progressBar.onSetProgress += OnCookingStageChange;
         }
 
         private void OnCookingStageChange()
