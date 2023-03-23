@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Kitchen.Player
 {
-    public partial class Player : NetworkLocalSingleton<Player>
+    public partial class Player : NetLocalSingleton<Player>
     {
         #region Controller
 
