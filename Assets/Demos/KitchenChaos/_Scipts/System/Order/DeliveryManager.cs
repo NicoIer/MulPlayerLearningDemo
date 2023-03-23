@@ -50,8 +50,9 @@ namespace Kitchen
             recipeList = new List<RecipeData>(_recipeDict.Values);
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
         }
 

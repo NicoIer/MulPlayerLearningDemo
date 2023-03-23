@@ -80,12 +80,22 @@ namespace Nico
             }
         }
 
+        protected virtual void OnEnable()
+        {
+            if (_instance == null)
+            {
+                _instance = this as T;
+            }
+        }
 
         protected virtual void OnDestroy()
         {
             //当单例对象被销毁的时候 会将_instance设置为null
             //如何保证单例对象是最后被销毁的呢
-            _instance = null;
+            if (_instance == this)
+            {
+                _instance = null;
+            }
         }
     }
 }

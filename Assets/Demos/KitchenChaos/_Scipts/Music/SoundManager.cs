@@ -10,14 +10,15 @@ namespace Kitchen.Music
     {
         [SerializeField] AudioClipData audioClipData;
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             var deliveryManager = DeliveryManager.Instance;
             deliveryManager.OnOrderSuccess += _OnOrderSuccess;
             deliveryManager.OnOrderFailed += _OnOrderFailed;
             CuttingCounter.OnAnyCut += _CuttingCounter_OnAnyCut;
-            Player.Player.Instance.OnPickUpSomeThing += _Player_On_PickUpSomeThing;
-            Player.Player.Instance.onMoving += _Player_OnMoving;
+            // Player.Player.Instance.OnPickUpSomeThing += _Player_On_PickUpSomeThing;
+            // Player.Player.Instance.onMoving += _Player_OnMoving;
             BaseCounter.OnAnyObjPlaceOnCounter += _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed += _TrashCounter_OnAnyObjTrashed;
             GameManager.Instance.OnCountDownChange += _OnCountDownChanged;
@@ -38,12 +39,12 @@ namespace Kitchen.Music
             }
 
             CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;
-            var player = Player.Player.GetInstanceUnSafe();
-            if (player != null)
-            {
-                player.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
-                player.onMoving -= _Player_OnMoving;
-            }
+            // var player = Player.Player.GetInstanceUnSafe();
+            // if (player != null)
+            // {
+                // player.OnPickUpSomeThing -= _Player_On_PickUpSomeThing;
+                // player.onMoving -= _Player_OnMoving;
+            // }
 
             BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
@@ -113,7 +114,7 @@ namespace Kitchen.Music
 
         private void _Player_On_PickUpSomeThing(object sender, EventArgs e)
         {
-            _PlaySound(audioClipData.pickUp, Player.Player.Instance.transform.position);
+            // _PlaySound(audioClipData.pickUp, Player.Player.Instance.transform.position);
         }
 
         private void _CuttingCounter_OnAnyCut(object sender, Vector3 position)

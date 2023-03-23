@@ -1,5 +1,6 @@
 ﻿using System;
 using Nico;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Kitchen.Player
@@ -31,8 +32,9 @@ namespace Kitchen.Player
             if (_playerInput.move != Vector2.zero)
             {
                 var inputDir = new Vector3(_playerInput.move.x, 0, _playerInput.move.y);
-                TransformSetter.Move(transform, GetMoveDirection(), _data.speed);
-                TransformSetter.SetForward(transform, inputDir, _data.rotateSpeed);
+                // MoveNormal(inputDir);
+                Owner._MoveServerRpc(inputDir, GetMoveDirection());
+                // Debug.Log("Move");
                 //如果没在移动状态，就触发开始移动事件
                 onMoving?.Invoke();
                 if (!_isMoving)
@@ -49,6 +51,15 @@ namespace Kitchen.Player
                 _animator.SetBool(_walking, false);
             }
         }
+
+        private void MoveNormal(Vector3 inputDir)
+        {
+            TransformSetter.Move(transform, GetMoveDirection(), _data.speed);
+            TransformSetter.SetForward(transform, inputDir, _data.rotateSpeed);
+        }
+
+
+
 
         private Vector3 GetMoveDirection()
         {

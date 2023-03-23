@@ -29,7 +29,7 @@ namespace Kitchen.UI
 
         public void UpdateVisual()
         {
-            var input = Player.Player.Instance.input;
+            var input = PlayerInput.Instance;
             moveUpButton.GetComponentInChildren<TextMeshProUGUI>().text = input.GetBingingName(InputEnum.MoveUp);
             moveDownButton.GetComponentInChildren<TextMeshProUGUI>().text = input.GetBingingName(InputEnum.MoveDown);
             moveLeftButton.GetComponentInChildren<TextMeshProUGUI>().text = input.GetBingingName(InputEnum.MoveLeft);
@@ -75,7 +75,7 @@ namespace Kitchen.UI
         private void _ReBinding(InputEnum inputEnum)
         {
             waitingForKey.SetActive(true);
-            Player.Player.Instance.input.Rebinding(inputEnum, () =>
+            PlayerInput.Instance.Rebinding(inputEnum, () =>
             {
                 waitingForKey.SetActive(false);
                 UpdateVisual();

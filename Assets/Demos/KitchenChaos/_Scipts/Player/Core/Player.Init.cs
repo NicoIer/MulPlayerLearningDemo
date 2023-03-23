@@ -11,7 +11,7 @@ namespace Kitchen.Player
         {
             if (!_initialized)
             {
-                input = new PlayerInput();
+                input = PlayerInput.Instance;//TODO Controller需要获取Input的引用，所以这里需要先初始化Input
                 InitializedMonoComponents();
                 InitializedControllers();
                 _initialized = true;

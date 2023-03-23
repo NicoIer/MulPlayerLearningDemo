@@ -20,7 +20,7 @@ namespace Kitchen.UI
 
         private void _UpdateVisual()
         {
-            var input = Player.Player.Instance.input;
+            var input = PlayerInput.Instance;
             moveDownText.text = input.GetBingingName(InputEnum.MoveUp);
             moveUpText.text = input.GetBingingName(InputEnum.MoveDown);
             moveLeftText.text = input.GetBingingName(InputEnum.MoveLeft);
@@ -36,7 +36,7 @@ namespace Kitchen.UI
         private void Start()
         {
             _UpdateVisual();
-            Player.Player.Instance.input.OnRebinding += _OnRebinding;
+            PlayerInput.Instance.OnRebinding += _OnRebinding;
             GameManager.Instance.stateMachine.onStateChange += _OnStateChange;
             Show();
         }
@@ -56,10 +56,14 @@ namespace Kitchen.UI
         }
 
 
-        // private void OnDestroy()
-        // {
-        //     Player.Player.GetInstanceOnDisable()!.input.OnRebinding -= _OnRebinding;
-        // }
+        private void OnDestroy()
+        {
+
+            if (PlayerInput.GetInstanceUnSafe() is not null)
+            {
+                PlayerInput.Instance.OnRebinding -= _OnRebinding;   
+            }
+        }
 
         private void _OnRebinding()
         {

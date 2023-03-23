@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using Nico;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,16 +20,26 @@ namespace Kitchen
         GamePadPause,
     }
 
-    public class PlayerInput
+    public class PlayerInput: MonoSingleton<PlayerInput>
     {
         public Vector2 move => _standerInput.Player.move2D.ReadValue<Vector2>().normalized;
-        private readonly StanderInput _standerInput;
+        private StanderInput _standerInput;
         public StanderInput.PlayerActions Player => _standerInput.Player;
         public event Action OnInteractPerform;
         public event Action OnInteractAlternatePerform;
         public event Action OnPause;
         private const string _bingSaveKey = "player_bindings";
         public event Action OnRebinding;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _standerInput = new StanderInput();
+            if (PlayerPrefs.HasKey(_bingSaveKey))
+            {
+                _standerInput.LoadBindingOverridesFromJson(PlayerPrefs.GetString(_bingSaveKey));
+            }
+        }
 
         public string GetBingingName(InputEnum actionName)
         {
@@ -58,14 +70,10 @@ namespace Kitchen
             }
         }
 
-        public PlayerInput()
-        {
-            _standerInput = new StanderInput();
-            if (PlayerPrefs.HasKey(_bingSaveKey))
-            {
-                _standerInput.LoadBindingOverridesFromJson(PlayerPrefs.GetString(_bingSaveKey));
-            }
-        }
+        // public PlayerInput()
+        // {
+        //
+        // }
 
         public void Enable()
         {

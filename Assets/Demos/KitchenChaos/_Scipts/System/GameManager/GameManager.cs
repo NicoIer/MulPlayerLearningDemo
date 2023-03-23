@@ -62,8 +62,11 @@ namespace Kitchen
 
         private void Start()
         {
-            Player.Player.Instance.input.OnInteractPerform += OnPerformInteract;
+            // PlayerInput.Instance.OnInteractPerform += OnPerformInteract;
+            // _stateMachine.Change<WaitingToStartState>();
+            //TODO 测试时 立刻开始游戏
             _stateMachine.Change<WaitingToStartState>();
+            StartGame();
         }
 
         private void OnPerformInteract()
@@ -71,13 +74,13 @@ namespace Kitchen
             if (stateMachine.CurrentState is WaitingToStartState)
             {
                 StartGame();
-                Player.Player.Instance.input.OnInteractPerform -= OnPerformInteract;
+                PlayerInput.Instance.OnInteractPerform -= OnPerformInteract;
             }
         }
 
         private void Update()
         {
-            if (Player.Player.Instance.input.Player.Pause.WasPerformedThisFrame())
+            if (PlayerInput.Instance.Player.Pause.WasPerformedThisFrame())
             {
                 PauseGame();
                 return;
