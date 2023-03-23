@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Kitchen.Music
 {
-    public class SoundManager : MonoSingleton<SoundManager>
+    public class SoundManager : SceneSingleton<SoundManager>
     {
         [SerializeField] AudioClipData audioClipData;
 

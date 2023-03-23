@@ -18,7 +18,7 @@ namespace Kitchen
         GamePadPause,
     }
 
-    public class PlayerInput: MonoSingleton<PlayerInput>
+    public class PlayerInput: SceneSingleton<PlayerInput>
     {
         public Vector2 move => _standerInput.Player.move2D.ReadValue<Vector2>().normalized;
         private StanderInput _standerInput;

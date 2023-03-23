@@ -6,7 +6,4 @@ namespace Nico.Design
     {
         
     }
-    public interface IMonoSingleton: ISingleton
-    {
-    }
 }

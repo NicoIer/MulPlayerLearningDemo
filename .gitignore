@@ -79,5 +79,12 @@ crashlytics-build.properties
 /Assets/TutorialInfo/
 /Assets/TutorialInfo.meta
 
+# 构建文件夹 用于构建 无需上传
 /_Build/
+
+# 测试文件夹 用于测试 无需上传
+/Assets/Test/
+/Assets/Test.meta
+/Assets/_Test/
+/Assets/_Test.meta
 

@@ -9,7 +9,7 @@ namespace Nico.Design
     /// 基于MonoBehaviour的单例模式 仅场景内单例 不会跨场景 切换场景会被销毁
     /// 这个单例是线程安全的 
     /// </summary>
-    public abstract class MonoSingleton<T> : MonoBehaviour, IMonoSingleton where T : MonoSingleton<T>
+    public abstract class SceneSingleton<T> : MonoBehaviour, ISingleton where T : SceneSingleton<T>
     {
         private static readonly object _lock = typeof(T);
         private static T _instance;
@@ -21,15 +21,18 @@ namespace Nico.Design
         {
             get
             {
-                if (_instance == null)
+                if (_instance is null)
                 {
                     //双重检查锁
                     lock (_lock)
                     {
-                        if (_instance == null)
+                        if (_instance is null)
                         {
                             _instance = FindObjectOfType<T>(); //从场景中寻找一个T类型的组件
-                            throw new Exception("Can not find " + typeof(T).Name + " in scene");
+                            if (_instance is null)
+                            {
+                                throw new Exception("Can not find " + typeof(T).Name + " in scene");
+                            }
                         }
                     }
                 }
@@ -37,6 +40,7 @@ namespace Nico.Design
                 return _instance;
             }
         }
+
         protected virtual void Awake()
         {
             //如果Awake前没有被访问 那么就会在Awake中初始化
@@ -48,7 +52,6 @@ namespace Nico.Design
             {
                 //如果已经被访问过了 代表已经有一个对应的单例对象存在了 那么就会在Awake中销毁自己
                 Destroy(this);
-                return;
             }
         }
 
@@ -62,8 +65,6 @@ namespace Nico.Design
 
         protected virtual void OnDestroy()
         {
-            //当单例对象被销毁的时候 会将_instance设置为null
-            //如何保证单例对象是最后被销毁的呢
             if (_instance == this)
             {
                 _instance = null;

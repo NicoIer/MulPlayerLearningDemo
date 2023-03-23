@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Kitchen
 {
-    public class GameManager : MonoSingleton<GameManager>
+    public class GameManager : SceneSingleton<GameManager>
     {
         private GameSetting _setting;
 
