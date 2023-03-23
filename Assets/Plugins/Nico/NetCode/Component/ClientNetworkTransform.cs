@@ -1,7 +1,7 @@
 ﻿using Unity.Netcode.Components;
 using UnityEngine;
 
-namespace Nico.Network.Singleton.NetCode
+namespace Nico.Network
 {
     public class ClientNetworkTransform : NetworkTransform
     {

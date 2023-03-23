@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Nico.Network.Singleton.MVC;
+using Nico.MVC;
 
 namespace Kitchen
 {
@@ -20,6 +20,7 @@ namespace Kitchen
             {
                 _firstEnter = false;
                 _currentTime = gameDuration;
+                
                 ModelManager.Get<CompletedOrderModel>().orderCount = 0;
                 //开启计时器
             }

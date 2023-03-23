@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nico.Network;
 using Nico.Network.Singleton;
 using Unity.Netcode;
 using UnityEngine;

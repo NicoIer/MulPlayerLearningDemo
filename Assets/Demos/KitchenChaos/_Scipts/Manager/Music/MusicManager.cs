@@ -1,4 +1,5 @@
-﻿using Nico.Network.Singleton;
+﻿using Nico.Design;
+using Nico.Network.Singleton;
 using UnityEngine;
 
 namespace Kitchen.Music

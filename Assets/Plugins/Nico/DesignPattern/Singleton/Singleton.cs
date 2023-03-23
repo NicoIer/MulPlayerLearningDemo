@@ -1,4 +1,4 @@
-﻿namespace Nico.Network.Singleton
+﻿namespace Nico.Design
 {
     /// <summary>
     /// 通用单例模式 它是线程安全的 且会全局存在一份

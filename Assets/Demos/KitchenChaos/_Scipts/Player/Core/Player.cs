@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Nico.Network.Singleton;
+using Nico.Network;
 using Unity.Netcode;
 using UnityEngine;
 

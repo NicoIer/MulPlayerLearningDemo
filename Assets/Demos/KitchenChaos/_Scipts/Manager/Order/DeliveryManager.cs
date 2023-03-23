@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
-using Nico.Network.Singleton;
-using Nico.Network.Singleton.MVC;
+using Nico.MVC;
+using Nico.Network;
 using Unity.Netcode;
 using UnityEngine;
 using Debug = UnityEngine.Debug;

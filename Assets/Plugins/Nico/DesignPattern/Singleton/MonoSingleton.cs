@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Nico.Network.Singleton
+namespace Nico.Design
 {
     /// <summary>
     /// 基于MonoBehaviour的单例模式 仅场景内单例 不会跨场景 切换场景会被销毁

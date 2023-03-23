@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using Nico.Network.Singleton;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using Nico.Design;
 namespace Kitchen
 {
     public enum InputEnum

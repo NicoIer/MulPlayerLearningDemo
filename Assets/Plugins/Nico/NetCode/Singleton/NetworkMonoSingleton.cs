@@ -1,9 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Nico.Design;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Nico.Network.Singleton
+namespace Nico.Network
 {
     /// <summary>
     /// 网络Mono单例模式

@@ -1,9 +1,8 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Kitchen.UI;
-using Nico.Network.Singleton;
+using Nico.Design;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Kitchen
 {

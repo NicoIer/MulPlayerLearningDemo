@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Nico.Network.Singleton.MVC
+namespace Nico.MVC
 {
     public interface IModel
     {

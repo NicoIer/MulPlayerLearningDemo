@@ -1,4 +1,5 @@
-﻿using Nico.Network.Singleton.MVC;
+﻿
+using Nico.MVC;
 using TMPro;
 using UnityEngine;
 

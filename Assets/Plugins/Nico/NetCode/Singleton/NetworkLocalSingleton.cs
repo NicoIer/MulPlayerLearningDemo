@@ -1,7 +1,7 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using Nico.Design;
+using Unity.Netcode;
 
-namespace Nico.Network.Singleton
+namespace Nico.Network
 {
     /// <summary>
     /// 本地单例模式
@@ -19,9 +19,10 @@ namespace Nico.Network.Singleton
                 LocalInstance = this as T;
             }
         }
-
+        
         public override void OnNetworkDespawn()
         {
+            base.OnNetworkDespawn();
             if (IsOwner)
             {
                 

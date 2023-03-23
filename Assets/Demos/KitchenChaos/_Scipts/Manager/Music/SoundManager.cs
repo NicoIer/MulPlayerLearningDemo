@@ -1,7 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using Nico.Network.Singleton;
-using Unity.VisualScripting;
+using Nico.Design;
 using UnityEngine;
 
 namespace Kitchen.Music
