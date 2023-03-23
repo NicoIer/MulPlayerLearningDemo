@@ -10,40 +10,14 @@ namespace Kitchen.UI
         public Transform recipeUIContainer;
         public GameObject recipeUIPrefab;
         public List<RecipeIcon> recipeIcons = new();
-
-        private void Start()
-        {
-            _SubscribeEvent();
-        }
-
-
-        private bool _listening;
-
-        private void _SubscribeEvent()
-        {
-            try
-            {
-                if (!_listening)
-                {
-                    var deliveryManager = DeliveryManager.Instance;
-                    deliveryManager.OnOrderFinished += _OnOrderFinished;
-                    deliveryManager.OnOrderAdded += _OnOrderAdded;
-                    deliveryManager.OnOrderSuccess += _OnOrderSuccess;
-                    deliveryManager.OnOrderFailed += _OnOrderFailed;
-                    _listening = true;
-                }
-            }
-            catch (NullReferenceException)
-            {
-                //由于不同对象的OnEnable调用顺序不同，可能会出现DeliveryManager还没有初始化的情况
-                //因为OnEnable会在Awake之前调用，所以可能会出现DeliveryManager还没有初始化的情况
-            }
-        }
-
-
+        
         private void OnEnable()
         {
-            _SubscribeEvent();
+            var deliveryManager = DeliveryManager.Instance;
+            deliveryManager.OnOrderFinished += _OnOrderFinished;
+            deliveryManager.OnOrderAdded += _OnOrderAdded;
+            deliveryManager.OnOrderSuccess += _OnOrderSuccess;
+            deliveryManager.OnOrderFailed += _OnOrderFailed;
         }
 
         private void OnDisable()

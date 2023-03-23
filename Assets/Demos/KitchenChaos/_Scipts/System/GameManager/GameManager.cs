@@ -1,4 +1,6 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
+using Kitchen.UI;
 using Nico;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -64,10 +66,11 @@ namespace Kitchen
         {
             // PlayerInput.Instance.OnInteractPerform += OnPerformInteract;
             // _stateMachine.Change<WaitingToStartState>();
-            //TODO 测试时 立刻开始游戏
+            //TODO 测试时 等待选择连接方式后 再 开始游戏
             _stateMachine.Change<WaitingToStartState>();
-            StartGame();
+            UniTask.WaitUntil(() => TestingUI.testingBool).ContinueWith(StartGame).Forget();
         }
+
 
         private void OnPerformInteract()
         {

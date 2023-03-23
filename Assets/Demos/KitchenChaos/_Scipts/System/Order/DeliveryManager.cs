@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -7,11 +8,13 @@ using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using Nico;
 using Nico.MVC;
+using Unity.Netcode;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Kitchen
 {
-    public class DeliveryManager : MonoSingleton<DeliveryManager>
+    public class DeliveryManager : NetworkMonoSingleton<DeliveryManager>
     {
         //ToDo 后续将所有配置信息保存到一个位置
         private const string _recipeDataPath =
@@ -37,6 +40,7 @@ namespace Kitchen
             base.Awake();
             _Init();
         }
+
 
         private void _Init()
         {
@@ -69,6 +73,9 @@ namespace Kitchen
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
+            Debug.Log("游戏状态切换：" + arg1 + " -> " + arg2);
+            Debug.Log("isServer:" + IsServer);
+            if (!IsServer) return;//只有服务器端才会生成订单
             if (arg2 is ReadyToStartState)
             {
                 //当切换到ReadyToStartState时，开始生成订单

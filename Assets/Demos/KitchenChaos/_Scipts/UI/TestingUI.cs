@@ -9,6 +9,7 @@ namespace Kitchen.UI
     {
         [SerializeField] private Button hostButton;
         [SerializeField] private Button clientButton;
+        public static bool testingBool = false;//DEBUG
 
         private void Awake()
         {
@@ -26,7 +27,14 @@ namespace Kitchen.UI
 
         public void Hide()
         {
+            testingBool = true;//DEBUG
+            
             gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            testingBool = false;//DEBUG
         }
     }
 }
