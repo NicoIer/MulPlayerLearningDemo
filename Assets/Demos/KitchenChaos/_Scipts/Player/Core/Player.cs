@@ -1,18 +1,21 @@
+using System;
 using System.Collections.Generic;
+using Nico.DesignPattern.Singleton.Network;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace Kitchen.Player
 {
-    public partial class Player : NetworkBehaviour
+    public partial class Player : NetworkLocalSingleton<Player>
     {
         #region Controller
 
-        private BaseCounter SelectedCounter => selectCounterController.SelectedCounter;
+        private BaseCounter SelectedCounter => SelectCounterController.SelectedCounter;
         private PlayerSelectCounterController _selectCounterController;
-        public  PlayerMoveController moveController { get; private set; }
+        public PlayerMoveController MoveController { get; private set; }
         private List<PlayerController> _controllers;
-        public PlayerSelectCounterController selectCounterController
+
+        public PlayerSelectCounterController SelectCounterController
         {
             get
             {
@@ -25,28 +28,26 @@ namespace Kitchen.Player
             }
         }
 
-        
-
         #endregion
 
         #region Event
 
+        public static event Action OnAnyPlayerSpawned;
 
         #endregion
 
         #region MonoComponents
+
         private KitchenObj _kitchenObj;
         [field: SerializeField] public Transform topSpawnPoint { get; private set; }
 
-
-
         #endregion
-        
+
 
         internal PlayerInput input;
 
         [SerializeField] internal PlayerData data;
-        // public static Player Instance { get; private set; }
+
 
         protected void Awake()
         {
@@ -54,21 +55,12 @@ namespace Kitchen.Player
             _Init();
         }
 
-        // [CanBeNull]
-        // public static Player GetInstanceUnSafe(bool throwError = false)
-        // {
-        //     if (Instance == null)
-        //     {
-        //         if (throwError)
-        //         {
-        //             throw new Exception("Application is quitting !!!!");
-        //         }
-        //
-        //         return null;
-        //     }
-        //
-        //     return Instance;
-        // }
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            OnAnyPlayerSpawned?.Invoke();
+        }
+        
 
         private void OnEnable()
         {
@@ -98,21 +90,16 @@ namespace Kitchen.Player
                 controller.Update();
             }
         }
-        
-        // [ServerRpc(RequireOwnership = false)]
-        // internal void _MoveServerRpc(Vector3 inputDir,Vector3 moveDir)
-        // {
-        //     TransformSetter.Move(transform, moveDir, data.speed);
-        //     TransformSetter.SetForward(transform, inputDir, data.rotateSpeed);
-        // }
-        
+
+
+
         private bool _initialized;
 
         protected void _Init()
         {
             if (!_initialized)
             {
-                input = PlayerInput.Instance;//TODO Controller需要获取Input的引用，所以这里需要先初始化Input
+                input = PlayerInput.Instance; //TODO Controller需要获取Input的引用，所以这里需要先初始化Input
                 InitializedMonoComponents();
                 InitializedControllers();
                 _initialized = true;
@@ -127,8 +114,8 @@ namespace Kitchen.Player
         private void InitializedControllers()
         {
             _controllers = new List<PlayerController>();
-            moveController = new PlayerMoveController(this);
-            _controllers.Add(moveController);
+            MoveController = new PlayerMoveController(this);
+            _controllers.Add(MoveController);
             _selectCounterController = new PlayerSelectCounterController(this);
             _controllers.Add(_selectCounterController);
         }

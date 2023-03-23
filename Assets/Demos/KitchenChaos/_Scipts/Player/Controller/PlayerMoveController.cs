@@ -1,5 +1,5 @@
 ﻿using System;
-using Nico;
+using Nico.DesignPattern.Singleton.Network;
 using Unity.Netcode;
 using UnityEngine;
 

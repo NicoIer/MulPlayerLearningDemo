@@ -1,22 +1,24 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
 
-namespace Nico
+namespace Nico.DesignPattern.Singleton.Network
 {
     /// <summary>
-    /// 基于MonoBehaviour的单例模式 仅场景内单例 不会跨场景 切换场景会被销毁
-    /// 这个单例是线程安全的 
+    /// 网络Mono单例模式
+    /// 游戏中只需要一个样的对象
+    /// 仅场景内单例 不会跨场景 切换场景会被销毁
+    /// 这个单例是线程安全的
+    /// 
     /// </summary>
-    public abstract class MonoSingleton<T> : MonoBehaviour, IMonoSingleton where T : MonoSingleton<T>
+    /// <typeparam name="T"></typeparam>
+    
+    public class NetworkMonoSingleton<T> : NetworkBehaviour, ISingleton where T : NetworkMonoSingleton<T>
     {
-        private static readonly object _lock = typeof(T);
         private static T _instance;
+        private static object _lock = typeof(T);
 
-        /// <summary>
-        /// 正常访问时的途径
-        /// </summary>
         public static T Instance
         {
             get
@@ -32,7 +34,6 @@ namespace Nico
                             if (_instance == null)
                             {
                                 //找不见 就 new 一个
-                                Debug.Log($"can not find MonoSingleton<{typeof(T).Name}> auto create one");
                                 GameObject obj = new GameObject(typeof(T).Name);
                                 _instance = obj.AddComponent<T>();
                             }
@@ -43,15 +44,11 @@ namespace Nico
                 return _instance;
             }
         }
-
-        /// <summary>
-        /// 在Disable时访问的途径 之所以会有这个存在 是因为游戏退出时 单例应该被销毁 此时其他的途径访问单例对象 都会造成错误
-        /// </summary>
-        /// <returns></returns>
+        
         [CanBeNull]
         public static T GetInstanceUnSafe(bool throwError = false)
         {
-            if(_instance==null)
+            if (_instance == null)
             {
                 if (throwError)
                 {
@@ -63,8 +60,6 @@ namespace Nico
 
             return Instance;
         }
-
-
         protected virtual void Awake()
         {
             //如果Awake前没有被访问 那么就会在Awake中初始化
@@ -88,8 +83,9 @@ namespace Nico
             }
         }
 
-        protected virtual void OnDestroy()
+        public override void OnDestroy()
         {
+            base.OnDestroy();
             //当单例对象被销毁的时候 会将_instance设置为null
             //如何保证单例对象是最后被销毁的呢
             if (_instance == this)

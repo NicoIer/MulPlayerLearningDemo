@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Nico
+namespace Nico.DesignPattern.Singleton.Network
 {
     public class ObjectPoolManager : MonoBehaviour
     {

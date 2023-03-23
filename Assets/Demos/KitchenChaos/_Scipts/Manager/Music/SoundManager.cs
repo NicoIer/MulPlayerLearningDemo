@@ -1,6 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using Nico;
+using Nico.DesignPattern.Singleton.Network;
 using Unity.VisualScripting;
 using UnityEngine;
 

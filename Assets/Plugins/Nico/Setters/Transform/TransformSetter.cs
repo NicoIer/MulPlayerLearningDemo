@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Jobs;
 
-namespace Nico
+namespace Nico.DesignPattern.Singleton.Network
 {
     public static class TransformSetter
     {

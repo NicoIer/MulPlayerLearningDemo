@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using Nico;
+using Nico.DesignPattern.Singleton.Network;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

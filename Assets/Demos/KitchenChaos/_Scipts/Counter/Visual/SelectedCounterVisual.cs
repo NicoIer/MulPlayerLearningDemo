@@ -14,23 +14,41 @@ namespace Kitchen
             _visualGameObj = transform.Find("KitchenCounter").gameObject;
         }
 
-        // ToDo 
-        // private void OnEnable()
-        // {
-        //     Player.Player.Instance.selectCounterController.OnSelectedCounterChanged += OnSelectedCounterChanged;
-        // }
-        //
-        // private void OnDisable()
-        // {
-        //     //如果抛出异常 才是正常的 因为 其本身都被删除了 事件自然也被删除了
-        //     var player = Player.Player.GetInstanceUnSafe();
-        //     if (player != null)
-        //         player.selectCounterController.OnSelectedCounterChanged -= OnSelectedCounterChanged;
-        // }
-
-        private void OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedArgs e)
+        private void OnEnable()
         {
-            if (e.SelectedCounter == _clearCounter)
+            if (Player.Player.LocalInstance != null)
+            {
+                Player.Player.LocalInstance.SelectCounterController.OnSelectedCounterChanged +=
+                    OnSelectedCounterChanged;
+            }
+            else
+            {
+                Player.Player.OnAnyPlayerSpawned += _OnAnyPlayerSpawned;
+            }
+        }
+
+        private void _OnAnyPlayerSpawned()
+        {
+            //当有玩家出生的时候 就会触发这个事件
+            //出生的玩家并不一定是本地玩家 因此 这里需要判断一下
+            if (Player.Player.LocalInstance != null)
+            {
+                Player.Player.LocalInstance.SelectCounterController.OnSelectedCounterChanged += OnSelectedCounterChanged;
+                Player.Player.OnAnyPlayerSpawned -= _OnAnyPlayerSpawned;
+            }
+        }
+
+        private void OnDisable()
+        {
+            //如果抛出异常 才是正常的 因为 其本身都被删除了 事件自然也被删除了
+            var player = Player.Player.LocalInstance; //TODO:这里有问题
+            if (player != null)
+                player.SelectCounterController.OnSelectedCounterChanged -= OnSelectedCounterChanged;
+        }
+
+        private void OnSelectedCounterChanged(object sender, BaseCounter selectedCounter)
+        {
+            if (selectedCounter == _clearCounter)
             {
                 _Show();
             }

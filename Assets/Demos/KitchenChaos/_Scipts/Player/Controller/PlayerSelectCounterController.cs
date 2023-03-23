@@ -8,8 +8,7 @@ namespace Kitchen.Player
         private readonly Transform _transform;
         private readonly PlayerData _data;
         public BaseCounter SelectedCounter { get; private set; }
-        public event EventHandler<OnSelectedCounterChangedArgs> OnSelectedCounterChanged;
-        private readonly OnSelectedCounterChangedArgs _onSelectedCounterChangedArgs = new();
+        public event EventHandler<BaseCounter> OnSelectedCounterChanged;
         
 
         public PlayerSelectCounterController(Player player) : base(player)
@@ -51,8 +50,7 @@ namespace Kitchen.Player
         private void _SetSelectedCounter(BaseCounter clearCounter)
         {
             SelectedCounter = clearCounter;
-            _onSelectedCounterChangedArgs.SelectedCounter = SelectedCounter;
-            OnSelectedCounterChanged?.Invoke(this, _onSelectedCounterChangedArgs);
+            OnSelectedCounterChanged?.Invoke(this, SelectedCounter);
         }
     }
 }

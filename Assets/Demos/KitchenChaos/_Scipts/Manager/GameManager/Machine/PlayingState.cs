@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Nico.MVC;
+using Nico.DesignPattern.Singleton.Network.MVC;
 
 namespace Kitchen
 {

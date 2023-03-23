@@ -20,14 +20,14 @@ namespace Kitchen.Player
 
         private void OnEnable()
         {
-            _player.moveController.OnStartMove += _OnStartMove;
-            _player.moveController.OnStopMove += _OnStopMove;
+            _player.MoveController.OnStartMove += _OnStartMove;
+            _player.MoveController.OnStopMove += _OnStopMove;
         }
 
         private void OnDisable()
         {
-            _player.moveController.OnStartMove -= _OnStartMove;
-            _player.moveController.OnStopMove -= _OnStopMove;
+            _player.MoveController.OnStartMove -= _OnStartMove;
+            _player.MoveController.OnStopMove -= _OnStopMove;
         }
 
         private void _OnStopMove()
