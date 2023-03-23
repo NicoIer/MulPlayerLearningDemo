@@ -22,9 +22,8 @@ namespace Kitchen.UI
         }
         private void OnDisable()
         {
-            var gameManager = GameManager.GetInstanceUnSafe();
-            if (gameManager != null)
-                gameManager.stateMachine.onStateChange -= _OnGameStateChange;
+            if (GameManager.Instance != null)
+                GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
         }
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)

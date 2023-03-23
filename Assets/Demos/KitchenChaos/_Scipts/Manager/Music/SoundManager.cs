@@ -65,9 +65,10 @@ namespace Kitchen.Music
             BaseCounter.OnAnyObjPlaceOnCounter -= _BaseCounter_OnAnyObjPlaceOnCounter;
             TrashCounter.OnAnyObjTrashed -= _TrashCounter_OnAnyObjTrashed;
 
-            var gameManager = GameManager.GetInstanceUnSafe();
-            if (gameManager != null)
-                gameManager.OnCountDownChange -= _OnCountDownChanged;
+            if (GameManager.Instance is not null)
+            {
+                GameManager.Instance.OnCountDownChange -= _OnCountDownChanged;
+            }
         }
 
 

@@ -196,10 +196,9 @@ namespace Kitchen
         {
             _orderGenerateCts?.Cancel();
 
-            var gameManager = GameManager.GetInstanceUnSafe();
-            if (gameManager != null)
+            if (GameManager.Instance != null)
             {
-                gameManager.stateMachine.onStateChange -= _OnGameStateChange;
+                GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
             }
         }
 

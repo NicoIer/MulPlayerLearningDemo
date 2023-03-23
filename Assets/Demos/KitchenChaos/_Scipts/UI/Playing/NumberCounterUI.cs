@@ -13,11 +13,11 @@ namespace Kitchen.UI
 
         private void OnEnable()
         {
-            GameManager.Instance.stateMachine.onStateChange += _GameManager_OnStateChange;
-            GameManager.Instance.OnCountDownChange += _GameManager_OnCountDownChange;
+            GameManager.Instance.stateMachine.onStateChange += _OnGameStateChange;
+            GameManager.Instance.OnCountDownChange += _OnCountDownChange;
         }
 
-        private void _GameManager_OnStateChange(GameState oldState, GameState newState)
+        private void _OnGameStateChange(GameState oldState, GameState newState)
         {
             if (newState is ReadyToStartState)
             {
@@ -32,7 +32,7 @@ namespace Kitchen.UI
         }
 
 
-        private void _GameManager_OnCountDownChange(int num)
+        private void _OnCountDownChange(int num)
         {
             SetNumber(num);
         }
@@ -55,12 +55,10 @@ namespace Kitchen.UI
 
         private void OnDisable()
         {
-            var gameManager = GameManager.GetInstanceUnSafe();
-            if (gameManager != null)
+            if (GameManager.Instance is not null)
             {
-                gameManager.stateMachine.onStateChange -= _GameManager_OnStateChange;
-                gameManager.OnCountDownChange -= _GameManager_OnCountDownChange;
-                return;
+                GameManager.Instance.stateMachine.onStateChange -= _OnGameStateChange;
+                GameManager.Instance.OnCountDownChange -= _OnCountDownChange;
             }
         }
     }
