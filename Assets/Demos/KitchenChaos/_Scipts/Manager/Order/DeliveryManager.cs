@@ -13,7 +13,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Kitchen
 {
-    public class DeliveryManager : NetworkMonoSingleton<DeliveryManager>
+    public class DeliveryManager : NetSingleton<DeliveryManager>
     {
         //ToDo 后续将所有配置信息保存到一个位置
         private const string _recipeDataPath =

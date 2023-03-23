@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Kitchen
 {
-    public class KitchenObjFactory : NetworkMonoSingleton<KitchenObjFactory>
+    public class KitchenObjFactory : NetSingleton<KitchenObjFactory>
     {
         public void CreateKitchenObj(KitchenObjEnum kitchenObjEnum, ICanHoldKitchenObj holder)
         {

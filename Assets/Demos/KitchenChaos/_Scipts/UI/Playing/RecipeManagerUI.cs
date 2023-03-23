@@ -10,7 +10,7 @@ namespace Kitchen.UI
         public Transform recipeUIContainer;
         public GameObject recipeUIPrefab;
         public List<RecipeIcon> recipeIcons = new();
-        
+
         private void OnEnable()
         {
             var deliveryManager = DeliveryManager.Instance;
@@ -22,15 +22,13 @@ namespace Kitchen.UI
 
         private void OnDisable()
         {
-            var deliveryManager = DeliveryManager.GetInstanceUnSafe();
-            if (deliveryManager != null)
+            if (DeliveryManager.Instance is not null)
             {
-                deliveryManager.OnOrderFinished -= _OnOrderFinished;
-                deliveryManager.OnOrderAdded -= _OnOrderAdded;
-                deliveryManager.OnOrderSuccess -= _OnOrderSuccess;
-                deliveryManager.OnOrderFailed -= _OnOrderFailed;
+                DeliveryManager.Instance.OnOrderFinished -= _OnOrderFinished;
+                DeliveryManager.Instance.OnOrderAdded -= _OnOrderAdded;
+                DeliveryManager.Instance.OnOrderSuccess -= _OnOrderSuccess;
+                DeliveryManager.Instance.OnOrderFailed -= _OnOrderFailed;
             }
-
         }
 
 

@@ -45,11 +45,10 @@ namespace Kitchen.Music
 
         private void OnDisable()
         {
-            var deliveryManager = DeliveryManager.GetInstanceUnSafe();
-            if (deliveryManager != null)
+            if (DeliveryManager.Instance is not null)
             {
-                deliveryManager.OnOrderSuccess -= _OnOrderSuccess;
-                deliveryManager.OnOrderFailed -= _OnOrderFailed;
+                DeliveryManager.Instance.OnOrderSuccess -= _OnOrderSuccess;
+                DeliveryManager.Instance.OnOrderFailed -= _OnOrderFailed;
             }
 
             CuttingCounter.OnAnyCut -= _CuttingCounter_OnAnyCut;

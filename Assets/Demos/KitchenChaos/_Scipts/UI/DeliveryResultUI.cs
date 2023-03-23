@@ -26,12 +26,11 @@ namespace Kitchen.UI
 
         private void OnDestroy()
         {
-            var deliveryManager = DeliveryManager.GetInstanceUnSafe();
-            if (deliveryManager != null)
+            if (DeliveryManager.Instance is not null)
             {
-                deliveryManager.OnOrderSuccess -= OnOrderSuccess;
-                deliveryManager.OnOrderFailed -= OnOrderFail;
-                return;
+                
+                DeliveryManager.Instance.OnOrderSuccess -= OnOrderSuccess;
+                DeliveryManager.Instance.OnOrderFailed -= OnOrderFail;
             }
         }
 
