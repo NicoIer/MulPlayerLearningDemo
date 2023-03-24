@@ -27,7 +27,7 @@ namespace Kitchen
             _platesCounter.OnPlateCountChanged -= OnPlateCountChanged;
         }
 
-        private void OnPlateCountChanged(object sender, int count)
+        private void OnPlateCountChanged(int count)
         {
             if (count > _plates.Count)
             {

@@ -64,7 +64,7 @@ namespace Kitchen
             if (cuttingCount >= maxCuttingCount)
             {
                 currentKitchenObj.DestroySelf();
-                KitchenObjOperator.SpawnKitchenObj(cutKitchenObjSo.kitchenObjEnum, this);
+                KitchenObjOperator.SpawnKitchenObjRpc(cutKitchenObjSo.kitchenObjEnum, this);
                 cuttingCount = 0;
             }
         }

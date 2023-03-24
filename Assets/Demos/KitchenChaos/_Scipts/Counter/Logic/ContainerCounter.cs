@@ -29,7 +29,7 @@ namespace Kitchen
             }
 
             Debug.Log("请求生成道具");
-            KitchenObjOperator.SpawnKitchenObj(_kitchenObjSo.kitchenObjEnum, player);
+            KitchenObjOperator.SpawnKitchenObjRpc(_kitchenObjSo.kitchenObjEnum, player);
             _OnInteractServerRpc();
         }
 

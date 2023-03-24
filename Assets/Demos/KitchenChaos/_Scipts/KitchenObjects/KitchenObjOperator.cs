@@ -6,11 +6,9 @@ namespace Kitchen
 {
     public static class KitchenObjOperator
     {
-        
-        public static void SpawnKitchenObj(KitchenObjEnum objEnum, ICanHoldKitchenObj holder)
+        public static void SpawnKitchenObjRpc(KitchenObjEnum objEnum, ICanHoldKitchenObj holder)
         {
             KitchenObjFactory.Instance.CreateKitchenObj(objEnum, holder);
-            
         }
 
         public static void ExchangeKitchenObj(ICanHoldKitchenObj holder1, ICanHoldKitchenObj holder2)
@@ -53,11 +51,10 @@ namespace Kitchen
 
         public static void PutKitchenObj(ICanHoldKitchenObj putter, ICanHoldKitchenObj reciever)
         {
-            var obj = putter.GetKitchenObj();
-            obj.SetHolder(reciever);
-            reciever.SetKitchenObj(obj);
-            putter.ClearKitchenObj();
+            Debug.Log($"放置物体!! from {putter} to {reciever}");
+            KitchenObjFactory.Instance.PutKitObjServerRpc(putter.GetNetworkObject(), reciever.GetNetworkObject());
         }
+
 
         private static readonly HashSet<KitchenObjEnum> _cookableKitchenObjEnumSet = new()
         {
@@ -74,7 +71,7 @@ namespace Kitchen
         {
             var cookedObjSo = DataTableManager.Sigleton.GetCookedKitchenObjSo(beCookedObj.objEnum);
             beCookedObj.DestroySelf();
-            SpawnKitchenObj(cookedObjSo.kitchenObjEnum, holder);
+            SpawnKitchenObjRpc(cookedObjSo.kitchenObjEnum, holder);
         }
 
         public static bool WillBeBurned(KitchenObjEnum kitchenObjEnum)

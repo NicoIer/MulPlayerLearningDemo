@@ -11,31 +11,65 @@ namespace Kitchen
     {
         public void CreateKitchenObj(KitchenObjEnum kitchenObjEnum, ICanHoldKitchenObj holder)
         {
-            SpawnKitObjServerRpc(kitchenObjEnum, holder.GetNetworkObject());
+            _SpawnKitObjServerRpc(kitchenObjEnum, holder.GetNetworkObject());
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SpawnKitObjServerRpc(KitchenObjEnum kitchenObjEnum, NetworkObjectReference holderRef)
+        private void _SpawnKitObjServerRpc(KitchenObjEnum kitchenObjEnum, NetworkObjectReference holderRef)
         {
             var so = DataTableManager.Sigleton.GetKitchenObjSo(kitchenObjEnum);
-
-            Transform objTransform = Instantiate(so.prefab).transform;//生成物体
             
-            var obj = objTransform.GetComponent<KitchenObj>();//获取物体脚本
             
-            //TAG Spawn 时 所有客户端都会生成这个物体
+            var obj = Instantiate(so.prefab).GetComponent<KitchenObj>();//生成 KitObj 并且获取对应脚本
             var netObj = obj.GetComponent<NetworkObject>();//获取物体网络组件
-            netObj.Spawn(true);
+            netObj.Spawn(true);//在网络上生成这个物体 生成的物体会在所有客户端生成
+            
+            //
+            _SetHolderClientRpc(holderRef,netObj);
+        }
+        
+        [ClientRpc]
+        private void _SetHolderClientRpc(NetworkObjectReference holderRef,NetworkObjectReference objReference)
+        {
             holderRef.TryGet(out NetworkObject holderObj);
             var holder = holderObj.GetComponent<ICanHoldKitchenObj>();
-            //设置Parent的这一步 需要在所有客户端调用 所以需要RPC
-            obj.SetHolder(holder);
+            if (holder.HasKitchenObj())
+            {
+                Debug.LogWarning(
+                    $"{holder}, type[{holder.GetType()}] already has:{this} type[{GetType()}]" +
+                    " it will be replaced by this"
+                );
+            }
+            
+            objReference.TryGet(out NetworkObject obj);
+            var kitchenObj = obj.GetComponent<KitchenObj>();
+
+            kitchenObj.SetHolder(holder);
+            holder.SetKitchenObj(kitchenObj);
         }
 
-        [ClientRpc]
-        public void SetParentClientRpc()
+
+        [ServerRpc(RequireOwnership = false)]
+        public void PutKitObjServerRpc(NetworkObjectReference putterRef, NetworkObjectReference recieverRef)
         {
-            
+            _PutKitObjClientRpc(putterRef, recieverRef);
         }
+        
+        [ClientRpc]
+        
+        private void _PutKitObjClientRpc(NetworkObjectReference putterRef, NetworkObjectReference recieverRef)
+        {
+            putterRef.TryGet(out NetworkObject putterObj);
+            recieverRef.TryGet(out NetworkObject recieverObj);
+            var putter = putterObj.GetComponent<ICanHoldKitchenObj>();
+            var reciever = recieverObj.GetComponent<ICanHoldKitchenObj>();
+            
+            var obj = putter.GetKitchenObj();
+            obj.SetHolder(reciever);
+            reciever.SetKitchenObj(obj);
+            putter.ClearKitchenObj();
+        }
+        
+
     }
 }
