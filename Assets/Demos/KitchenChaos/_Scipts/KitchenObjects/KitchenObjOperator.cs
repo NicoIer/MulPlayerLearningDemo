@@ -51,7 +51,6 @@ namespace Kitchen
 
         public static void PutKitchenObj(ICanHoldKitchenObj putter, ICanHoldKitchenObj reciever)
         {
-            Debug.Log($"放置物体!! from {putter} to {reciever}");
             KitchenObjFactory.Instance.PutKitObjServerRpc(putter.GetNetworkObject(), reciever.GetNetworkObject());
         }
 

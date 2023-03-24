@@ -22,7 +22,7 @@ namespace Kitchen
             return _kitchenDict[kitchenObjEnum];
         }
 
-        public KitchenObjSo GetCutKitchenObjSo(KitchenObjEnum kitchenObjEnum)
+        public KitchenObjSo GetCutKitObj(KitchenObjEnum kitchenObjEnum)
         {
             try
             {

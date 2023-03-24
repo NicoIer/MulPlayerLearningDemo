@@ -31,16 +31,20 @@ namespace Kitchen
         {
             holderRef.TryGet(out NetworkObject holderObj);
             var holder = holderObj.GetComponent<ICanHoldKitchenObj>();
+            objReference.TryGet(out NetworkObject obj);
+            var kitchenObj = obj.GetComponent<KitchenObj>();
+
             if (holder.HasKitchenObj())
             {
                 Debug.LogWarning(
-                    $"{holder}, type[{holder.GetType()}] already has:{this} type[{GetType()}]" +
+                    $"{holder}, type[{holder.GetType()}] already has:{kitchenObj} type[{GetType()}]" +
                     " it will be replaced by this"
                 );
+                // var oldObj = holder.GetKitchenObj();
+                // oldObj.SetHolder(null);
+                // oldObj.gameObject.SetActive(false);
             }
 
-            objReference.TryGet(out NetworkObject obj);
-            var kitchenObj = obj.GetComponent<KitchenObj>();
 
             kitchenObj.SetHolder(holder);
             holder.SetKitchenObj(kitchenObj);
@@ -62,9 +66,10 @@ namespace Kitchen
             var reciever = recieverObj.GetComponent<ICanHoldKitchenObj>();
 
             var obj = putter.GetKitchenObj();
+            putter.ClearKitchenObj();
             obj.SetHolder(reciever);
             reciever.SetKitchenObj(obj);
-            putter.ClearKitchenObj();
+            
         }
 
 
@@ -72,13 +77,16 @@ namespace Kitchen
         public void DestroyServerRpc(NetworkObjectReference objRef)
         {
             objRef.TryGet(out NetworkObject obj);
-            _ClearHolderClientRpc(objRef);//清空持有者 这个需要在所有客户端执行
-            Destroy(obj.gameObject);//销毁物体
+            _ClearHolderClientRpc(objRef); //清空持有者 这个需要在所有客户端执行  先清空持有者再销毁物体
+            Destroy(obj.gameObject); //销毁物体
         }
-        
+
         [ClientRpc]
         private void _ClearHolderClientRpc(NetworkObjectReference objRef)
         {
+            if (IsServer)
+                return;
+
             objRef.TryGet(out NetworkObject obj);
             obj.GetComponent<KitchenObj>().ClearHolder();
         }

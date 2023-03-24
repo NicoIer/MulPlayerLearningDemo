@@ -1,5 +1,6 @@
 ﻿using System;
 using Nico.Components;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Kitchen
@@ -9,7 +10,7 @@ namespace Kitchen
         public int cuttingCount = 0;
         private ProgressBar _progressBar;
         public event Action OnCuttingEvent;
-        public static event EventHandler<Vector3> OnAnyCut; 
+        public static event EventHandler<Vector3> OnAnyCut;
 
         protected override void Awake()
         {
@@ -22,6 +23,7 @@ namespace Kitchen
             //玩家持有物体，当前柜子没有物体 -> 放置物体
             if (player.HasKitchenObj() && !HasKitchenObj())
             {
+                Debug.Log("玩家持有物体，当前案板没有物体 -> 放置物体");
                 cuttingCount = 0;
                 _progressBar.SetProgress(0);
                 KitchenObjOperator.PutKitchenObj(player, this);
@@ -31,13 +33,14 @@ namespace Kitchen
             //玩家没有持有物体，当前柜子有物体 -> 拿起物体
             if (!player.HasKitchenObj() && HasKitchenObj())
             {
+                Debug.Log("玩家没有持有物体，当前案板有物体 -> 拿起物体");
                 cuttingCount = 0;
                 _progressBar.SetProgress(0);
                 KitchenObjOperator.PutKitchenObj(this, player);
                 return;
             }
-            
-            if(CounterOperator.TryPlateOperator(player, this)) return;
+
+            if (CounterOperator.TryPlateOperator(player, this)) return;
         }
 
 
@@ -45,25 +48,40 @@ namespace Kitchen
         public void InteractAlternate(Player.Player player)
         {
             if (!HasKitchenObj()) return;
+            
+            var nextObj = DataTableManager.Sigleton.GetCutKitObj(kitchenObj.objEnum);
+            if (nextObj == null) return;
+            CuttingServerRpc(transform.position);
+        }
 
-            var currentKitchenObj = GetKitchenObj();
-            var cutKitchenObjSo = DataTableManager.Sigleton.GetCutKitchenObjSo(currentKitchenObj.objEnum);
-            //ToDo 这里判断是否可以切菜
-            if (cutKitchenObjSo == null) return;
-            //获取最大切菜次数
-            var maxCuttingCount = DataTableManager.Sigleton.GetCuttingCount(currentKitchenObj.objEnum);
-            //切菜
-            ++cuttingCount;
+        [ServerRpc(RequireOwnership = false)]
+        public void CuttingServerRpc(Vector3 position)
+        {
+            CuttingClientRpc(position);
+        }
+
+        [ClientRpc]
+        public void CuttingClientRpc(Vector3 position)
+        {
+            
+            //获取当前物体的最大切菜次数
+            var maxCuttingCount = DataTableManager.Sigleton.GetCuttingCount(kitchenObj.objEnum);
+            
             //触发切菜事件
+            ++cuttingCount;
             OnCuttingEvent?.Invoke();
-            OnAnyCut?.Invoke(this, transform.position);
-            //设置进度条
+            OnAnyCut?.Invoke(this, position);
+            
+            
             _progressBar.SetProgress((float)cuttingCount / maxCuttingCount);
-            //如果切完了
+            
+            
             if (cuttingCount >= maxCuttingCount)
             {
-                KitchenObjOperator.DestroyKitchenObj(currentKitchenObj);
-                KitchenObjOperator.SpawnKitchenObjRpc(cutKitchenObjSo.kitchenObjEnum, this);
+                var nextObj = DataTableManager.Sigleton.GetCutKitObj(kitchenObj.objEnum);//获取切完后的物体
+                KitchenObjOperator.DestroyKitchenObj(kitchenObj);//销毁当前物体
+                Debug.Log("切菜完成,原先物体已经被销毁,准备生成新物体");
+                KitchenObjOperator.SpawnKitchenObjRpc(nextObj.kitchenObjEnum, this);//生成切完后的物体
                 cuttingCount = 0;
             }
         }
