@@ -19,9 +19,8 @@ namespace Kitchen
             if (DeliveryManager.Instance.TryDeliverOrder(transform.position,ingredients))
             {
                 //如果合格则销毁盘子 并且销毁玩家手上的物体
-                playerKitchenObj.DestroySelf();
+                KitchenObjOperator.DestroyKitchenObj(playerKitchenObj);
                 //然后完成当前订单
-                
             }
         }
     }

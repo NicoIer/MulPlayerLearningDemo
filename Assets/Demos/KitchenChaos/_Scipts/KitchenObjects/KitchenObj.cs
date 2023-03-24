@@ -36,12 +36,6 @@ namespace Kitchen
             holder.ClearKitchenObj();
             holder = null;
         }
-
-        public void DestroySelf()
-        {
-            //ToDo 抽象成接口
-            ClearHolder();
-            Destroy(gameObject);
-        }
+        
     }
 }

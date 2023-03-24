@@ -8,7 +8,7 @@ namespace Kitchen
     {
         public static void SpawnKitchenObjRpc(KitchenObjEnum objEnum, ICanHoldKitchenObj holder)
         {
-            KitchenObjFactory.Instance.CreateKitchenObj(objEnum, holder);
+            KitchenObjFactory.Instance.SpawnKitObjServerRpc(objEnum, holder.GetNetworkObject());
         }
 
         public static void ExchangeKitchenObj(ICanHoldKitchenObj holder1, ICanHoldKitchenObj holder2)
@@ -70,7 +70,7 @@ namespace Kitchen
         public static void Cook(KitchenObj beCookedObj, ICanHoldKitchenObj holder)
         {
             var cookedObjSo = DataTableManager.Sigleton.GetCookedKitchenObjSo(beCookedObj.objEnum);
-            beCookedObj.DestroySelf();
+            DestroyKitchenObj(beCookedObj);
             SpawnKitchenObjRpc(cookedObjSo.kitchenObjEnum, holder);
         }
 
@@ -91,8 +91,13 @@ namespace Kitchen
             if (plate.TryAddIngredient(kitchenObj))
             {
                 //销毁掉物体
-                kitchenObj.DestroySelf();
+                DestroyKitchenObj(kitchenObj);
             }
+        }
+
+        public static void DestroyKitchenObj(KitchenObj kitchenObj)
+        {
+            KitchenObjFactory.Instance.DestroyServerRpc(kitchenObj.NetworkObject);
         }
     }
 }

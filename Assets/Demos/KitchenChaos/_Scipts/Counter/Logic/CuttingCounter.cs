@@ -24,7 +24,6 @@ namespace Kitchen
             {
                 cuttingCount = 0;
                 _progressBar.SetProgress(0);
-
                 KitchenObjOperator.PutKitchenObj(player, this);
                 return;
             }
@@ -63,7 +62,7 @@ namespace Kitchen
             //如果切完了
             if (cuttingCount >= maxCuttingCount)
             {
-                currentKitchenObj.DestroySelf();
+                KitchenObjOperator.DestroyKitchenObj(currentKitchenObj);
                 KitchenObjOperator.SpawnKitchenObjRpc(cutKitchenObjSo.kitchenObjEnum, this);
                 cuttingCount = 0;
             }

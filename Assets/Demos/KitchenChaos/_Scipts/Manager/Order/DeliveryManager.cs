@@ -47,7 +47,7 @@ namespace Kitchen
             _recipeDict = JsonConvert.DeserializeObject<Dictionary<string, RecipeData>>(contentStr);
             if (_recipeDict == null)
             {
-                throw new NullReferenceException();
+                throw new NullReferenceException(); 
             }
 
             recipeList = new List<RecipeData>(_recipeDict.Values);
@@ -56,8 +56,6 @@ namespace Kitchen
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
-            Debug.Log("游戏状态切换：" + arg1 + " -> " + arg2);
-            Debug.Log("isServer:" + IsServer);
             if (!IsServer) return; //只有服务器端才会生成订单
             if (arg2 is ReadyToStartState)
             {

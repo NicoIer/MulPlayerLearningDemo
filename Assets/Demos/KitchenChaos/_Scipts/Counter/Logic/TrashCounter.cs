@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Kitchen
@@ -11,11 +12,20 @@ namespace Kitchen
             //将玩家手上的东西销毁掉
             if (player.HasKitchenObj())
             {
-                player.GetKitchenObj().DestroySelf();
-                OnAnyObjTrashed?.Invoke(transform.position);
+                KitchenObjOperator.DestroyKitchenObj(player.GetKitchenObj());
+                TrashObjServerRpc(transform.position);
             }
         }
+        [ServerRpc(RequireOwnership = false)]
+        private void TrashObjServerRpc(Vector3 position)
+        {
+            TranshObjClientRpc(position);
+        }
+        [ClientRpc]
+        private void TranshObjClientRpc(Vector3 position)
+        {
+            OnAnyObjTrashed?.Invoke(position);
+        }
 
-       
     }
 }

@@ -10,6 +10,7 @@
             //玩家持有物体，当前柜子没有物体
             if (player.HasKitchenObj() && !HasKitchenObj())
             {
+                
                 KitchenObjOperator.PutKitchenObj(player, this);
                 return;
             }
