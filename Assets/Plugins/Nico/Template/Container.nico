@@ -24,5 +24,9 @@ namespace Nico.Util
         {
             return metaList[idx];
         }
+        public void AddData(IMetaData metaData)
+        {
+            AddData(({dataName})metaData);
+        }
     }
 }
