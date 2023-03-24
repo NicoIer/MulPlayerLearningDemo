@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Kitchen
 {
-    public abstract class BaseCounter : MonoBehaviour, IInteract, ICanHoldKitchenObj
+    public abstract class BaseCounter : NetworkBehaviour, IInteract, ICanHoldKitchenObj
     {
         public static event EventHandler<Vector3> OnAnyObjPlaceOnCounter; 
         protected Transform topSpawnPoint { get; set; }
@@ -18,7 +18,7 @@ namespace Kitchen
 
         public abstract void Interact(Player.Player player);
 
-        public virtual Transform GetTopSpawnPoint()
+        public virtual Transform GetHoldTransform()
         {
             return topSpawnPoint;
         }
@@ -34,6 +34,7 @@ namespace Kitchen
             {
                 OnAnyObjPlaceOnCounter?.Invoke(this, transform.position);
             }
+            kitchenObj = null;
             kitchenObj = newKitchenObj;
         }
 
@@ -49,7 +50,7 @@ namespace Kitchen
 
         public NetworkObject GetNetworkObject()
         {
-            return GetComponent<NetworkObject>();
+            return NetworkObject;
         }
     }
 }

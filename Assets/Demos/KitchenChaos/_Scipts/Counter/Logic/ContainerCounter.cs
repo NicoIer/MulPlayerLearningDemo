@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Kitchen
@@ -7,7 +8,7 @@ namespace Kitchen
     {
         private KitchenObjSo _kitchenObjSo;
         public KitchenObjEnum objEnum;
-        public event EventHandler OnInteractEvent;
+        public event Action OnInteractEvent;
         public SpriteRenderer re;
 
 
@@ -20,7 +21,7 @@ namespace Kitchen
 
         public override void Interact(Player.Player player)
         {
-            Debug.Log(player + "  " + player.NetworkObjectId + "尝试获取道具" +$"它是否有道具:{player.HasKitchenObj()}");
+            Debug.Log(player + "  " + player.NetworkObjectId + "尝试获取道具" + $"它是否有道具:{player.HasKitchenObj()}");
             if (player.HasKitchenObj())
             {
                 Debug.Log("获取失败");
@@ -29,7 +30,20 @@ namespace Kitchen
 
             Debug.Log("请求生成道具");
             KitchenObjOperator.SpawnKitchenObj(_kitchenObjSo.kitchenObjEnum, player);
-            OnInteractEvent?.Invoke(this, EventArgs.Empty);
+            _OnInteractServerRpc();
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void _OnInteractServerRpc()
+        {
+            _OnInteractClientRpc();
+        }
+
+        [ClientRpc]
+        private void _OnInteractClientRpc()
+        {
+            Debug.Log("交互事件触发");
+            OnInteractEvent?.Invoke();
         }
     }
 }

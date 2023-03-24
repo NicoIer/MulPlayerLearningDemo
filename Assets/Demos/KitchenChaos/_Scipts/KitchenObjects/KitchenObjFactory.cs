@@ -30,7 +30,6 @@ namespace Kitchen
             var holder = holderObj.GetComponent<ICanHoldKitchenObj>();
             //设置Parent的这一步 需要在所有客户端调用 所以需要RPC
             obj.SetHolder(holder);
-            holder.SetKitchenObj(obj);
         }
 
         [ClientRpc]

@@ -19,15 +19,18 @@ namespace Kitchen
         private void OnEnable()
         {
             _containerCounter.OnInteractEvent += OnInteractEvent;
+            Debug.Log("注册事件");
         }
 
         private void OnDisable()
         {
             _containerCounter.OnInteractEvent -= OnInteractEvent;
+            Debug.Log("注销事件");
         }
 
-        private void OnInteractEvent(object sender, EventArgs e)
+        private void OnInteractEvent()
         {
+            Debug.Log("交互事件触发 设置动画");
             _animator.SetTrigger(_openParam);
         }
     }

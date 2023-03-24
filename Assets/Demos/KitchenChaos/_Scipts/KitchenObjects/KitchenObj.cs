@@ -37,14 +37,22 @@ namespace Kitchen
             var canHoldKitchenObj = holderObj.GetComponent<ICanHoldKitchenObj>();
             if (canHoldKitchenObj.HasKitchenObj())
             {
-                Debug.Log("holder: " + canHoldKitchenObj + " already has:" + canHoldKitchenObj.GetKitchenObj());
+                if (canHoldKitchenObj.GetKitchenObj() == this)
+                {//TODO 搞清楚为什么会出现这种情况 是服务器设置了 holder 对应的物体 但是没有通知客户端么???
+                    // 明明 holder 已经持有这个物体了 自己却没有设置对应的holder
+                    follower.SetFollowTarget(canHoldKitchenObj.GetHoldTransform());
+                    return;
+                }
+
+                Debug.Log("holder: " + canHoldKitchenObj + $"{canHoldKitchenObj.GetType()}" + " already has:" +
+                          canHoldKitchenObj.GetKitchenObj());
                 Debug.LogError("kitchenObjParent already has a KitchenObj");
             }
 
             holder = canHoldKitchenObj;
-            holder.SetKitchenObj(this);//这一步很重要 因为 holder是否持有物体 也是需要网络同步的的!!!
-            //TODO DEBUG
-            follower.SetFollowTarget(canHoldKitchenObj.GetTopSpawnPoint());
+            holder.SetKitchenObj(this); //这一步很重要 因为 holder是否持有物体 也是需要网络同步的的!!!
+
+            follower.SetFollowTarget(canHoldKitchenObj.GetHoldTransform());
         }
 
         public ICanHoldKitchenObj GetHolder()

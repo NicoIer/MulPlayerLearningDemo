@@ -5,7 +5,7 @@ namespace Kitchen
 {
     public interface ICanHoldKitchenObj
     {
-        Transform GetTopSpawnPoint();
+        Transform GetHoldTransform();
         KitchenObj GetKitchenObj();
         void SetKitchenObj(KitchenObj newKitchenObj);
         bool HasKitchenObj();
