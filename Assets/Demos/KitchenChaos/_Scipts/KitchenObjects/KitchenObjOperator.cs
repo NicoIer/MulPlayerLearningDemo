@@ -66,11 +66,11 @@ namespace Kitchen
             return _cookableKitchenObjEnumSet.Contains(kitchenObj.objEnum);
         }
 
-        public static void Cook(KitchenObj beCookedObj, ICanHoldKitchenObj holder)
+        public static void Cook(KitchenObj oldObj, ICanHoldKitchenObj holder)
         {
-            var cookedObjSo = DataTableManager.Sigleton.GetCookedKitchenObjSo(beCookedObj.objEnum);
-            DestroyKitchenObj(beCookedObj);
-            SpawnKitchenObjRpc(cookedObjSo.kitchenObjEnum, holder);
+            var nextObj = DataTableManager.Sigleton.GetCookedKitchenObjSo(oldObj.objEnum);
+            DestroyKitchenObj(oldObj);
+            SpawnKitchenObjRpc(nextObj.kitchenObjEnum, holder);
         }
 
         public static bool WillBeBurned(KitchenObjEnum kitchenObjEnum)
@@ -96,6 +96,8 @@ namespace Kitchen
 
         public static void DestroyKitchenObj(KitchenObj kitchenObj)
         {
+            if (kitchenObj == null)
+                return;
             KitchenObjFactory.Instance.DestroyServerRpc(kitchenObj.NetworkObject);
         }
     }

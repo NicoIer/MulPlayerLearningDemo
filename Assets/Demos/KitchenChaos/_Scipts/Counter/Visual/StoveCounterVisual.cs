@@ -28,13 +28,13 @@ namespace Kitchen
             _stoveCounter.OnStopCooking -= OnStopCooking;
         }
 
-        private void OnStopCooking(object sender, EventArgs e)
+        private void OnStopCooking()
         {
             _stoveGameOnObject.SetActive(false);
             _particleObject.SetActive(false);
         }
 
-        private void OnStartCooking(object sender, EventArgs e)
+        private void OnStartCooking()
         {
             _stoveGameOnObject.SetActive(true);
             _particleObject.SetActive(true);

@@ -37,8 +37,8 @@ namespace Kitchen
             if (holder.HasKitchenObj())
             {
                 Debug.LogWarning(
-                    $"{holder}, type[{holder.GetType()}] already has:{kitchenObj} type[{GetType()}]" +
-                    " it will be replaced by this"
+                    $"{holder}] already has:{holder.GetKitchenObj()}" +
+                    $" it will be replaced by {kitchenObj}"
                 );
                 // var oldObj = holder.GetKitchenObj();
                 // oldObj.SetHolder(null);
@@ -69,7 +69,6 @@ namespace Kitchen
             putter.ClearKitchenObj();
             obj.SetHolder(reciever);
             reciever.SetKitchenObj(obj);
-            
         }
 
 

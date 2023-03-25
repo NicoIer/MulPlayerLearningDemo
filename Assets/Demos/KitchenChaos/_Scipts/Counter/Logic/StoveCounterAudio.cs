@@ -73,13 +73,13 @@ namespace Kitchen
             _stoveCounter.OnCookingStageChange -= _OnCookingStageChange;
         }
 
-        private void _StoveCounter_OnStopCooking(object sender, EventArgs e)
+        private void _StoveCounter_OnStopCooking()
         {
             // _playingWarningSoundCts?.Cancel();
             _cookingAudioSource.Stop();
         }
 
-        private void _StoveCounter_OnStartCooking(object sender, EventArgs e)
+        private void _StoveCounter_OnStartCooking()
         {
             // _playingWarningSoundCts?.Cancel();
             _cookingAudioSource.Play();

@@ -23,9 +23,7 @@ namespace Kitchen
             //玩家持有物体，当前柜子没有物体 -> 放置物体
             if (player.HasKitchenObj() && !HasKitchenObj())
             {
-                Debug.Log("玩家持有物体，当前案板没有物体 -> 放置物体");
-                cuttingCount = 0;
-                _progressBar.SetProgress(0);
+                _ClearCountServerRpc();
                 KitchenObjOperator.PutKitchenObj(player, this);
                 return;
             }
@@ -33,9 +31,7 @@ namespace Kitchen
             //玩家没有持有物体，当前柜子有物体 -> 拿起物体
             if (!player.HasKitchenObj() && HasKitchenObj())
             {
-                Debug.Log("玩家没有持有物体，当前案板有物体 -> 拿起物体");
-                cuttingCount = 0;
-                _progressBar.SetProgress(0);
+                _ClearCountServerRpc();
                 KitchenObjOperator.PutKitchenObj(this, player);
                 return;
             }
@@ -43,6 +39,18 @@ namespace Kitchen
             if (CounterOperator.TryPlateOperator(player, this)) return;
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        private void _ClearCountServerRpc()
+        {
+            _SetProgressClientRpc();
+        }
+
+        [ClientRpc]
+        public void _SetProgressClientRpc()
+        {
+            cuttingCount = 0;
+            _progressBar.SetProgress(0);
+        }
 
         //交互逻辑 这里是切菜的逻辑
         public void InteractAlternate(Player.Player player)
