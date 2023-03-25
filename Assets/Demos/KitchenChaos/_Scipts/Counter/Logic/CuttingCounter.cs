@@ -90,7 +90,6 @@ namespace Kitchen
                 if (IsServer)
                 {
                     KitchenObjOperator.DestroyKitchenObj(kitchenObj); //销毁当前物体 这个销毁操作只能被调用一次
-                    Debug.Log("切菜完成,原先物体已经被销毁,准备生成新物体");
                     KitchenObjOperator.SpawnKitchenObjRpc(nextObj.kitchenObjEnum, this); //生成切完后的物体
                 }
 

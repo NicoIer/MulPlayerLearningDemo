@@ -122,7 +122,6 @@ namespace Kitchen
 
 
                 //烹饪阶段改变 
-                Debug.Log(kitchenObj.objEnum);
                 _CookingStageChangeClientRpc(kitchenObj.objEnum);
             }
 

@@ -128,7 +128,7 @@ namespace Kitchen
             OnOrderFailed?.Invoke(this, position);
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void _FailedOrderServerRpc(Vector3 position)
         {
             _FailedOrderClientRpc(position);
