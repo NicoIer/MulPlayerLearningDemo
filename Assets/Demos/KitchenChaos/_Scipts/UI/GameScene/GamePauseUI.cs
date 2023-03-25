@@ -43,8 +43,10 @@ namespace Kitchen.UI
 
         private void _OnMainMenuButtonClick()
         {
-            GameManager.Instance.ExitGame();
+            Debug.Log("退出游戏,停止服务器");
             NetworkManager.Singleton.Shutdown();
+            
+            GameManager.Instance.ExitGame();
             SceneLoader.Load("MainMenuScene", "LoadingScene");
         }
 

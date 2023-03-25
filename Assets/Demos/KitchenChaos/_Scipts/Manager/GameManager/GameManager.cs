@@ -178,10 +178,14 @@ namespace Kitchen
         {
             //TODO 值得研究
             OnConnecting?.Invoke();
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnConnectingFailed;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
             NetworkManager.Singleton.StartClient();
         }
 
+        public void OnClientDisconnectCallback(ulong clientId)
+        {
+            OnConnectingFailed?.Invoke(clientId);
+        }
         #endregion
 
 
@@ -219,12 +223,10 @@ namespace Kitchen
                 return;
             }
         }
-        
+
         public void EnterGame()
         {
-            
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadSceneCompleted;
-            
         }
 
 

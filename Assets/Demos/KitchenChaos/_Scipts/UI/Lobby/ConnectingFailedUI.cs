@@ -26,6 +26,10 @@ namespace Kitchen.UI
         private void OnConnectingFailed(ulong clientId)
         {
             msgText.text = NetworkManager.Singleton.DisconnectReason;
+            if (string.IsNullOrEmpty(msgText.text))
+            {
+                msgText.text = "Failed to Connect";
+            }
             gameObject.SetActive(true);
         }
 
@@ -36,8 +40,10 @@ namespace Kitchen.UI
 
         private void OnDestroy()
         {
+            Debug.Log("销毁");
             GameManager.Instance.OnConnecting -= OnConnecting;
             GameManager.Instance.OnConnectingFailed -= OnConnectingFailed;
+            Debug.Log("取消注册的事件");
         }
     }
 }

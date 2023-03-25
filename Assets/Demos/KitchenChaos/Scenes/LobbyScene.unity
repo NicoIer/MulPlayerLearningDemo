@@ -1863,6 +1863,7 @@ MonoBehaviour:
   <setting>k__BackingField:
     gameDurationSetting: 60
     readyCountDown: 3
+    maxPlayerCount: 4
   playerPrefab: {fileID: 3810951076065167919, guid: 37185b51dcced9e4384a8497bcbd1c01,
     type: 3}
 --- !u!4 &1894448524
