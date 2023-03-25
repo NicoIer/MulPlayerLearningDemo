@@ -12,6 +12,7 @@ namespace Nico.Manager
     /// </summary>
     public sealed class TableManager : GlobalSingleton<TableManager>, IInitializable
     {
+        public string dataPath = "Asset/Test/";
         private Dictionary<Type, IMetaDataContainer> _containers = new Dictionary<Type, IMetaDataContainer>();
         public void Initialize()
         {
