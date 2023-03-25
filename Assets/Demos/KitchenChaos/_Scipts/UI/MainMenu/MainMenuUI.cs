@@ -1,4 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using Kitchen.Config;
 using Kitchen.Scene;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,6 +14,8 @@ namespace Kitchen.UI.Menu
         [SerializeField] private Button playButton;
         [SerializeField] private Button quitButton;
 
+
+
         private void Start()
         {
             playButton.onClick.AddListener(_OnPlayButtonClick);
@@ -20,8 +24,7 @@ namespace Kitchen.UI.Menu
 
         private void _OnPlayButtonClick()
         {
-            NetworkManager.Singleton.Shutdown();
-            SceneLoader.Load("MainMenuScene", "LoadingScene");
+            SceneLoader.Load(SceneName.LobbyScene, "LoadingScene");
         }
 
         private void _OnQuitButtonClick()

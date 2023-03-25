@@ -1,5 +1,8 @@
-﻿using Unity.Netcode;
+﻿using Kitchen.Config;
+using Kitchen.Scene;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Kitchen.UI
@@ -7,11 +10,12 @@ namespace Kitchen.UI
     public class HostDisconnectUI : MonoBehaviour
     {
         [SerializeField] private Button playAgainButton;
-        
-        
+
+
         private void Start()
         {
             NetworkManager.Singleton.OnClientDisconnectCallback += _OnClientDisconnect;
+            playAgainButton.onClick.AddListener(() => { SceneLoader.Load(SceneName.MainMenuScene); });
             Hide();
         }
 
