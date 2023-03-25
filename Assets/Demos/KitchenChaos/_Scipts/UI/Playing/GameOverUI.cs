@@ -1,18 +1,27 @@
 ﻿
+using Kitchen.Scene;
 using Nico.MVC;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Kitchen.UI
 {
     public class GameOverUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI recipeDeliveredText;
+        [SerializeField] private Button playAgainButton;
         private GameObject _uiContainer;
 
         private void Awake()
         {
             _uiContainer = transform.Find("UIContainer").gameObject;
+            playAgainButton.onClick.AddListener(_OnPlayAgainButtonClick);
+        }
+
+        private void _OnPlayAgainButtonClick()
+        {
+            SceneLoader.Load("MainScene", "LoadingScene");
         }
 
         private void OnEnable()
@@ -31,7 +40,6 @@ namespace Kitchen.UI
             if (arg2 is GameOverState)
             {
                 _uiContainer.SetActive(true);
-
                 recipeDeliveredText.text = ModelManager.Get<CompletedOrderModel>().orderCount.ToString();
             }
         }

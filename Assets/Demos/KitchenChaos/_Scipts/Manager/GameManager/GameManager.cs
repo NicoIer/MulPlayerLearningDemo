@@ -17,6 +17,7 @@ namespace Kitchen
         public event Action<float> OnLeftTimeChange;
         public event Action OnLocalPlayerReady;
         public GameStateMachine stateMachine { get; private set; }
+        public GameState CurrentState => stateMachine.CurrentState;
         public bool localPlayerReady { get; private set; } = false;
 
         private HashSet<ulong> _playerReadySet = new HashSet<ulong>();
@@ -81,9 +82,17 @@ namespace Kitchen
             // stateMachine.Change<ReadyToStartState>();
         }
 
+        /// <summary>
+        /// 暂停游戏 只有服务器才能暂停游戏
+        /// </summary>
         public void PauseGame()
         {
-            Debug.Log($"PauseGame: from {stateMachine.CurrentState.GetType()}");
+            //只有服务器才能暂停游戏
+            if (!IsServer)
+            {
+                return;
+            }
+            Debug.Log("Pause Game");
             if (stateMachine.CurrentState is PausedState)
             {
                 // stateMachine.Change<PlayingState>();
@@ -92,7 +101,7 @@ namespace Kitchen
             else if (stateMachine.CurrentState is PlayingState)
             {
                 // stateMachine.Change<PausedState>();
-                ChangeStateClientRpc(PlayingState.stateEnum);
+                ChangeStateClientRpc(PausedState.stateEnum);
             }
         }
 
@@ -110,7 +119,7 @@ namespace Kitchen
         #endregion
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetPlayerReadyServerRpc(ServerRpcParams serverRpcParams = default)
+        internal void SetPlayerReadyServerRpc(ServerRpcParams serverRpcParams = default)
         {
             _playerReadySet.Add(serverRpcParams.Receive.SenderClientId);
             bool flag = NetworkManager.Singleton.ConnectedClientsIds.All(clientId =>

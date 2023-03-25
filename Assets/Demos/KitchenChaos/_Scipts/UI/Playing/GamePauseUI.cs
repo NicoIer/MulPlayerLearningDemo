@@ -1,5 +1,6 @@
 ﻿using System;
 using Kitchen.Scene;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,7 @@ namespace Kitchen.UI
         private void _OnMainMenuButtonClick()
         {
             GameManager.Instance.ExitGame();
+            NetworkManager.Singleton.Shutdown();
             SceneLoader.Load("MainMenuScene", "LoadingScene");
         }
 

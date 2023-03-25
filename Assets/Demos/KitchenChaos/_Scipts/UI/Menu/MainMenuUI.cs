@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Kitchen.Scene;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -19,7 +20,8 @@ namespace Kitchen.UI.Menu
 
         private void _OnPlayButtonClick()
         {
-            SceneLoader.Load("GameScene", "LoadingScene");
+            NetworkManager.Singleton.Shutdown();
+            SceneLoader.Load("MainMenuScene", "LoadingScene");
         }
 
         private void _OnQuitButtonClick()

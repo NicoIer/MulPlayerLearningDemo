@@ -14,6 +14,7 @@ namespace Kitchen.UI
         {
             hostButton.onClick.AddListener(() =>
             {
+                NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback;
                 NetworkManager.Singleton.StartHost();
                 Hide();
             });
@@ -24,12 +25,31 @@ namespace Kitchen.UI
             });
         }
 
+        /// <summary>
+        /// TODO 搞懂这个方法
+        /// </summary>
+        /// <param name="Request"></param>
+        /// <param name="response"></param>
+        private void ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest Request,
+            NetworkManager.ConnectionApprovalResponse response)
+        {
+            if (GameManager.Instance.CurrentState is WaitingToStartState)
+            {
+                response.Approved = true;
+                response.CreatePlayerObject = true;
+            }
+            else
+            {
+                response.Approved = false;
+            }
+        }
+
+
         private void Start()
         {
             GameManager.Instance.OnLocalPlayerReady += Hide;
         }
-        
-        
+
 
         public void Hide()
         {

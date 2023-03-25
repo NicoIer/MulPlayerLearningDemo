@@ -57,11 +57,23 @@ namespace Kitchen.Player
             _Init();
             //TODO 这里会有BUG 
             transform.position = spawnPoints[(int)OwnerClientId];
-            
+
             OnAnyPlayerSpawned?.Invoke();
             input.Enable();
             input.OnInteractPerform += OnPerformInteract;
             input.OnInteractAlternatePerform += OnPerformInteractAlternate;
+
+            if (IsServer)
+                NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+        }
+
+        private void OnClientDisconnect(ulong clientId)
+        {
+            //如果掉线的玩家 是自己的玩家，就销毁自己所持有的物体
+            if (OwnerClientId == clientId)
+            {
+                KitchenObjOperator.DestroyKitchenObj(_kitchenObj);
+            }
         }
 
         public override void OnNetworkDespawn()
@@ -71,6 +83,9 @@ namespace Kitchen.Player
             input.Disable();
             input.OnInteractPerform -= OnPerformInteract;
             input.OnInteractAlternatePerform -= OnPerformInteractAlternate;
+
+
+            KitchenObjOperator.DestroyKitchenObj(GetKitchenObj());
         }
 
 
