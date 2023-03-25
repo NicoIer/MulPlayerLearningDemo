@@ -6,5 +6,6 @@ namespace Kitchen
     public class GameSetting
     {
         public float gameDurationSetting = 60f;
+        public int readyCountDown = 3;
     }
 }

@@ -1,44 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Kitchen.UI;
 using Nico.Design;
+using Nico.Network;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Kitchen
 {
-    public class GameManager : SceneSingleton<GameManager>
+    public class GameManager : NetSingleton<GameManager>
     {
-        private GameSetting _setting;
-
-        public GameSetting setting
-        {
-            get
-            {
-                if (_setting == null)
-                {
-                    //TODO 改成从配置文件读取
-                    _setting = new GameSetting();
-                    setting.gameDurationSetting = 60;
-                }
-
-                return _setting;
-            }
-        }
-
-        public int readyCountDown = 3;
+        [field: SerializeField] public GameSetting setting { get; private set; }
         public event Action<int> OnCountDownChange;
-        private GameStateMachine _stateMachine;
+        public event Action<float> OnLeftTimeChange;
+        public event Action OnLocalPlayerReady;
+        public GameStateMachine stateMachine { get; private set; }
+        public bool localPlayerReady { get; private set; } = false;
 
-        public GameStateMachine stateMachine
-        {
-            get
-            {
-                //这里不是线程安全的
-                if (_stateMachine == null)
-                    _Init_StateMachine();
-                return _stateMachine;
-            }
-        }
+        private HashSet<ulong> _playerReadySet = new HashSet<ulong>();
 
         protected override void Awake()
         {
@@ -51,31 +32,29 @@ namespace Kitchen
 
         private void _Init_StateMachine()
         {
-            _stateMachine = new GameStateMachine(this);
-            _stateMachine.Add(new WaitingToStartState());
-            var readyToStartState = new ReadyToStartState();
-            readyToStartState.onCountDownChange += (num) => { OnCountDownChange?.Invoke(num); };
-            _stateMachine.Add(readyToStartState);
-            _stateMachine.Add(new PlayingState());
-            _stateMachine.Add(new PausedState());
-            _stateMachine.Add(new GameOverState());
+            stateMachine = new GameStateMachine(this);
+            stateMachine.Add(new WaitingToStartState());
+            stateMachine.Add(new ReadyToStartState());
+            stateMachine.Add(new PlayingState());
+            stateMachine.Add(new PausedState());
+            stateMachine.Add(new GameOverState());
         }
 
         private void Start()
         {
-            // PlayerInput.Instance.OnInteractPerform += OnPerformInteract;
-            // _stateMachine.Change<WaitingToStartState>();
-            //TODO 测试时 等待选择连接方式后 再 开始游戏
-            _stateMachine.Change<WaitingToStartState>();
-            UniTask.WaitUntil(() => TestingUI.testingBool).ContinueWith(StartGame).Forget();
+            PlayerInput.Instance.OnInteractPerform += OnPerformInteract;
+            stateMachine.Change<WaitingToStartState>();
         }
 
 
         private void OnPerformInteract()
         {
+            //在等待开始状态下，按下交互键，进入准备完成状态
             if (stateMachine.CurrentState is WaitingToStartState)
             {
-                StartGame();
+                localPlayerReady = true;
+                OnLocalPlayerReady?.Invoke();
+                SetPlayerReadyServerRpc();
                 PlayerInput.Instance.OnInteractPerform -= OnPerformInteract;
             }
         }
@@ -88,12 +67,18 @@ namespace Kitchen
                 return;
             }
 
-            stateMachine.Update();
+            if (IsServer) //只有服务器做状态的更新
+            {
+                stateMachine.Update();
+            }
         }
+
+        #region 游戏 状态
 
         public void StartGame()
         {
-            stateMachine.Change<ReadyToStartState>();
+            ChangeStateClientRpc(ReadyToStartState.stateEnum);
+            // stateMachine.Change<ReadyToStartState>();
         }
 
         public void PauseGame()
@@ -101,22 +86,58 @@ namespace Kitchen
             Debug.Log($"PauseGame: from {stateMachine.CurrentState.GetType()}");
             if (stateMachine.CurrentState is PausedState)
             {
-                stateMachine.Change<PlayingState>();
+                // stateMachine.Change<PlayingState>();
+                ChangeStateClientRpc(PlayingState.stateEnum);
             }
             else if (stateMachine.CurrentState is PlayingState)
             {
-                stateMachine.Change<PausedState>();
+                // stateMachine.Change<PausedState>();
+                ChangeStateClientRpc(PlayingState.stateEnum);
             }
         }
 
         public void ExitGame()
         {
-            stateMachine.Change<WaitingToStartState>(); //切换
+            ChangeStateClientRpc(WaitingToStartState.stateEnum);
+            // stateMachine.Change<WaitingToStartState>(); //切换
         }
 
         public bool IsPlaying()
         {
             return stateMachine.CurrentState is PlayingState;
+        }
+
+        #endregion
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetPlayerReadyServerRpc(ServerRpcParams serverRpcParams = default)
+        {
+            _playerReadySet.Add(serverRpcParams.Receive.SenderClientId);
+            bool flag = NetworkManager.Singleton.ConnectedClientsIds.All(clientId =>
+                _playerReadySet.Contains(clientId));
+
+            if (flag)
+            {
+                StartGame();
+            }
+        }
+
+        [ClientRpc]
+        internal void ChangeStateClientRpc(GameStateEnum stateEnum)
+        {
+            stateMachine.Change(stateEnum);
+        }
+
+        [ClientRpc]
+        internal void OnCountDownChangeClientRpc(int num)
+        {
+            OnCountDownChange?.Invoke(num);
+        }
+        
+        [ClientRpc]
+        internal void OnLeftTimeChangeClientRpc(float timer)
+        {
+            OnLeftTimeChange?.Invoke(timer);
         }
     }
 }

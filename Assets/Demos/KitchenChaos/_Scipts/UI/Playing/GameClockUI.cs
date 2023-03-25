@@ -34,17 +34,17 @@ namespace Kitchen.UI
 
         private void _OnGameStateChange(GameState arg1, GameState arg2)
         {
-            if (arg2 is PlayingState playingState)
+            if (arg2 is PlayingState)
             {
                 _Show();
-                playingState.OnLeftTimeChange += _OnLeftTimeChange;
+                GameManager.Instance.OnLeftTimeChange += _OnLeftTimeChange;
                 _maxPlayingTime = GameManager.Instance.setting.gameDurationSetting;
                 return;
             }
 
-            if (arg1 is PlayingState playingState1)
+            if (arg1 is PlayingState)
             {
-                playingState1.OnLeftTimeChange -= _OnLeftTimeChange;
+                GameManager.Instance.OnLeftTimeChange -= _OnLeftTimeChange;
                 return;
             }
         }

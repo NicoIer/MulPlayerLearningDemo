@@ -49,12 +49,14 @@ namespace Kitchen.Player
 
         [SerializeField] internal PlayerData data;
 
-        
+        [SerializeField] internal List<Vector3> spawnPoints;
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
             _Init();
+            //TODO 这里会有BUG 
+            transform.position = spawnPoints[(int)OwnerClientId];
             
             OnAnyPlayerSpawned?.Invoke();
             input.Enable();
@@ -65,7 +67,7 @@ namespace Kitchen.Player
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
-            
+
             input.Disable();
             input.OnInteractPerform -= OnPerformInteract;
             input.OnInteractAlternatePerform -= OnPerformInteractAlternate;
@@ -86,27 +88,25 @@ namespace Kitchen.Player
         }
 
 
-
         private bool _initialized;
 
         protected void _Init()
         {
             if (!_initialized)
             {
-                Debug.Log("INIT");
                 input = PlayerInput.Instance; //TODO Controller需要获取Input的引用，所以这里需要先初始化Input
                 topSpawnPoint = transform.Find("KitchenObjHoldPoint");
-                
+
                 _controllers = new List<PlayerController>();
                 MoveController = new PlayerMoveController(this);
                 _controllers.Add(MoveController);
                 _selectCounterController = new PlayerSelectCounterController(this);
                 _controllers.Add(_selectCounterController);
-                
+
                 _initialized = true;
             }
         }
-        
+
         public NetworkObject GetNetworkObject()
         {
             return NetworkObject;

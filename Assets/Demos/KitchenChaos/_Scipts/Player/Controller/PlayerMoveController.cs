@@ -78,6 +78,9 @@ namespace Kitchen.Player
             canMove = !Physics.CapsuleCast(position,
                 position + Vector3.up * _data.playerHeight,
                 _data.playerRadius, moveDirZ, _data.playerRadius, _data.collisionLayer);
+            //TODO 打磨碰撞检测
+            // canMove = !Physics.BoxCast(position,
+            // Vector3.one*_data.playerRadius, moveDirZ, Quaternion.identity, _data.collisionLayer);
             moveDir = canMove ? moveDirZ : Vector3.zero;
 
             return moveDir.normalized;

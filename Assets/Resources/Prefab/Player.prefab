@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 3810951076065167917}
   - component: {fileID: -8450641689425972688}
   - component: {fileID: 3609757822705673695}
-  - component: {fileID: 5809303032044214161}
+  - component: {fileID: 220417379472784901}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -83,6 +83,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <topSpawnPoint>k__BackingField: {fileID: 3810951075651400322}
   data: {fileID: 11400000, guid: 2251bc72fa32f5c4c8042248cdaf78eb, type: 2}
+  spawnPoints:
+  - {x: 0, y: 0, z: 0}
+  - {x: -3, y: 0, z: 0}
+  - {x: -6, y: 0, z: 0}
+  - {x: 0, y: 0, z: -3}
 --- !u!114 &-8450641689425972688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,8 +130,8 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
---- !u!136 &5809303032044214161
-CapsuleCollider:
+--- !u!65 &220417379472784901
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -143,11 +148,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3878377
-  m_Height: 1.35
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.47, z: 0}
+  serializedVersion: 3
+  m_Size: {x: 0.82, y: 1, z: 0.54}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &3810951075464327665
 PrefabInstance:
   m_ObjectHideFlags: 0

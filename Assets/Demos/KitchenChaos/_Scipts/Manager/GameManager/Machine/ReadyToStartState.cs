@@ -7,18 +7,23 @@ namespace Kitchen
 {
     public class ReadyToStartState : GameState
     {
-        private int defaultReadyCountDown => owner.readyCountDown;
-        private int _readyCountDown;
-        public Action<int> onCountDownChange;
+        public static readonly GameStateEnum stateEnum = GameStateEnum.ReadyToStart;
+        private int defaultReadyCountDown => owner.setting.readyCountDown;//默认准备时间
+        private int _leftCountDown;//
         private bool _firstEnter = true;
 
         public override void Enter()
         {
+            if (!owner.IsOwnedByServer) //只有Server才能开启定时器 任务
+            {
+                return;
+            }
+
             //开启计时器 readyCountDown秒后进入PlayingState
             //并且每过一秒减少一次readyCountDown 并且触发对应时间
             if (_firstEnter)
             {
-                _readyCountDown = defaultReadyCountDown;
+                _leftCountDown = defaultReadyCountDown;
                 _firstEnter = false;
             }
 
@@ -36,13 +41,17 @@ namespace Kitchen
         {
             _countDownCts = new CancellationTokenSource();
 
-            while (_readyCountDown > 0 && !_countDownCts.IsCancellationRequested)
+            while (_leftCountDown > 0 && !_countDownCts.IsCancellationRequested)
             {
-                onCountDownChange?.Invoke(_readyCountDown);
+                //通知所有客户端进行倒计时播放
+                owner.OnCountDownChangeClientRpc(_leftCountDown);
+                //服务器倒计时--
+                _leftCountDown--;
+                
                 await UniTask.Delay(TimeSpan.FromSeconds(1));
-                _readyCountDown--;
             }
 
+            owner.ChangeStateClientRpc(GameStateEnum.Playing);
             stateMachine.Change<PlayingState>();
             return;
         }

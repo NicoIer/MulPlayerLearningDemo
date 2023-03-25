@@ -12,8 +12,9 @@ namespace Kitchen
 
         public GameState CurrentState { get; private set; }
         public Action<GameState, GameState> onStateChange;
-        
+
         public GameManager Owner { get; protected set; }
+
         public GameStateMachine(GameManager manager)
         {
             Owner = manager;
@@ -35,6 +36,30 @@ namespace Kitchen
             CurrentState?.Enter();
         }
 
+        public void Change(GameStateEnum stateEnum)
+        {
+            //找到GameStateEnum对应的类型
+            switch (stateEnum)
+            {
+                case GameStateEnum.WaitingToStart:
+                    Change<WaitingToStartState>();
+                    break;
+                case GameStateEnum.ReadyToStart:
+                    Change<ReadyToStartState>();
+                    break;
+                case GameStateEnum.Playing:
+                    Change<PlayingState>();
+                    break;
+                case GameStateEnum.Paused:
+                    Change<PausedState>();
+                    break;
+                case GameStateEnum.GameOver:
+                    Change<GameOverState>();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(stateEnum), stateEnum, null);
+            }
+        }
 
 
         public void Update()

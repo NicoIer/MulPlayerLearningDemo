@@ -5,6 +5,7 @@ namespace Kitchen
 {
     public class WaitingToStartState : GameState
     {
+        public static readonly GameStateEnum stateEnum = GameStateEnum.WaitingToStart;
         // public override void Update()
         // {
         //     if (Keyboard.current.spaceKey.wasPressedThisFrame)
