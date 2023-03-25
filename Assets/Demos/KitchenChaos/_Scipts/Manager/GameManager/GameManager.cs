@@ -219,11 +219,14 @@ namespace Kitchen
                 return;
             }
         }
-
+        
         public void EnterGame()
         {
+            
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadSceneCompleted;
+            
         }
+
 
         public void OnLoadSceneCompleted(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted,
             List<ulong> clientstimedout)
