@@ -2,6 +2,7 @@
 {
     public enum GameStateEnum
     {
+        Lobby,
         WaitingToStart,
         ReadyToStart,
         Playing,

@@ -5,19 +5,22 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Demos/KitchenChaos/Scenes/GameScene.unity
     guid: 66447a8bc1f61f0458036e0f947d08a5
-  - enabled: 0
+  - enabled: 1
     path: Assets/Demos/KitchenChaos/Scenes/MainMenuScene.unity
     guid: eaa9a7c915ed8ab4a8ae762982a98976
-  - enabled: 0
+  - enabled: 1
     path: Assets/Demos/KitchenChaos/Scenes/LoadingScene.unity
     guid: a9b0b60fb0cb03645902613a7a0b6faa
+  - enabled: 1
+    path: Assets/Demos/KitchenChaos/Scenes/LobbyScene.unity
+    guid: 2791661efde616e478736e1008d4b5f6
+  - enabled: 1
+    path: Assets/Demos/KitchenChaos/Scenes/CharacterSelectScene.unity
+    guid: 3740ca1c52a828847b86fc7fa3b8853a
   - enabled: 0
-    path: Assets/Demos/MulPlayerSimpleDemo/Scenes/SampleScene.unity
-    guid: 2a681a6950bfd294fbd9a4f2c97bfbd5
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}

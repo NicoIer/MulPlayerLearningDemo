@@ -2,25 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Kitchen.Config;
 using Kitchen.UI;
 using Nico.Design;
 using Nico.Network;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Kitchen
 {
-    public class GameManager : NetSingleton<GameManager>
+    public class GameManager : GlobalNetSingleton<GameManager>
     {
         [field: SerializeField] public GameSetting setting { get; private set; }
+
+        #region Events
+
         public event Action<int> OnCountDownChange;
         public event Action<float> OnLeftTimeChange;
         public event Action OnLocalPlayerReady;
+        public event Action OnConnecting;
+        public event Action<ulong> OnConnectingFailed;
+
+        #endregion
+
         public GameStateMachine stateMachine { get; private set; }
         public GameState CurrentState => stateMachine.CurrentState;
         public bool localPlayerReady { get; private set; } = false;
 
         private HashSet<ulong> _playerReadySet = new HashSet<ulong>();
+        [SerializeField] private GameObject playerPrefab;
 
         protected override void Awake()
         {
@@ -34,6 +45,7 @@ namespace Kitchen
         private void _Init_StateMachine()
         {
             stateMachine = new GameStateMachine(this);
+            stateMachine.Add(new LobbyState());
             stateMachine.Add(new WaitingToStartState());
             stateMachine.Add(new ReadyToStartState());
             stateMachine.Add(new PlayingState());
@@ -44,7 +56,7 @@ namespace Kitchen
         private void Start()
         {
             PlayerInput.Instance.OnInteractPerform += OnPerformInteract;
-            stateMachine.Change<WaitingToStartState>();
+            stateMachine.Change<LobbyState>();
         }
 
 
@@ -79,7 +91,6 @@ namespace Kitchen
         public void StartGame()
         {
             ChangeStateClientRpc(ReadyToStartState.stateEnum);
-            // stateMachine.Change<ReadyToStartState>();
         }
 
         /// <summary>
@@ -92,7 +103,7 @@ namespace Kitchen
             {
                 return;
             }
-            Debug.Log("Pause Game");
+
             if (stateMachine.CurrentState is PausedState)
             {
                 // stateMachine.Change<PlayingState>();
@@ -116,7 +127,21 @@ namespace Kitchen
             return stateMachine.CurrentState is PlayingState;
         }
 
+        [ClientRpc]
+        internal void ChangeStateClientRpc(GameStateEnum stateEnum)
+        {
+            stateMachine.Change(stateEnum);
+        }
+
+        [ClientRpc]
+        internal void OnCountDownChangeClientRpc(int num)
+        {
+            OnCountDownChange?.Invoke(num);
+        }
+
         #endregion
+
+        #region 同步 Rpc
 
         [ServerRpc(RequireOwnership = false)]
         internal void SetPlayerReadyServerRpc(ServerRpcParams serverRpcParams = default)
@@ -131,22 +156,90 @@ namespace Kitchen
             }
         }
 
-        [ClientRpc]
-        internal void ChangeStateClientRpc(GameStateEnum stateEnum)
-        {
-            stateMachine.Change(stateEnum);
-        }
 
-        [ClientRpc]
-        internal void OnCountDownChangeClientRpc(int num)
-        {
-            OnCountDownChange?.Invoke(num);
-        }
-        
         [ClientRpc]
         internal void OnLeftTimeChangeClientRpc(float timer)
         {
             OnLeftTimeChange?.Invoke(timer);
+        }
+
+        #endregion
+
+
+        #region 启动服务器 客户端
+
+        public void StartHost()
+        {
+            NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback;
+            NetworkManager.Singleton.StartHost();
+        }
+
+        public void StartClient()
+        {
+            //TODO 值得研究
+            OnConnecting?.Invoke();
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnConnectingFailed;
+            NetworkManager.Singleton.StartClient();
+        }
+
+        #endregion
+
+
+        /// <summary>
+        /// TODO 搞懂这个方法
+        /// 这个方法是在客户端连接服务器的时候调用的
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        private void ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request,
+            NetworkManager.ConnectionApprovalResponse response)
+        {
+            Debug.Log("ConnectionApprovalCallback!");
+            if (CurrentState is not LobbyState)
+            {
+                Debug.Log("拒绝连接");
+                response.Approved = false;
+                response.Reason = "Game Already Started";
+                return;
+            }
+
+            if (NetworkManager.Singleton.ConnectedClientsIds.Count >= setting.maxPlayerCount)
+            {
+                Debug.Log("拒绝连接");
+                response.Approved = false;
+                response.Reason = "Player is full";
+                return;
+            }
+
+            if (CurrentState is LobbyState)
+            {
+                Debug.Log("允许连接");
+                response.Approved = true;
+                response.CreatePlayerObject = false;
+                return;
+            }
+        }
+
+        public void EnterGame()
+        {
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadSceneCompleted;
+        }
+
+        public void OnLoadSceneCompleted(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted,
+            List<ulong> clientstimedout)
+        {
+            Debug.Log($"{scenename}加载完成");
+            if (scenename != SceneName.GameScene)
+                return;
+            ChangeStateClientRpc(WaitingToStartState.stateEnum); //通知所有客户端切换状态
+            //同时 由服务端 生成玩家
+            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                var playerObj = Instantiate(playerPrefab);
+                playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+            }
+
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
         }
     }
 }
