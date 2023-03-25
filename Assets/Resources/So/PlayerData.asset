@@ -21,3 +21,6 @@ MonoBehaviour:
   interactLayer:
     serializedVersion: 2
     m_Bits: 64
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 192

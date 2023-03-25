@@ -12,5 +12,6 @@ namespace Kitchen
         public string animWalking = "walking";
         public float interactDistance = 1f;
         public LayerMask interactLayer;
+        public LayerMask collisionLayer;
     }
 }

@@ -60,14 +60,14 @@ namespace Kitchen.Player
             var position = Owner.transform.position;
             var canMove = !Physics.CapsuleCast(position,
                 position + Vector3.up * _data.playerHeight,
-                _data.playerRadius, moveDir, _data.playerRadius);
+                _data.playerRadius, moveDir, _data.playerRadius, _data.collisionLayer);
             if (canMove) return moveDir;
 
             //尝试在X方向移动
             var moveDirX = new Vector3(moveDir.x, 0, 0);
             canMove = !Physics.CapsuleCast(position,
                 position + Vector3.up * _data.playerHeight,
-                _data.playerRadius, moveDirX, _data.playerRadius);
+                _data.playerRadius, moveDirX, _data.playerRadius, _data.collisionLayer);
             if (canMove)
             {
                 return moveDirX.normalized;
@@ -77,7 +77,7 @@ namespace Kitchen.Player
             var moveDirZ = new Vector3(0, 0, moveDir.z);
             canMove = !Physics.CapsuleCast(position,
                 position + Vector3.up * _data.playerHeight,
-                _data.playerRadius, moveDirZ, _data.playerRadius);
+                _data.playerRadius, moveDirZ, _data.playerRadius, _data.collisionLayer);
             moveDir = canMove ? moveDirZ : Vector3.zero;
 
             return moveDir.normalized;
