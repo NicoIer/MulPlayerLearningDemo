@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Kitchen.Config;
+using Kitchen.Scene;
 using Nico.Network;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
@@ -109,8 +110,31 @@ namespace Kitchen
 
         public void EnterGame()
         {
+            SceneLoader.LoadNet(SceneName.GameScene);
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadSceneCompleted;
         }
+
+
+
+        public void OnLoadSceneCompleted(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted,
+            List<ulong> clientstimedout)
+        {
+            Debug.Log($"{scenename}加载完成,isServer:{IsServer}");
+            if (!IsServer)
+                return;
+            if (scenename != SceneName.GameScene)
+                return;
+            ChangeStateClientRpc(WaitingToStartState.stateEnum); //通知所有客户端切换状态
+            //同时 由服务端 生成玩家
+            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                var playerObj = Instantiate(playerPrefab);
+                playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+            }
+
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
+        }
+
 
         public void StartGame()
         {
@@ -226,6 +250,7 @@ namespace Kitchen
             OnConnecting?.Invoke();
             NetworkManager.Singleton.OnClientConnectedCallback += Client_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnSelfDisconnectCallback;
+            Debug.Log("NetworkManager 开启客户端 准备连接");
             NetworkManager.Singleton.StartClient();
         }
 
@@ -258,23 +283,6 @@ namespace Kitchen
 
         #region 回调事件
 
-        public void OnLoadSceneCompleted(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted,
-            List<ulong> clientstimedout)
-        {
-            Debug.Log($"{scenename}加载完成");
-            if (scenename != SceneName.GameScene)
-                return;
-            ChangeStateClientRpc(WaitingToStartState.stateEnum); //通知所有客户端切换状态
-            //同时 由服务端 生成玩家
-            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
-            {
-                var playerObj = Instantiate(playerPrefab);
-                playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
-            }
-
-            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
-        }
-
         private void Host_OnClientConnectedCallback(ulong clientId)
         {
             Debug.Log($"{clientId} 连接成功");
@@ -289,6 +297,7 @@ namespace Kitchen
 
         private void Client_OnClientConnectedCallback(ulong clientId)
         {
+            Debug.Log($"客户端连接成功,客户端id{clientId}");
             SetPlayerNameServerRpc(_playerName);
             SetPlayerIDServerRpc(AuthenticationService.Instance.PlayerId);
         }
@@ -383,7 +392,7 @@ namespace Kitchen
         }
 
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void SetPlayerIDServerRpc(string playerId, ServerRpcParams serverRpcParams = default)
         {
             var senderID = serverRpcParams.Receive.SenderClientId;

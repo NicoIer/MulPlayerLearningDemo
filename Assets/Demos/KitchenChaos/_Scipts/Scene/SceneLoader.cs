@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Unity.Netcode;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Kitchen.Scene
@@ -21,10 +22,11 @@ namespace Kitchen.Scene
             await SceneManager.LoadSceneAsync(targetSceneName);
         }
 
-        public static async void LoadNet(string targetSceneName, string transitionSceneName)
+        public static void LoadNet(string targetSceneName)
         {
-            await SceneManager.LoadSceneAsync(transitionSceneName);
             NetworkManager.Singleton.SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
         }
+        
+        
     }
 }

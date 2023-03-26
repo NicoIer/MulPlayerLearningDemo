@@ -25,16 +25,20 @@ namespace Kitchen.Manager
             // readyClientSet.Add(clientId);
             bool flag = NetworkManager.Singleton.ConnectedClientsIds.All(clientId => readyClientSet.Contains(clientId));
 //如果所有客户端都准备好了，就进入准备就绪阶段
+
             if (flag)
             {
-                LobbyManager.Instance.DeleteLobby();
-                SceneLoader.LoadNet(SceneName.GameScene, SceneName.LoadingScene);
-                LoadSceneClientRpc(SceneName.LoadingScene); //通知客户端加载LoadingScene
+                Debug.Log($"所有玩家准备就绪,现在开始加载场景");
+                //通知客户端进入游戏
                 GameManager.Instance.EnterGame();
+                LobbyManager.Instance.DeleteLobby();
             }
         }
-
-
+        
+        
+        
+        
+        
         [ClientRpc]
         internal void SetPlayerReadyClientRpc(ulong clientId)
         {
@@ -42,18 +46,6 @@ namespace Kitchen.Manager
                 return;
             readyClientSet.Add(clientId);
             onReadyChange?.Invoke();
-        }
-
-
-        [ClientRpc]
-        internal void LoadSceneClientRpc(string sceneName)
-        {
-            if (IsHost || IsServer)
-            {
-                return;
-            }
-
-            SceneLoader.Load(sceneName);
         }
     }
 }

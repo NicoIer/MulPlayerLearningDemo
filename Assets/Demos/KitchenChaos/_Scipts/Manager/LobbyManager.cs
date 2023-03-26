@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Kitchen.Config;
 using Kitchen.Scene;
 using Nico.Design;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,6 +29,7 @@ namespace Kitchen.Manager
         public event Action onJoinFailed;
         public event Action onCodeJoinFailed;
         public event Action<List<Lobby>> onLobbyListUpdate;
+        public const string relayKey = "relayJoinCode";
 
         protected override void Awake()
         {
@@ -75,6 +82,54 @@ namespace Kitchen.Manager
 
         #endregion
 
+        #region Relay
+
+        private async Task<Allocation> AllocateRelay()
+        {
+            try
+            {
+                //这里的参数是最大客户端数量 不包括服务器
+                var allocation =
+                    await RelayService.Instance.CreateAllocationAsync(GameManager.Instance.setting.maxPlayerCount - 1);
+                return allocation;
+            }
+            catch (RelayServiceException e)
+            {
+                Debug.Log(e);
+                return default;
+            }
+        }
+
+        private async Task<string> GetRelayJoinCode(Allocation allocation)
+        {
+            try
+            {
+                string relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+                return relayJoinCode;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(e);
+                return default;
+            }
+        }
+
+        private async Task<JoinAllocation> JoinRelay(string joinCode)
+        {
+            try
+            {
+                var allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+                return allocation;
+            }
+            catch (RelayServiceException e)
+            {
+                Debug.LogWarning(e);
+                return default;
+            }
+        }
+
+        #endregion
+
         #region 创建 退出
 
         public async void Create(string lobbyName, bool isPrivate)
@@ -82,13 +137,15 @@ namespace Kitchen.Manager
             OnStartCreate?.Invoke();
             try
             {
-                var options = new CreateLobbyOptions();
-                options.IsPrivate = isPrivate;
+                var options = new CreateLobbyOptions
+                {
+                    IsPrivate = isPrivate
+                };
                 joinedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName,
                     GameManager.Instance.setting.maxPlayerCount, options);
-
+                await _SetServerRelay();
                 GameManager.Instance.StartHost();
-                SceneLoader.LoadNet(SceneName.CharacterSelectScene, SceneName.LoadingScene);
+                SceneLoader.LoadNet(SceneName.CharacterSelectScene);
             }
             catch (LobbyServiceException e)
             {
@@ -103,6 +160,8 @@ namespace Kitchen.Manager
             try
             {
                 joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
+                await _SetClientRelay();
+
                 GameManager.Instance.StartClient();
             }
             catch (Exception e)
@@ -118,6 +177,9 @@ namespace Kitchen.Manager
             try
             {
                 joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(id);
+                Debug.Log("JoinWithID,设置Relay");
+                await _SetClientRelay();
+                Debug.Log("JoinWithID,设置Relay完成,启动客户端");
                 GameManager.Instance.StartClient();
             }
             catch (Exception e)
@@ -133,6 +195,9 @@ namespace Kitchen.Manager
             try
             {
                 joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
+
+                await _SetClientRelay();
+
                 GameManager.Instance.StartClient();
             }
             catch (Exception e)
@@ -140,6 +205,35 @@ namespace Kitchen.Manager
                 Debug.LogWarning(e);
                 onCodeJoinFailed?.Invoke();
             }
+        }
+
+        private async Task _SetServerRelay()
+        {
+            return;
+            //TODO 搞明白这里的逻辑
+            var allocation = await AllocateRelay();
+            string relayJoinCode = await GetRelayJoinCode(allocation);
+            await LobbyService.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+                {
+                    { relayKey, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCode) }
+                }
+            });
+            Debug.Log($"设置Relay,JoinCode:{relayJoinCode}");
+            
+            var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetRelayServerData(new RelayServerData(allocation, "dtls"));
+        }
+
+        private async Task _SetClientRelay()
+        {
+            return;
+            var relayJoinCode = joinedLobby.Data[relayKey];
+            JoinAllocation joinAllocation = await JoinRelay(relayJoinCode.Value);
+            Debug.Log($"设置Relay,JoinCode:{relayJoinCode.Value}");
+            var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
         }
 
         #endregion
@@ -205,7 +299,7 @@ namespace Kitchen.Manager
         }
 
         private CancellationTokenSource _heartBeatCts;
-        public int heartBeatInterval = 15;
+        public int heartBeatInterval = 8;
 
         private async UniTask HeartBeatTask()
         {
