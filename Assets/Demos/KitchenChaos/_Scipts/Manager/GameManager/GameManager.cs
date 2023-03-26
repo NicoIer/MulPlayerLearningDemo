@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using Kitchen.Config;
-using Kitchen.UI;
-using Nico.Design;
 using Nico.Network;
 using Unity.Netcode;
 using UnityEngine;
@@ -15,6 +12,9 @@ namespace Kitchen
     public class GameManager : GlobalNetSingleton<GameManager>
     {
         [field: SerializeField] public GameSetting setting { get; private set; }
+
+        public NetworkList<PlayerConfig> playerConfigs { get; private set; }
+        [field: SerializeField] public List<Color> playerColors { get; private set; } = new List<Color>();
 
         #region Events
 
@@ -33,24 +33,26 @@ namespace Kitchen
         private HashSet<ulong> _playerReadySet = new HashSet<ulong>();
         [SerializeField] private GameObject playerPrefab;
 
+        #region Awake Start
+
         protected override void Awake()
         {
             base.Awake();
             if (stateMachine == null)
             {
-                _Init_StateMachine();
+                stateMachine = new GameStateMachine(this);
+                stateMachine.Add(new LobbyState());
+                stateMachine.Add(new WaitingToStartState());
+                stateMachine.Add(new ReadyToStartState());
+                stateMachine.Add(new PlayingState());
+                stateMachine.Add(new PausedState());
+                stateMachine.Add(new GameOverState());
             }
-        }
 
-        private void _Init_StateMachine()
-        {
-            stateMachine = new GameStateMachine(this);
-            stateMachine.Add(new LobbyState());
-            stateMachine.Add(new WaitingToStartState());
-            stateMachine.Add(new ReadyToStartState());
-            stateMachine.Add(new PlayingState());
-            stateMachine.Add(new PausedState());
-            stateMachine.Add(new GameOverState());
+            if (playerConfigs == null)
+            {
+                playerConfigs = new();
+            }
         }
 
         private void Start()
@@ -58,6 +60,8 @@ namespace Kitchen
             PlayerInput.Instance.OnInteractPerform += OnPerformInteract;
             stateMachine.Change<LobbyState>();
         }
+
+        #endregion
 
 
         private void OnPerformInteract()
@@ -87,6 +91,11 @@ namespace Kitchen
         }
 
         #region 游戏 状态
+
+        public void EnterGame()
+        {
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadSceneCompleted;
+        }
 
         public void StartGame()
         {
@@ -170,8 +179,18 @@ namespace Kitchen
 
         public void StartHost()
         {
-            NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback;
+            NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback; // 是否允许连接 事件
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback; // 客户端连接事件 回调
             NetworkManager.Singleton.StartHost();
+        }
+
+        private void OnClientConnectedCallback(ulong clientId)
+        {
+            Debug.Log($"{clientId} 连接成功");
+            playerConfigs.Add(new PlayerConfig
+            {
+                clientId = clientId
+            });
         }
 
         public void StartClient()
@@ -186,12 +205,15 @@ namespace Kitchen
         {
             OnConnectingFailed?.Invoke(clientId);
         }
+
         #endregion
 
 
         /// <summary>
         /// TODO 搞懂这个方法
-        /// 这个方法是在客户端连接服务器的时候调用的
+        /// 这个方法是在客户端尝试连接服务器的时候调用的
+        /// request代表客户端的请求
+        /// response代表服务器的响应
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
@@ -224,11 +246,7 @@ namespace Kitchen
             }
         }
 
-        public void EnterGame()
-        {
-            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadSceneCompleted;
-        }
-
+        #region 回调事件
 
         public void OnLoadSceneCompleted(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted,
             List<ulong> clientstimedout)
@@ -245,6 +263,13 @@ namespace Kitchen
             }
 
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
+        }
+
+        #endregion
+
+        public Color GetColor(int colorIdx)
+        {
+            return playerColors[colorIdx];
         }
     }
 }

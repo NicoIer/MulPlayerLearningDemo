@@ -1864,6 +1864,17 @@ MonoBehaviour:
     gameDurationSetting: 60
     readyCountDown: 3
     maxPlayerCount: 4
+  <playerColors>k__BackingField:
+  - {r: 1, g: 0.7951523, b: 0, a: 1}
+  - {r: 0, g: 0.49056602, b: 0.08181215, a: 1}
+  - {r: 0, g: 0.22587347, b: 1, a: 1}
+  - {r: 0.6712856, g: 0, b: 1, a: 1}
+  - {r: 1, g: 0.43320215, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0.77507114, a: 1}
+  - {r: 1, g: 0.07474381, b: 0, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0.27151054, g: 0.11213955, b: 0.3773585, a: 1}
+  - {r: 1, g: 0, b: 0.07831144, a: 1}
   playerPrefab: {fileID: 3810951076065167919, guid: 37185b51dcced9e4384a8497bcbd1c01,
     type: 3}
 --- !u!4 &1894448524
