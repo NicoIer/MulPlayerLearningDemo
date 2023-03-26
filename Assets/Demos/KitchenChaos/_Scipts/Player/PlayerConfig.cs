@@ -7,6 +7,8 @@ namespace Kitchen
     {
         public ulong clientId;
         public int colorId;
+        public int swpanPointId;
+
         public bool Equals(PlayerConfig other)
         {
             return clientId == other.clientId && colorId == other.colorId;

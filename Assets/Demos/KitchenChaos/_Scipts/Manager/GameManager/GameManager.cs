@@ -297,11 +297,14 @@ namespace Kitchen
 
         public PlayerConfig GetPlayerConfig(ulong clientId)
         {
-            foreach (var playerConfig in playerConfigs)
+            for(int i=0;i!=playerConfigs.Count;++i)
             {
+                var playerConfig = playerConfigs[i];
                 if (clientId == playerConfig.clientId)
                 {
-                    return playerConfig;
+                    var config = playerConfig;
+                    config.swpanPointId = i;
+                    return config;
                 }
             }
 

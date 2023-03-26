@@ -57,11 +57,13 @@ namespace Kitchen.Player
             base.OnNetworkSpawn();
             _Init();
             //TODO 这里会有BUG 
-            transform.position = spawnPoints[(int)OwnerClientId];
+            
             
             var config = GameManager.Instance.GetPlayerConfig(OwnerClientId);
             var color = GameManager.Instance.GetColor(config.colorId);
             playerVisual.SetColor(color);
+            transform.position = spawnPoints[config.swpanPointId];
+            
             
             OnAnyPlayerSpawned?.Invoke();
             input.Enable();

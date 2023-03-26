@@ -1,4 +1,5 @@
-﻿using Kitchen.Config;
+﻿using System;
+using Kitchen.Config;
 using Kitchen.Manager;
 using Kitchen.Scene;
 using Unity.Netcode;
@@ -20,6 +21,17 @@ namespace Kitchen.UI
                 SceneLoader.Load(SceneName.MainMenuScene);
             });
             readyButton.onClick.AddListener(() => { SelectManager.Instance.SetPlayerReadyServerRpc(); });
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+        }
+
+        private void OnClientDisconnect(ulong obj)
+        {
+            gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
         }
     }
 }
