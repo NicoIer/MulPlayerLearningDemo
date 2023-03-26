@@ -20,6 +20,7 @@ namespace Kitchen.UI
         {
             mainMenuButton.onClick.AddListener(() =>
             {
+                LobbyManager.Instance.LeaveLobby();
                 NetworkManager.Singleton.Shutdown();
                 SceneLoader.Load(SceneName.MainMenuScene);
             });
@@ -29,7 +30,7 @@ namespace Kitchen.UI
 
         private void Start()
         {
-            var lobby = LobbyManager.Instance.GetCurrentLobby();
+            var lobby = LobbyManager.Instance.joinedLobby;
             lobbyNameText.text = $"LobbyName: {lobby.Name}";
             lobbyCodeText.text = $"LobbyCode: {lobby.LobbyCode}";
         }
