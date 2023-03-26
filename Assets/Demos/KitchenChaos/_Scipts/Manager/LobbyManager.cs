@@ -17,6 +17,11 @@ namespace Kitchen.Manager
     {
         public int heartBeatInterval = 15;
         private Lobby joinedLobby;
+        public event Action OnStartCreate;
+        public event Action OnCreateFailed;
+        public event Action onJoinStart;
+        public event Action onJoinFailed;
+        public event Action onCodeJoinFailed;
 
         protected override void Awake()
         {
@@ -39,6 +44,7 @@ namespace Kitchen.Manager
 
         public async void Create(string lobbyName, bool isPrivate)
         {
+            OnStartCreate?.Invoke();
             try
             {
                 var options = new CreateLobbyOptions();
@@ -52,11 +58,13 @@ namespace Kitchen.Manager
             catch (LobbyServiceException e)
             {
                 Debug.LogWarning(e);
+                OnCreateFailed?.Invoke();
             }
         }
 
         public async void QuickJoin()
         {
+            onJoinStart?.Invoke();
             try
             {
                 joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
@@ -65,16 +73,14 @@ namespace Kitchen.Manager
             catch (Exception e)
             {
                 Debug.LogWarning(e);
+                onJoinFailed?.Invoke();
             }
         }
 
-        public Lobby GetCurrentLobby()
-        {
-            return joinedLobby;
-        }
 
         public async void JoinWithCode(string code)
         {
+            onJoinStart?.Invoke();
             try
             {
                 joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
@@ -83,15 +89,22 @@ namespace Kitchen.Manager
             catch (Exception e)
             {
                 Debug.LogWarning(e);
+                onCodeJoinFailed?.Invoke();
             }
         }
-
-        private CancellationTokenSource _heartBeatCts;
 
         private void Start()
         {
             HeartBeatTask().Forget();
         }
+
+        public Lobby GetCurrentLobby()
+        {
+            return joinedLobby;
+        }
+
+        private CancellationTokenSource _heartBeatCts;
+
 
         private async UniTask HeartBeatTask()
         {
@@ -108,10 +121,59 @@ namespace Kitchen.Manager
             return joinedLobby != null && joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
         }
 
+        public async void DeleteLobby()
+        {
+            if (joinedLobby != null)
+            {
+                try
+                {
+                    await LobbyService.Instance.DeleteLobbyAsync(joinedLobby.Id);
+                    joinedLobby = null;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning(e);
+                }
+            }
+        }
+
+        public async void LeaveLobby()
+        {
+            try
+            {
+                if (joinedLobby != null)
+                {
+                    await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id,
+                        AuthenticationService.Instance.PlayerId);
+                    joinedLobby = null;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(e);
+            }
+        }
+
+        public async void KickPlayer(string playerId)
+        {
+            try
+            {
+                if (IsLobbyHost())
+                {
+                    await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(e);
+            }
+        }
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
             _heartBeatCts?.Cancel();
+            DeleteLobby();
         }
     }
 }

@@ -27,6 +27,7 @@ namespace Kitchen.Manager
 //如果所有客户端都准备好了，就进入准备就绪阶段
             if (flag)
             {
+                LobbyManager.Instance.DeleteLobby();
                 SceneLoader.LoadNet(SceneName.GameScene, SceneName.LoadingScene);
                 LoadSceneClientRpc(SceneName.LoadingScene); //通知客户端加载LoadingScene
                 GameManager.Instance.EnterGame();

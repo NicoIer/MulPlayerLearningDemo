@@ -209,6 +209,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2234340084275450025, guid: 449e09f4a5276e44681e53e213a19e02,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 449e09f4a5276e44681e53e213a19e02, type: 3}
 --- !u!1001 &35694720
 PrefabInstance:
@@ -561,6 +565,10 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2606094658137903075, guid: 449e09f4a5276e44681e53e213a19e02,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2234340084275450025, guid: 449e09f4a5276e44681e53e213a19e02,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
@@ -1306,6 +1314,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2234340084275450025, guid: 449e09f4a5276e44681e53e213a19e02,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 449e09f4a5276e44681e53e213a19e02, type: 3}
 --- !u!1001 &604138471
 PrefabInstance:
@@ -1732,10 +1744,10 @@ RectTransform:
   m_Father: {fileID: 1605442835}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -725, y: 393}
-  m_SizeDelta: {x: 400, y: 100}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 116.285095, y: -50.778778}
+  m_SizeDelta: {x: 232.5702, y: 101.5576}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &814414241
 MonoBehaviour:
@@ -2623,10 +2635,10 @@ RectTransform:
   m_Father: {fileID: 1605442835}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -725, y: 245}
-  m_SizeDelta: {x: 400, y: 100}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -99.819824, y: -50}
+  m_SizeDelta: {x: 199.6395, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1240805906
 MonoBehaviour:
@@ -3438,6 +3450,10 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2606094658137903075, guid: 449e09f4a5276e44681e53e213a19e02,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2234340084275450025, guid: 449e09f4a5276e44681e53e213a19e02,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}

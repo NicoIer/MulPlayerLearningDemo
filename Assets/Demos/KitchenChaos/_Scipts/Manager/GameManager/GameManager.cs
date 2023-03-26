@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Kitchen.Config;
 using Nico.Network;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,12 +19,10 @@ namespace Kitchen
         public NetworkList<PlayerConfig> playerConfigs { get; private set; }
         [field: SerializeField] public List<Color> playerColors { get; private set; } = new List<Color>();
         private string _playerName;
+
         public string playerName
         {
-            get
-            {
-                return _playerName;
-            }
+            get { return _playerName; }
             set
             {
                 _playerName = value;
@@ -48,7 +48,7 @@ namespace Kitchen
         [SerializeField] private GameObject playerPrefab;
 
         #region Awake Start
-        
+
         protected override void Awake()
         {
             base.Awake();
@@ -224,15 +224,11 @@ namespace Kitchen
         {
             //TODO 值得研究
             OnConnecting?.Invoke();
-            Unity.Netcode.NetworkManager.Singleton.OnClientConnectedCallback += Client_OnClientConnectedCallback;
+            NetworkManager.Singleton.OnClientConnectedCallback += Client_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnSelfDisconnectCallback;
             NetworkManager.Singleton.StartClient();
         }
 
-        private void Client_OnClientConnectedCallback(ulong clientId)
-        {
-            SetPlayerNameServerRpc(_playerName);
-        }
 
         [ServerRpc(RequireOwnership = false)]
         private void SetPlayerNameServerRpc(string name, ServerRpcParams serverRpcParams = default)
@@ -249,7 +245,7 @@ namespace Kitchen
                     break;
                 }
             }
-        }   
+        }
 
 
         public void OnSelfDisconnectCallback(ulong clientId)
@@ -259,6 +255,43 @@ namespace Kitchen
 
         #endregion
 
+
+        #region 回调事件
+
+        public void OnLoadSceneCompleted(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted,
+            List<ulong> clientstimedout)
+        {
+            Debug.Log($"{scenename}加载完成");
+            if (scenename != SceneName.GameScene)
+                return;
+            ChangeStateClientRpc(WaitingToStartState.stateEnum); //通知所有客户端切换状态
+            //同时 由服务端 生成玩家
+            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                var playerObj = Instantiate(playerPrefab);
+                playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+            }
+
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
+        }
+
+        private void Host_OnClientConnectedCallback(ulong clientId)
+        {
+            Debug.Log($"{clientId} 连接成功");
+            playerConfigs.Add(new PlayerConfig
+            {
+                clientId = clientId,
+                colorId = 0
+            });
+            SetPlayerNameServerRpc(playerName);
+            SetPlayerIDServerRpc(AuthenticationService.Instance.PlayerId);
+        }
+
+        private void Client_OnClientConnectedCallback(ulong clientId)
+        {
+            SetPlayerNameServerRpc(_playerName);
+            SetPlayerIDServerRpc(AuthenticationService.Instance.PlayerId);
+        }
 
         /// <summary>
         /// TODO 搞懂这个方法
@@ -297,36 +330,6 @@ namespace Kitchen
             }
         }
 
-        #region 回调事件
-
-        public void OnLoadSceneCompleted(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted,
-            List<ulong> clientstimedout)
-        {
-            Debug.Log($"{scenename}加载完成");
-            if (scenename != SceneName.GameScene)
-                return;
-            ChangeStateClientRpc(WaitingToStartState.stateEnum); //通知所有客户端切换状态
-            //同时 由服务端 生成玩家
-            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
-            {
-                var playerObj = Instantiate(playerPrefab);
-                playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
-            }
-
-            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
-        }
-
-        private void Host_OnClientConnectedCallback(ulong clientId)
-        {
-            Debug.Log($"{clientId} 连接成功");
-            playerConfigs.Add(new PlayerConfig
-            {
-                clientId = clientId,
-                colorId = 0
-            });
-            SetPlayerNameServerRpc(playerName);
-        }
-
         #endregion
 
         public Color GetColor(int colorIdx)
@@ -336,7 +339,7 @@ namespace Kitchen
 
         public PlayerConfig GetPlayerConfig(ulong clientId)
         {
-            for(int i=0;i!=playerConfigs.Count;++i)
+            for (int i = 0; i != playerConfigs.Count; ++i)
             {
                 var playerConfig = playerConfigs[i];
                 if (clientId == playerConfig.clientId)
@@ -379,9 +382,43 @@ namespace Kitchen
             }
         }
 
+
+        [ServerRpc]
+        private void SetPlayerIDServerRpc(string playerId, ServerRpcParams serverRpcParams = default)
+        {
+            var senderID = serverRpcParams.Receive.SenderClientId;
+            var idx = GetConfigIdxByClientId(senderID);
+            if (idx == -1)
+            {
+                Debug.LogError("没有找到玩家配置");
+                return;
+            }
+
+            var playerConfig = playerConfigs[idx];
+            if (playerConfig.clientId == senderID)
+            {
+                playerConfig.playerId = playerId;
+                playerConfigs[idx] = playerConfig; //结构体赋值 不会改变引用
+            }
+        }
+
+        private int GetConfigIdxByClientId(ulong clientId)
+        {
+            for (int i = 0; i != playerConfigs.Count; ++i)
+            {
+                var playerConfig = playerConfigs[i];
+                if (playerConfig.clientId == clientId)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         public void KickPlayer(ulong clientId)
         {
-            Unity.Netcode.NetworkManager.Singleton.DisconnectClient(clientId);
+            NetworkManager.Singleton.DisconnectClient(clientId);
             OnClientDisConnectedCallback(clientId);
         }
     }

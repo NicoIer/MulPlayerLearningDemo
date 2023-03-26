@@ -10,10 +10,11 @@ namespace Kitchen
         public int colorId;
         public int spawnPointId;
         public FixedString64Bytes playerName;
+        public FixedString64Bytes playerId;
 
         public bool Equals(PlayerConfig other)
         {
-            return clientId == other.clientId && colorId == other.colorId && playerName == other.playerName;
+            return clientId == other.clientId && colorId == other.colorId && playerName == other.playerName && playerId == other.playerId;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -21,6 +22,7 @@ namespace Kitchen
             serializer.SerializeValue(ref clientId);
             serializer.SerializeValue(ref colorId);
             serializer.SerializeValue(ref playerName);
+            serializer.SerializeValue(ref playerId);
         }
     }
 }

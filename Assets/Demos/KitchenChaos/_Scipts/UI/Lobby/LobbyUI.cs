@@ -26,6 +26,7 @@ namespace Kitchen.UI
 
             mainMenuButton.onClick.AddListener(() =>
             {
+                LobbyManager.Instance.LeaveLobby();
                 SceneLoader.Load(SceneName.MainMenuScene, SceneName.LoadingScene);
             });
 
