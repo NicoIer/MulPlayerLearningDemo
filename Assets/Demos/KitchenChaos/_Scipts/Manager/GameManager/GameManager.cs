@@ -16,6 +16,19 @@ namespace Kitchen
 
         public NetworkList<PlayerConfig> playerConfigs { get; private set; }
         [field: SerializeField] public List<Color> playerColors { get; private set; } = new List<Color>();
+        private string _playerName;
+        public string playerName
+        {
+            get
+            {
+                return _playerName;
+            }
+            set
+            {
+                _playerName = value;
+                PlayerPrefs.SetString(nameof(_playerName), _playerName);
+            }
+        }
 
         #region Events
 
@@ -39,6 +52,7 @@ namespace Kitchen
         protected override void Awake()
         {
             base.Awake();
+            _playerName = PlayerPrefs.GetString(nameof(_playerName), "Nico");
             if (stateMachine == null)
             {
                 stateMachine = new GameStateMachine(this);
@@ -181,7 +195,7 @@ namespace Kitchen
         public void StartHost()
         {
             NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback; // 是否允许连接 事件
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback; // 客户端连接事件 回调
+            NetworkManager.Singleton.OnClientConnectedCallback += Host_OnClientConnectedCallback; // 客户端连接事件 回调
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisConnectedCallback; // 客户端断开连接事件 回调
             NetworkManager.Singleton.StartHost();
         }
@@ -210,9 +224,33 @@ namespace Kitchen
         {
             //TODO 值得研究
             OnConnecting?.Invoke();
+            Unity.Netcode.NetworkManager.Singleton.OnClientConnectedCallback += Client_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnSelfDisconnectCallback;
             NetworkManager.Singleton.StartClient();
         }
+
+        private void Client_OnClientConnectedCallback(ulong clientId)
+        {
+            SetPlayerNameServerRpc(_playerName);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerNameServerRpc(string name, ServerRpcParams serverRpcParams = default)
+        {
+            Debug.Log($"客户端{serverRpcParams.Receive.SenderClientId}设置名字为{name}");
+            var senderID = serverRpcParams.Receive.SenderClientId;
+            for (int i = 0; i != playerConfigs.Count; ++i)
+            {
+                var playerConfig = playerConfigs[i];
+                if (playerConfig.clientId == senderID)
+                {
+                    playerConfig.playerName = name;
+                    playerConfigs[i] = playerConfig; //结构体赋值 不会改变引用
+                    break;
+                }
+            }
+        }   
+
 
         public void OnSelfDisconnectCallback(ulong clientId)
         {
@@ -278,7 +316,7 @@ namespace Kitchen
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
         }
 
-        private void OnClientConnectedCallback(ulong clientId)
+        private void Host_OnClientConnectedCallback(ulong clientId)
         {
             Debug.Log($"{clientId} 连接成功");
             playerConfigs.Add(new PlayerConfig
@@ -286,6 +324,7 @@ namespace Kitchen
                 clientId = clientId,
                 colorId = 0
             });
+            SetPlayerNameServerRpc(playerName);
         }
 
         #endregion
@@ -303,7 +342,7 @@ namespace Kitchen
                 if (clientId == playerConfig.clientId)
                 {
                     var config = playerConfig;
-                    config.swpanPointId = i;
+                    config.spawnPointId = i;
                     return config;
                 }
             }

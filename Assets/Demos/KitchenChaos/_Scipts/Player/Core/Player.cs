@@ -62,7 +62,7 @@ namespace Kitchen.Player
             var config = GameManager.Instance.GetPlayerConfig(OwnerClientId);
             var color = GameManager.Instance.GetColor(config.colorId);
             playerVisual.SetColor(color);
-            transform.position = spawnPoints[config.swpanPointId];
+            transform.position = spawnPoints[config.spawnPointId];
             
             
             OnAnyPlayerSpawned?.Invoke();

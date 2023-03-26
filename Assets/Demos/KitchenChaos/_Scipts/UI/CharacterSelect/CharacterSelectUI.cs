@@ -2,6 +2,7 @@
 using Kitchen.Config;
 using Kitchen.Manager;
 using Kitchen.Scene;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ namespace Kitchen.UI
     {
         [SerializeField] private Button readyButton;
         [SerializeField] private Button mainMenuButton;
+        [SerializeField] private TextMeshProUGUI lobbyNameText;
+        [SerializeField] private TextMeshProUGUI lobbyCodeText;
 
         private void Awake()
         {
@@ -22,6 +25,13 @@ namespace Kitchen.UI
             });
             readyButton.onClick.AddListener(() => { SelectManager.Instance.SetPlayerReadyServerRpc(); });
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+        }
+
+        private void Start()
+        {
+            var lobby = LobbyManager.Instance.GetCurrentLobby();
+            lobbyNameText.text = $"LobbyName: {lobby.Name}";
+            lobbyCodeText.text = $"LobbyCode: {lobby.LobbyCode}";
         }
 
         private void OnClientDisconnect(ulong obj)

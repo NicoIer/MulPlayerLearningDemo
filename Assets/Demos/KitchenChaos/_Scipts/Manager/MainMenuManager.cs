@@ -17,10 +17,12 @@ namespace Kitchen.Manager
             try
             {
                 Destroy(GameManager.Instance.gameObject);
+                Destroy(LobbyManager.Instance.gameObject);
             }
             catch (SingletonException e)
             {
             }
+            
         }
     }
 }
