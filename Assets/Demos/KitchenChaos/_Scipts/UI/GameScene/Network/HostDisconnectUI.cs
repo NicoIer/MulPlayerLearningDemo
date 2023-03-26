@@ -1,4 +1,5 @@
-﻿using Kitchen.Config;
+﻿using System;
+using Kitchen.Config;
 using Kitchen.Scene;
 using Unity.Netcode;
 using UnityEngine;
@@ -36,6 +37,11 @@ namespace Kitchen.UI
         public void Show()
         {
             gameObject.SetActive(true);
+        }
+
+        public void OnDestroy()
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= _OnClientDisconnect;
         }
     }
 }

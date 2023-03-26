@@ -3,6 +3,7 @@ using Kitchen.Manager;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Kitchen.Visual
 {
@@ -11,16 +12,26 @@ namespace Kitchen.Visual
         [SerializeField] private int playerIdx;
         [SerializeField] private TextMeshPro readyText;
         [SerializeField] private PlayerVisual playerVisual;
+        [SerializeField] private Button kickButton;
 
         private void Awake()
         {
-            playerVisual = GetComponent<PlayerVisual>();
+            if (playerVisual == null)
+                playerVisual = GetComponent<PlayerVisual>();
         }
 
         private void Start()
         {
             GameManager.Instance.playerConfigs.OnListChanged += _OnPlayerConfigListChange;
             SelectManager.Instance.onReadyChange += _OnReadyChange;
+            kickButton.gameObject.SetActive(NetworkManager.Singleton.IsServer);
+            Debug.Log("注册点击事件");
+            kickButton.onClick.AddListener(() =>
+            {
+                Debug.Log("kick");
+                var config = GameManager.Instance.playerConfigs[playerIdx];
+                GameManager.Instance.KickPlayer(config.clientId);
+            });
             UpdateVisual();
         }
 

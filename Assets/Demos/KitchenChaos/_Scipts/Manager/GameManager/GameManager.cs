@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Kitchen.Config;
 using Nico.Network;
+using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,7 +35,7 @@ namespace Kitchen
         [SerializeField] private GameObject playerPrefab;
 
         #region Awake Start
-
+        
         protected override void Awake()
         {
             base.Awake();
@@ -202,7 +203,6 @@ namespace Kitchen
             {
                 playerConfigs.RemoveAt(targetIdx);
             }
-            
         }
 
 
@@ -335,6 +335,12 @@ namespace Kitchen
                     break;
                 }
             }
+        }
+
+        public void KickPlayer(ulong clientId)
+        {
+            Unity.Netcode.NetworkManager.Singleton.DisconnectClient(clientId);
+            OnClientDisConnectedCallback(clientId);
         }
     }
 }
