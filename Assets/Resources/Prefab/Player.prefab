@@ -82,6 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <topSpawnPoint>k__BackingField: {fileID: 3810951075651400322}
+  playerVisual: {fileID: 8603793189912937556}
   data: {fileID: 11400000, guid: 2251bc72fa32f5c4c8042248cdaf78eb, type: 2}
   spawnPoints:
   - {x: 0, y: 0, z: 0}
@@ -338,6 +339,18 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 3810951075464327665}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8603793189912937556 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4865549636370052517, guid: 1c5dda3c7cd3cf742afcade5419faeab,
+    type: 3}
+  m_PrefabInstance: {fileID: 3810951075464327665}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826881328136101334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a710e7f98e5643db8b46d852413425ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5851443867854364989
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Kitchen.UI
 {
-    public class CharacterSelectUI : NetworkBehaviour
+    public class CharacterSelectUI : MonoBehaviour
     {
         [SerializeField] private Button readyButton;
         [SerializeField] private Button mainMenuButton;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kitchen.Visual;
 using Nico.Network;
 using Unity.Netcode;
 using UnityEngine;
@@ -44,7 +45,7 @@ namespace Kitchen.Player
 
         #endregion
 
-
+        [SerializeField] private PlayerVisual playerVisual;
         internal PlayerInput input;
 
         [SerializeField] internal PlayerData data;
@@ -57,14 +58,18 @@ namespace Kitchen.Player
             _Init();
             //TODO 这里会有BUG 
             transform.position = spawnPoints[(int)OwnerClientId];
-
+            
+            var config = GameManager.Instance.GetPlayerConfig(OwnerClientId);
+            var color = GameManager.Instance.GetColor(config.colorId);
+            playerVisual.SetColor(color);
+            
             OnAnyPlayerSpawned?.Invoke();
             input.Enable();
             input.OnInteractPerform += OnPerformInteract;
             input.OnInteractAlternatePerform += OnPerformInteractAlternate;
 
-            if (IsServer)
-                NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+            
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
         }
 
         private void OnClientDisconnect(ulong clientId)

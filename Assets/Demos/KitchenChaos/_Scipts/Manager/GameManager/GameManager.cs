@@ -181,27 +181,40 @@ namespace Kitchen
         {
             NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback; // 是否允许连接 事件
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback; // 客户端连接事件 回调
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisConnectedCallback; // 客户端断开连接事件 回调
             NetworkManager.Singleton.StartHost();
         }
 
-        private void OnClientConnectedCallback(ulong clientId)
+        private void OnClientDisConnectedCallback(ulong clientId)
         {
-            Debug.Log($"{clientId} 连接成功");
-            playerConfigs.Add(new PlayerConfig
+            Debug.Log($"客户端{clientId}断开连接");
+            int targetIdx = -1;
+            for (int i = 0; i < playerConfigs.Count; i++)
             {
-                clientId = clientId
-            });
+                if (clientId == playerConfigs[i].clientId)
+                {
+                    targetIdx = i;
+                    break;
+                }
+            }
+
+            if (targetIdx != -1)
+            {
+                playerConfigs.RemoveAt(targetIdx);
+            }
+            
         }
+
 
         public void StartClient()
         {
             //TODO 值得研究
             OnConnecting?.Invoke();
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnSelfDisconnectCallback;
             NetworkManager.Singleton.StartClient();
         }
 
-        public void OnClientDisconnectCallback(ulong clientId)
+        public void OnSelfDisconnectCallback(ulong clientId)
         {
             OnConnectingFailed?.Invoke(clientId);
         }
@@ -265,11 +278,63 @@ namespace Kitchen
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
         }
 
+        private void OnClientConnectedCallback(ulong clientId)
+        {
+            Debug.Log($"{clientId} 连接成功");
+            playerConfigs.Add(new PlayerConfig
+            {
+                clientId = clientId,
+                colorId = 0
+            });
+        }
+
         #endregion
 
         public Color GetColor(int colorIdx)
         {
             return playerColors[colorIdx];
+        }
+
+        public PlayerConfig GetPlayerConfig(ulong clientId)
+        {
+            foreach (var playerConfig in playerConfigs)
+            {
+                if (clientId == playerConfig.clientId)
+                {
+                    return playerConfig;
+                }
+            }
+
+            Debug.LogWarning("没有找到玩家配置");
+
+            return default;
+        }
+
+        public PlayerConfig GetLocalPlayerConfig()
+        {
+            var id = NetworkManager.Singleton.LocalClientId;
+            return GetPlayerConfig(id);
+        }
+
+        public void SePlayerColor(int colorIdx)
+        {
+            SetPlayerColorServerRpc(colorIdx);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerColorServerRpc(int colorId, ServerRpcParams serverRpcParams = default)
+        {
+            var senderID = serverRpcParams.Receive.SenderClientId;
+            for (int i = 0; i != playerConfigs.Count; ++i)
+            {
+                var playerConfig = playerConfigs[i];
+                if (playerConfig.clientId == senderID)
+                {
+                    playerConfig.colorId = colorId;
+                    playerConfigs[i] = playerConfig; //结构体赋值 不会改变引用
+                    break;
+                }
+            }
         }
     }
 }

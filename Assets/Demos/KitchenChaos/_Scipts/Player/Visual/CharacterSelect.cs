@@ -39,19 +39,15 @@ namespace Kitchen.Visual
         {
             if (playerIdx < GameManager.Instance.playerConfigs.Count)
             {
+                //获取玩家配置
                 var config = GameManager.Instance.playerConfigs[playerIdx];
                 gameObject.SetActive(true);
-                if (SelectManager.Instance.readyClientSet.Contains(config.clientId))
-                {
-                    readyText.gameObject.SetActive(true);
-                }
-                else
-                {
-                    readyText.gameObject.SetActive(false);
-                }
+                //判断玩家是否准备
+                readyText.gameObject.SetActive(SelectManager.Instance.readyClientSet.Contains(config.clientId));
 
-                var color = GameManager.Instance.GetColor(playerIdx);
-
+                //获取玩家颜色
+                var color = GameManager.Instance.GetColor(config.colorId);
+                //设置玩家颜色
                 playerVisual.SetColor(color);
             }
             else
