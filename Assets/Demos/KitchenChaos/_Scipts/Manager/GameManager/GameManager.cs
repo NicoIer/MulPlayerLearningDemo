@@ -110,7 +110,9 @@ namespace Kitchen
 
         public void EnterGame()
         {
+            //TODO 使用Rpc 替代 NetworkManager.Singleton.SceneManager.LoadScene
             SceneLoader.LoadNet(SceneName.GameScene);
+            // NetworkManager.Singleton.SceneManager.LoadScene(SceneName.GameScene, LoadSceneMode.Single);
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadSceneCompleted;
         }
 
