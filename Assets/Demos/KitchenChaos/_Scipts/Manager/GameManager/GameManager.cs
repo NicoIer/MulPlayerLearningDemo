@@ -110,12 +110,14 @@ namespace Kitchen
 
         public void EnterGame()
         {
+            Debug.Log("进入游戏");
             //TODO 使用Rpc 替代 NetworkManager.Singleton.SceneManager.LoadScene
-            SceneLoader.LoadNet(SceneName.GameScene);
-            // NetworkManager.Singleton.SceneManager.LoadScene(SceneName.GameScene, LoadSceneMode.Single);
+            // SceneLoader.LoadNet(SceneName.GameScene);
+            // RpcSceneManager.Instance.LoadScene(SceneName.GameScene);
+            // RpcSceneManager.Instance.OnLoadSceneCompleted += OnLoadSceneCompleted;
+            NetworkManager.Singleton.SceneManager.LoadScene(SceneName.GameScene, LoadSceneMode.Single);
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadSceneCompleted;
         }
-
 
 
         public void OnLoadSceneCompleted(string scenename, LoadSceneMode loadscenemode, List<ulong> clientscompleted,
@@ -136,6 +138,22 @@ namespace Kitchen
 
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadSceneCompleted;
         }
+
+
+        // public void OnLoadSceneCompleted()
+        // {
+        //     if (!IsServer)
+        //         return;
+        //     ChangeStateClientRpc(WaitingToStartState.stateEnum); //通知所有客户端切换状态
+        //     //同时 由服务端 生成玩家
+        //     foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        //     {
+        //         var playerObj = Instantiate(playerPrefab);
+        //         playerObj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+        //     }
+        //
+        //     RpcSceneManager.Instance.OnLoadSceneCompleted -= OnLoadSceneCompleted;
+        // }
 
 
         public void StartGame()

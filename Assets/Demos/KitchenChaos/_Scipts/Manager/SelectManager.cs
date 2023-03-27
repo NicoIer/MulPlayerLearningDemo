@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Kitchen.Config;
 using Kitchen.Scene;
-using Kitchen.Visual;
 using Nico.Network;
 using Unity.Netcode;
 using UnityEngine;
@@ -14,7 +13,6 @@ namespace Kitchen.Manager
     {
         public event Action onReadyChange;
         public HashSet<ulong> readyClientSet { get; private set; } = new();
-        public PlayerVisual playerVisual;
 
         [ServerRpc(RequireOwnership = false)]
         internal void SetPlayerReadyServerRpc(ServerRpcParams serverRpcParams = default)
@@ -23,9 +21,10 @@ namespace Kitchen.Manager
             // if (readyClientSet.Contains(clientId))
             // return;
             // readyClientSet.Add(clientId);
+
             bool flag = NetworkManager.Singleton.ConnectedClientsIds.All(clientId => readyClientSet.Contains(clientId));
 //如果所有客户端都准备好了，就进入准备就绪阶段
-
+            Debug.Log($"isServer:{IsServer}");
             if (flag)
             {
                 Debug.Log($"所有玩家准备就绪,现在开始加载场景");
@@ -34,11 +33,8 @@ namespace Kitchen.Manager
                 LobbyManager.Instance.DeleteLobby();
             }
         }
-        
-        
-        
-        
-        
+
+
         [ClientRpc]
         internal void SetPlayerReadyClientRpc(ulong clientId)
         {

@@ -3573,6 +3573,7 @@ GameObject:
   - component: {fileID: 1894448523}
   - component: {fileID: 1894448522}
   - component: {fileID: 1894448525}
+  - component: {fileID: 1894448526}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3652,6 +3653,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e21e01fb3de4ddb83c10d5c901baaf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1894448526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894448521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6410b1606949baa1ef0c578da1bcf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsLocalPlayer>k__BackingField: 0
+  <IsOwner>k__BackingField: 0
+  <IsServer>k__BackingField: 0
+  <IsClient>k__BackingField: 0
+  <IsHost>k__BackingField: 0
+  <IsOwnedByServer>k__BackingField: 0
+  <IsSpawned>k__BackingField: 0
+  m_NetworkObject: {fileID: 0}
+  <NetworkObjectId>k__BackingField: 0
+  <NetworkBehaviourId>k__BackingField: 0
+  NetworkBehaviourIdCache: 0
+  <OwnerClientId>k__BackingField: 0
+  m_VarInit: 0
 --- !u!1 &1917158703
 GameObject:
   m_ObjectHideFlags: 0
